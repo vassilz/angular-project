@@ -18,7 +18,7 @@ import { User } from '../types/user';
 export class FirebaseUserService {
   constructor(private db: Database) {}
 
-  getUser(): Observable<DataSnapshot> {
+  getUsers(): Observable<DataSnapshot> {
     return from(get(ref(this.db, 'user')));
   }
 

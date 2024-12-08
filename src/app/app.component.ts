@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FirebaseUserService } from './users/firebase-user.service';
+import { BooksListComponent } from './books/books-list/books-list.component';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -13,21 +14,17 @@ import { FirebaseUserService } from './users/firebase-user.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [BooksListComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  constructor(private bookService: FirebaseUserService) {}
+  constructor(private userService: FirebaseUserService) {}
 
   ngOnInit(): void {
     // Initialize Firebase
     // const app = initializeApp(environment.firebaseConfig);
     // const analytics = getAnalytics(app);
-
-    this.bookService.getBooks().subscribe((data) => console.log(data.val()));
-
-    this.bookService.doStuff();
   }
   title = 'bookstore';
 }

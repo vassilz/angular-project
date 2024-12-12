@@ -1,1 +1,59 @@
-<p>add-book works!</p>
+<form #form="ngForm" (ngSubmit)="addBook(form)">
+  <label for="name">Name:</label><br />
+  <input
+    type="text"
+    id="name"
+    name="name"
+    placeholder="John"
+    [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
+    #inputName="ngModel"
+    ngModel
+    required
+  />
+  @if (inputName?.touched) {
+  <div>
+    @if (inputName?.errors?.['required']) {
+    <p class="error">Book name is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="author">Author:</label><br />
+  <input
+    type="text"
+    id="author"
+    name="author"
+    placeholder="Doe"
+    #inputAuthor="ngModel"
+    ngModel
+    required
+  /><br />
+  <label for="publish_date">Publish date:</label><br />
+  <input
+    type="text"
+    id="publish_date"
+    name="publish_date"
+    placeholder="Doe"
+    #inputPublishDate="ngModel"
+    ngModel
+    required
+  /><br />
+  <label for="pages">Pages:</label><br />
+  <input
+    type="text"
+    id="pages"
+    name="pages"
+    placeholder="Doe"
+    #inputPages="ngModel"
+    ngModel
+    required
+  /><br /><br />
+
+  <button class="cancel">Cancel</button>
+  <button
+    [disabled]="form.invalid"
+    [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+  >
+    Add
+  </button>
+</form>

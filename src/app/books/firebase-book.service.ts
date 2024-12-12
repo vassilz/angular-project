@@ -22,7 +22,7 @@ export class FirebaseBookService {
   }
 
   createBook(
-    bookId: string,
+    bookId: number,
     name: string,
     author: string,
     publishDate: string,

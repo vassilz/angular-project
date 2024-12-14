@@ -1,4 +1,4 @@
 <button routerLink="/books/add">Add book</button>
 @for (book of books; track $index) {
-<div>{{ book.name }} by {{ book.author }}</div>
+<app-book-card [book]="book" />
 }

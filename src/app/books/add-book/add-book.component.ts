@@ -21,19 +21,23 @@ export class AddBookComponent {
       return;
     }
 
-    let bookCount: number = 0;
-    this.bookService
-      .getBooks()
-      .subscribe((data) => (bookCount = data.val().length));
+    this.bookService.getBooks().subscribe((data) => {
+      let bookCount = data.val().length;
 
-    console.log(form.value);
+      console.log(form.value);
 
-    const { name, author, publish_date, pages } = form.value;
+      const { name, author, publish_date, pages, synopsis } = form.value;
 
-    this.bookService
-      .createBook(bookCount, name, author, publish_date, pages)
-      .subscribe(() => {
-        this.router.navigate(['/books']);
-      });
+      this.bookService
+        .createBook(bookCount, name, author, publish_date, pages, synopsis)
+        .subscribe(() => {
+          this.router.navigate(['/books']);
+        });
+    });
+  }
+
+  onCancel(event: MouseEvent) {
+    console.log('Cancel');
+    this.router.navigate(['/books']);
   }
 }

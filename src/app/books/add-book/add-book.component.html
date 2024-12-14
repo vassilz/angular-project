@@ -27,7 +27,15 @@
     #inputAuthor="ngModel"
     ngModel
     required
-  /><br />
+  />
+  @if (inputAuthor?.touched) {
+  <div>
+    @if (inputAuthor?.errors?.['required']) {
+    <p class="error">Author is required.</p>
+    }
+  </div>
+  }
+  <br />
   <label for="publish_date">Publish date:</label><br />
   <input
     type="text"
@@ -37,7 +45,15 @@
     #inputPublishDate="ngModel"
     ngModel
     required
-  /><br />
+  />
+  @if (inputPublishDate?.touched) {
+  <div>
+    @if (inputPublishDate?.errors?.['required']) {
+    <p class="error">Publish date is required.</p>
+    }
+  </div>
+  }
+  <br />
   <label for="pages">Pages:</label><br />
   <input
     type="text"
@@ -47,9 +63,37 @@
     #inputPages="ngModel"
     ngModel
     required
-  /><br /><br />
+  />
+  @if (inputPages?.touched) {
+  <div>
+    @if (inputPages?.errors?.['required']) {
+    <p class="error">Pages count is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="synopsis">Synopsis:</label><br />
+  <textarea
+    [class]="inputSynopsis?.touched && inputSynopsis?.errors?.['minlength'] ? 'input-error' : ''"
+    type="text"
+    id="synopsis"
+    name="synopsis"
+    placeholder="Doe"
+    #inputSynopsis="ngModel"
+    rows="5"
+    minlength="20"
+    ngModel
+  ></textarea>
+  @if (inputSynopsis?.touched) {
+  <div>
+    @if (inputSynopsis?.errors?.['minlength']) {
+    <p class="error">Synopsis must be at least 20 characters long.</p>
+    }
+  </div>
+  }
+  <br /><br />
 
-  <button class="cancel">Cancel</button>
+  <button class="cancel" (click)="onCancel($event)">Cancel</button>
   <button
     [disabled]="form.invalid"
     [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"

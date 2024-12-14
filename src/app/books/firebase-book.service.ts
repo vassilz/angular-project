@@ -21,12 +21,17 @@ export class FirebaseBookService {
     return from(get(ref(this.db, 'books')));
   }
 
+  getBook(id: string): Observable<DataSnapshot> {
+    return from(get(ref(this.db, `books/${id}`)));
+  }
+
   createBook(
     bookId: number,
     name: string,
     author: string,
     publishDate: string,
-    pagesCount: number
+    pagesCount: number,
+    synopsis?: string
   ): Observable<void> {
     return from(
       set(ref(this.db, 'books/' + bookId), {
@@ -34,6 +39,7 @@ export class FirebaseBookService {
         author,
         publishDate,
         pagesCount,
+        synopsis,
       })
     );
   }
@@ -43,7 +49,8 @@ export class FirebaseBookService {
     name: string,
     author: string,
     publishDate: string,
-    pagesCount: number
+    pagesCount: number,
+    synopsis?: string
   ): Observable<void> {
     return from(
       update(ref(this.db, 'books/' + bookId), {
@@ -51,6 +58,7 @@ export class FirebaseBookService {
         author,
         publishDate,
         pagesCount,
+        synopsis,
       })
     );
   }

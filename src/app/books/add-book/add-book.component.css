@@ -1,3 +1,7 @@
 .input-error {
-  border: 10px red;
+  border: 1px solid red;
+}
+
+.error {
+  color: red;
 }

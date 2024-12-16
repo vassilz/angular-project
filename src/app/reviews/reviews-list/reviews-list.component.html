@@ -1,1 +1,3 @@
-<p>reviews-list works!</p>
+@for (review of reviews; track $index) {
+<app-review-card [review]="review" />
+}

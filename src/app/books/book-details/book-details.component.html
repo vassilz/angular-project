@@ -10,3 +10,6 @@
   <div>{{ book.synopsis }}</div>
 </div>
 <button routerLink="/books">Back</button>
+
+<app-add-review [bookId]="book.id" />
+<app-reviews-list />

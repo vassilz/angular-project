@@ -10,7 +10,6 @@ import {
   update,
 } from '@angular/fire/database';
 import { from, Observable } from 'rxjs';
-import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -18,25 +17,38 @@ import { User } from '../types/user';
 export class FirebaseReviewService {
   constructor(private db: Database) {}
 
-  getUser(): Observable<DataSnapshot> {
-    return from(get(ref(this.db, 'user')));
+  getReviews(bookId: number): Observable<DataSnapshot> {
+    return from(get(ref(this.db, `books/${bookId}/reviews`)));
   }
 
-  createUser(userId: string, username: string, name: string): Observable<void> {
-    return from(set(ref(this.db, 'users/' + userId), { username, name }));
+  createReview(
+    bookId: number,
+    reviewId: number,
+    username: string,
+    rating: number,
+    text: string
+  ): Observable<void> {
+    return from(
+      set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), { rating, text })
+    );
   }
 
-  updateUser(userId: string, username: string, name: string): Observable<void> {
-    return from(update(ref(this.db, 'users/' + userId), { username, name }));
+  updateReview(
+    bookId: number,
+    reviewId: number,
+    username: string,
+    rating: number,
+    text: string
+  ): Observable<void> {
+    return from(
+      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        rating,
+        text,
+      })
+    );
   }
 
-  deleteUser(userId: string): Observable<void> {
-    return from(remove(ref(this.db, 'users/' + userId)));
-  }
-
-  doStuff() {
-    const doc = ref(this.db, 'user');
-    console.log(doc);
-    objectVal(doc).subscribe((data: any) => console.log(data));
+  deleteReview(bookId: number, reviewId: number): Observable<void> {
+    return from(remove(ref(this.db, `books/${bookId}/reviews/${reviewId}`)));
   }
 }

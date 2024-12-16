@@ -22,7 +22,7 @@ export class AddBookComponent {
     }
 
     this.bookService.getBooks().subscribe((data) => {
-      let bookCount = data.val().length;
+      let bookCount = data.val()?.length || 0;
 
       console.log(form.value);
 

@@ -14,7 +14,7 @@ import { BooksListComponent } from './books/books-list/books-list.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [BooksListComponent, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

@@ -18,13 +18,32 @@ import { User } from '../types/user';
 export class FirebaseUserService {
   constructor(private db: Database) {}
 
-  getUsers(): Observable<DataSnapshot> {
-    return from(get(ref(this.db, 'user')));
+  register(
+    userId: number,
+    username: string,
+    email: string,
+    firstName: string | null | undefined,
+    lastName: string | null | undefined,
+    password: string
+  ): Observable<void> {
+    return from(
+      set(ref(this.db, 'users/' + userId), {
+        username,
+        email,
+        firstName,
+        lastName,
+        password,
+      })
+    );
   }
 
-  createUser(userId: string, username: string, name: string): Observable<void> {
-    return from(set(ref(this.db, 'users/' + userId), { username, name }));
+  getUsers(): Observable<DataSnapshot> {
+    return from(get(ref(this.db, 'users')));
   }
+
+  // createUser(userId: string, username: string, name: string): Observable<void> {
+  //   return from(set(ref(this.db, 'users/' + userId), { username, name }));
+  // }
 
   updateUser(userId: string, username: string, name: string): Observable<void> {
     return from(update(ref(this.db, 'users/' + userId), { username, name }));

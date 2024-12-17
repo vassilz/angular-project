@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-header',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
 })
-export class HomeComponent {
+export class HeaderComponent {
   constructor(private authenticationService: AuthenticationService) {}
 
   logout() {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FirebaseUserService } from './users/firebase-user.service';
 import { BooksListComponent } from './books/books-list/books-list.component';
+import { HeaderComponent } from './header/header.component';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -14,7 +15,7 @@ import { BooksListComponent } from './books/books-list/books-list.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

@@ -1,0 +1,48 @@
+<form #form="ngForm" (ngSubmit)="login(form)">
+  <label for="email">Email:</label><br />
+  <input
+    type="email"
+    id="email"
+    name="email"
+    placeholder="john.doe@gmail.com"
+    [class]="inputEmail.touched && inputEmail.errors?.['required'] ? 'input-error' : ''"
+    #inputEmail="ngModel"
+    ngModel
+    required
+  />
+  @if (inputEmail.touched) {
+  <div>
+    @if (inputEmail.errors?.['required']) {
+    <p class="error">Email is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="password">Password:</label><br />
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="******"
+    [class]="inputPassword.touched && inputPassword.errors?.['required'] ? 'input-error' : ''"
+    #inputPassword="ngModel"
+    ngModel
+    required
+  />
+  @if (inputPassword.touched) {
+  <div>
+    @if (inputPassword.errors?.['required']) {
+    <p class="error">Password is required.</p>
+    }
+  </div>
+  }
+  <br /><br />
+
+  <button class="cancel" routerLink="/home">Cancel</button>
+  <button
+    [disabled]="form.invalid"
+    [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+  >
+    Add
+  </button>
+</form>

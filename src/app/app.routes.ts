@@ -3,12 +3,16 @@ import { AddBookComponent } from './books/add-book/add-book.component';
 import { BooksListComponent } from './books/books-list/books-list.component';
 import { BookDetailsComponent } from './books/book-details/book-details.component';
 import { HomeComponent } from './home/home.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from './users/register/register.component';
+import { LoginComponent } from './users/login/login.component';
+import { ProfileComponent } from './users/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'profile', component: ProfileComponent },
   {
     path: 'books',
     children: [

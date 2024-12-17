@@ -9,7 +9,8 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { matchPasswordsValidator } from './match-passwords.validator';
-import { FirebaseUserService } from '../users/firebase-user.service';
+import { FirebaseUserService } from '../firebase-user.service';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -40,6 +41,7 @@ export class RegisterComponent {
 
   constructor(
     private userService: FirebaseUserService,
+    private authenticationService: AuthenticationService,
     private router: Router
   ) {}
 
@@ -65,11 +67,14 @@ export class RegisterComponent {
         passGroup: { password, repeatPassword } = {},
       } = this.form.value;
 
-      this.userService
-        .register(userCount, username!, email!, firstName, lastName, password!)
-        .subscribe(() => {
-          this.router.navigate(['/home']);
-        });
+      // this.userService
+      //   .register(userCount, username!, email!, firstName, lastName, password!)
+      //   .subscribe(() => {
+      //     this.router.navigate(['/home']);
+      //   });
+
+      this.authenticationService.register(email!, password!);
+      this.router.navigate(['/books']);
     });
   }
 }

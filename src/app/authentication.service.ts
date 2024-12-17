@@ -6,7 +6,6 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import { AuthenticatedUser } from './types/user';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable({

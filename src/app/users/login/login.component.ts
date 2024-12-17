@@ -30,8 +30,7 @@ export class LoginComponent {
     //   this.router.navigate(['/home']);
     // });
 
-    this.authenticationService.login(email, password).then(() => {
-      this.router.navigate(['/books']);
-    });
+    this.authenticationService.login(email, password);
+    this.router.navigate(['/books']);
   }
 }

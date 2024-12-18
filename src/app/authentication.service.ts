@@ -1,12 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   User,
+  UserCredential,
 } from 'firebase/auth';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subscription, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,61 +20,45 @@ export class AuthenticationService implements OnDestroy {
   user: User | null = null;
   userSubscription: Subscription | null = null;
 
-  constructor() {
+  constructor(private router: Router) {
     this.userSubscription = this.user$.subscribe((user) => {
       this.user = user;
     });
   }
 
-  register(email: string, password: string): void {
+  register(email: string, password: string): Observable<UserCredential> {
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+    return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
+      tap((userCredential) => {
         // Signed up
         const user = userCredential.user;
         console.log('User registered: ' + user);
         this.user$$.next(user);
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
+    );
   }
 
-  login(email: string, password: string): void {
+  login(email: string, password: string): Observable<UserCredential> {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+    return from(signInWithEmailAndPassword(auth, email, password)).pipe(
+      tap((userCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log('User logged in: ' + user);
         this.user$$.next(user);
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
+    );
   }
 
-  logout(): void {
+  logout(): Observable<void> {
     const auth = getAuth();
-    signOut(auth)
-      .then(() => {
+    return from(signOut(auth)).pipe(
+      tap((userCredential) => {
         // Sign-out successful.
         console.log('User logged out');
         this.user$$.next(null);
       })
-      .catch((error) => {
-        // An error happened.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
+    );
   }
 
   get isLoggedIn(): boolean {

@@ -3,6 +3,7 @@ import { FirebaseBookService } from '../firebase-book.service';
 import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-books-list',
@@ -12,7 +13,10 @@ import { BookCardComponent } from '../book-card/book-card.component';
   styleUrl: './books-list.component.css',
 })
 export class BooksListComponent implements OnInit {
-  constructor(private bookService: FirebaseBookService) {}
+  constructor(
+    private bookService: FirebaseBookService,
+    private authenticationService: AuthenticationService
+  ) {}
 
   books: Book[] = [];
 
@@ -24,5 +28,9 @@ export class BooksListComponent implements OnInit {
         book.id = index;
       });
     });
+  }
+
+  isLoggedIn() {
+    return this.authenticationService.isLoggedIn;
   }
 }

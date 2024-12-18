@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
-  NgForm,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -11,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { matchPasswordsValidator } from './match-passwords.validator';
 import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
+import { ErrorMessageService } from '../../error-message/error-message.service';
 
 @Component({
   selector: 'app-register',
@@ -42,7 +41,8 @@ export class RegisterComponent {
   constructor(
     private userService: FirebaseUserService,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private errorMessageService: ErrorMessageService
   ) {}
 
   get passGroup() {
@@ -67,14 +67,24 @@ export class RegisterComponent {
         passGroup: { password, repeatPassword } = {},
       } = this.form.value;
 
-      // this.userService
-      //   .register(userCount, username!, email!, firstName, lastName, password!)
-      //   .subscribe(() => {
-      //     this.router.navigate(['/home']);
-      //   });
+      const router = this.router;
+      const errorMessageService = this.errorMessageService;
 
-      this.authenticationService.register(email!, password!);
-      this.router.navigate(['/books']);
+      this.authenticationService.register(email!, password!).subscribe({
+        next(value) {
+          router.navigate(['/books']);
+        },
+        // TODO handle errors with an interceptor
+        error(err) {
+          console.log('Registration error' + err);
+
+          errorMessageService.setError(err);
+          router.navigate(['/error']);
+        },
+        // complete() {
+        //   console.log('Subscription complete');
+        // },
+      });
     });
   }
 }

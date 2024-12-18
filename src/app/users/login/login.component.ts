@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { FirebaseUserService } from '../firebase-user.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
+import { ErrorMessageService } from '../../error-message/error-message.service';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +13,9 @@ import { AuthenticationService } from '../../authentication.service';
 })
 export class LoginComponent {
   constructor(
-    private userService: FirebaseUserService,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private errorMessageService: ErrorMessageService
   ) {}
 
   login(form: NgForm) {
@@ -26,11 +26,23 @@ export class LoginComponent {
 
     const { email, password } = form.value;
 
-    // this.userService.login(email, password).subscribe(() => {
-    //   this.router.navigate(['/home']);
-    // });
+    const router = this.router;
+    const errorMessageService = this.errorMessageService;
 
-    this.authenticationService.login(email, password);
-    this.router.navigate(['/books']);
+    this.authenticationService.login(email, password).subscribe({
+      next(value) {
+        router.navigate(['/books']);
+      },
+      // TODO handle errors with an interceptor
+      error(err) {
+        console.log('Login error' + err);
+
+        errorMessageService.setError(err);
+        router.navigate(['/error']);
+      },
+      // complete() {
+      //   console.log('Subscription complete');
+      // },
+    });
   }
 }

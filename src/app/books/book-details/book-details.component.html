@@ -11,5 +11,7 @@
 </div>
 <button routerLink="/books">Back</button>
 
+@if (isLoggedIn()) {
 <app-add-review [bookId]="book.id" />
+}
 <app-reviews-list />

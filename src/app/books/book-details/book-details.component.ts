@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FirebaseBookService } from '../firebase-book.service';
 import { AddReviewComponent } from '../../reviews/add-review/add-review.component';
 import { ReviewsListComponent } from '../../reviews/reviews-list/reviews-list.component';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-book-details',
@@ -17,7 +18,8 @@ export class BookDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private bookService: FirebaseBookService
+    private bookService: FirebaseBookService,
+    private authenticationService: AuthenticationService
   ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.params['bookId'];
@@ -27,5 +29,9 @@ export class BookDetailsComponent implements OnInit {
       this.book = data.val();
       this.book.id = id;
     });
+  }
+
+  isLoggedIn() {
+    return this.authenticationService.isLoggedIn;
   }
 }

@@ -1,4 +1,5 @@
+@if (isLoggedIn()) {
 <button routerLink="/books/add">Add book</button>
-@for (book of books; track $index) {
+} @for (book of books; track $index) {
 <app-book-card [book]="book" />
 }

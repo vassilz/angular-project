@@ -1,0 +1,22 @@
+/* TODO Customize */
+.notification {
+  position: fixed;
+  z-index: 10;
+  right: 8%;
+  top: 8%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-style: italic;
+  text-decoration: underline;
+  box-shadow: 0 5px 10px rgb(204, 204, 204);
+  background-color: red;
+}
+
+.error-message {
+  background-color: red;
+}
+
+.success-message {
+  background-color: green;
+}

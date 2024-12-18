@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './users/register/register.component';
 import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,4 +25,5 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: 'error', component: ErrorMessageComponent },
 ];

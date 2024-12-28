@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-book',
@@ -10,7 +11,9 @@ import { Router } from '@angular/router';
   templateUrl: './add-book.component.html',
   styleUrl: './add-book.component.css',
 })
-export class AddBookComponent {
+export class AddBookComponent implements OnDestroy {
+  subscription: Subscription | null = null;
+
   constructor(
     private bookService: FirebaseBookService,
     private router: Router
@@ -21,10 +24,10 @@ export class AddBookComponent {
       return;
     }
 
-    this.bookService.getBooks().subscribe((data) => {
+    this.subscription = this.bookService.getBooks().subscribe((data) => {
       let bookCount = data.val()?.length || 0;
 
-      console.log(form.value);
+      // console.log(form.value);
 
       const { name, author, publish_date, pages, synopsis } = form.value;
 
@@ -37,7 +40,10 @@ export class AddBookComponent {
   }
 
   onCancel(event: MouseEvent) {
-    console.log('Cancel');
     this.router.navigate(['/books']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription!.unsubscribe();
   }
 }

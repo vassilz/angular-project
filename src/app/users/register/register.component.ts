@@ -58,7 +58,7 @@ export class RegisterComponent {
     this.userService.getUsers().subscribe((data) => {
       let userCount = data.val()?.length || 0;
 
-      console.log(this.form.value);
+      // console.log(this.form.value);
 
       const {
         username,

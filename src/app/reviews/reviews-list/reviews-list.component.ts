@@ -22,7 +22,6 @@ export class ReviewsListComponent implements OnInit {
   ngOnInit(): void {
     const bookId = this.route.snapshot.params['bookId'];
     this.reviewService.getReviews(bookId).subscribe((data) => {
-      console.log(data.val());
       this.reviews = data.val();
       // this.reviews.forEach((review, index) => {
       //   review.id = index;

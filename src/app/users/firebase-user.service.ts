@@ -11,6 +11,7 @@ import {
 } from '@angular/fire/database';
 import { from, Observable, Subject } from 'rxjs';
 import { User } from '../types/user';
+import { User as AuthenticatedUser } from '@firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -60,6 +61,17 @@ export class FirebaseUserService {
 
     return foundUser.asObservable();
   }
+
+  // getUserForAuthenticatedUser(
+  //   authenticatedUser: AuthenticatedUser
+  // ): Observable<User> {
+  //   var foundUser = new Subject<User>();
+  //   this.getUserById(authenticatedUser.uid).subscribe((user) => {
+  //     foundUser.next(user);
+  //   });
+
+  //   return foundUser.asObservable();
+  // }
 
   updateUser(
     userId: number,

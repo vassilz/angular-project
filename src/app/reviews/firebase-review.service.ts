@@ -9,7 +9,8 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { from, Observable } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
+import { Review } from '../types/review';
 
 @Injectable({
   providedIn: 'root',
@@ -21,15 +22,57 @@ export class FirebaseReviewService {
     return from(get(ref(this.db, `books/${bookId}/reviews`)));
   }
 
+  getReviewByBookAndUser(
+    bookId: number,
+    userId: string
+  ): Observable<Review | null> {
+    console.log(bookId);
+
+    const observable = from(get(ref(this.db, `books/${bookId}/reviews`)));
+
+    var foundReview = new Subject<Review | null>();
+    observable.subscribe((data) => {
+      const reviews: Review[] = data.val();
+
+      console.log('Found Reviews!!!');
+      console.log(reviews);
+
+      if (!!reviews) {
+        reviews.forEach((review, index) => {
+          review.id = index;
+
+          console.log('Found review:');
+          console.log(review);
+        });
+
+        const review = reviews.filter((review) => review.userid === userId)[0];
+        console.log('REVIEW');
+        console.log(review);
+
+        foundReview.next(review);
+      } else {
+        console.log('No Review?!');
+
+        foundReview.next(null);
+      }
+    });
+
+    return foundReview.asObservable();
+  }
+
   createReview(
     bookId: number,
     reviewId: number,
-    username: string,
+    userid: string,
     rating: number,
     text: string
   ): Observable<void> {
     return from(
-      set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), { rating, text })
+      set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        rating,
+        text,
+        userid,
+      })
     );
   }
 

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-add-review',
@@ -16,7 +17,8 @@ export class AddReviewComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private reviewService: FirebaseReviewService
+    private reviewService: FirebaseReviewService,
+    private authenticationService: AuthenticationService
   ) {}
 
   addReview(form: NgForm) {
@@ -27,12 +29,18 @@ export class AddReviewComponent {
     this.reviewService.getReviews(this.bookId).subscribe((data) => {
       let reviewCount = data.val()?.length || 0;
 
-      console.log(form.value);
+      // console.log(form.value);
 
       const { rating, text } = form.value;
 
       this.reviewService
-        .createReview(this.bookId, reviewCount, '', rating, text)
+        .createReview(
+          this.bookId,
+          reviewCount,
+          this.authenticationService.user!.uid,
+          rating,
+          text
+        )
         .subscribe(() => {
           // this.router.navigate(['/books']);
         });

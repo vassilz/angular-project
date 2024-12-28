@@ -11,7 +11,7 @@
 </div>
 <button routerLink="/books">Back</button>
 
-@if (isLoggedIn()) {
-<app-add-review [bookId]="book.id" />
-}
+@if (isLoggedIn()) { @if (hasReviewedBook()) {
+<app-edit-review [bookId]="book.id" /> } @else {
+<app-add-review [bookId]="book.id" /> } }
 <app-reviews-list />

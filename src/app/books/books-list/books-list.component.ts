@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-books-list',
@@ -12,7 +13,9 @@ import { AuthenticationService } from '../../authentication.service';
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
 })
-export class BooksListComponent implements OnInit {
+export class BooksListComponent implements OnInit, OnDestroy {
+  subscription: Subscription | null = null;
+
   constructor(
     private bookService: FirebaseBookService,
     private authenticationService: AuthenticationService
@@ -21,8 +24,7 @@ export class BooksListComponent implements OnInit {
   books: Book[] = [];
 
   ngOnInit(): void {
-    this.bookService.getBooks().subscribe((data) => {
-      console.log(data.val());
+    this.subscription = this.bookService.getBooks().subscribe((data) => {
       this.books = data.val();
       this.books.forEach((book, index) => {
         book.id = index;
@@ -32,5 +34,9 @@ export class BooksListComponent implements OnInit {
 
   isLoggedIn() {
     return this.authenticationService.isLoggedIn;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription!.unsubscribe();
   }
 }

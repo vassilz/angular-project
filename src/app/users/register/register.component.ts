@@ -10,6 +10,7 @@ import { matchPasswordsValidator } from './match-passwords.validator';
 import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorMessageService } from '../../error-message/error-message.service';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-register',
@@ -69,9 +70,26 @@ export class RegisterComponent {
 
       const router = this.router;
       const errorMessageService = this.errorMessageService;
+      const userService = this.userService;
 
       this.authenticationService.register(email!, password!).subscribe({
-        next(value) {
+        next(userCredential) {
+          const user: User = userCredential.user;
+          const uuid = user.uid;
+          userService
+            .createUser(
+              userCount,
+              uuid,
+              username!,
+              email!,
+              firstName,
+              lastName,
+              password!
+            )
+            .subscribe((data) => {
+              console.log(data);
+            });
+
           router.navigate(['/books']);
         },
         // TODO handle errors with an interceptor

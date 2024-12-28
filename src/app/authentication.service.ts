@@ -15,7 +15,7 @@ import { BehaviorSubject, from, Observable, Subscription, tap } from 'rxjs';
 })
 export class AuthenticationService implements OnDestroy {
   private user$$ = new BehaviorSubject<User | null>(null);
-  private user$ = this.user$$.asObservable();
+  user$ = this.user$$.asObservable();
 
   user: User | null = null;
   userSubscription: Subscription | null = null;
@@ -32,7 +32,8 @@ export class AuthenticationService implements OnDestroy {
       tap((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log('User registered: ' + user);
+        console.log('User registered');
+        console.log(user);
         this.user$$.next(user);
       })
     );
@@ -44,7 +45,8 @@ export class AuthenticationService implements OnDestroy {
       tap((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log('User logged in: ' + user);
+        console.log('User logged in');
+        console.log(user);
         this.user$$.next(user);
       })
     );

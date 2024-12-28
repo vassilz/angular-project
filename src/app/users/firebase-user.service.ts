@@ -9,7 +9,7 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { from, Observable } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { User } from '../types/user';
 
 @Injectable({
@@ -18,8 +18,9 @@ import { User } from '../types/user';
 export class FirebaseUserService {
   constructor(private db: Database) {}
 
-  register(
+  createUser(
     userId: number,
+    uuid: string,
     username: string,
     email: string,
     firstName: string | null | undefined,
@@ -27,8 +28,9 @@ export class FirebaseUserService {
     password: string
   ): Observable<void> {
     return from(
-      set(ref(this.db, 'users/' + userId), {
+      set(ref(this.db, `users/${userId}`), {
         username,
+        uuid,
         email,
         firstName,
         lastName,
@@ -41,15 +43,46 @@ export class FirebaseUserService {
     return from(get(ref(this.db, 'users')));
   }
 
-  // createUser(userId: string, username: string, name: string): Observable<void> {
-  //   return from(set(ref(this.db, 'users/' + userId), { username, name }));
-  // }
+  getUserById(userId: string): Observable<User> {
+    const observable = from(get(ref(this.db, 'users')));
 
-  updateUser(userId: string, username: string, name: string): Observable<void> {
-    return from(update(ref(this.db, 'users/' + userId), { username, name }));
+    var foundUser = new Subject<User>();
+    observable.subscribe((data) => {
+      const users: User[] = data.val();
+
+      users.forEach((user, index) => {
+        user.id = index;
+      });
+      const user = users.filter((user) => user.uuid === userId)[0];
+
+      foundUser.next(user);
+    });
+
+    return foundUser.asObservable();
   }
 
-  deleteUser(userId: string): Observable<void> {
+  updateUser(
+    userId: number,
+    username: string,
+    uuid: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string
+  ): Observable<void> {
+    return from(
+      update(ref(this.db, 'users/' + userId), {
+        username,
+        uuid,
+        email,
+        firstName,
+        lastName,
+        password,
+      })
+    );
+  }
+
+  deleteUser(userId: number): Observable<void> {
     return from(remove(ref(this.db, 'users/' + userId)));
   }
 

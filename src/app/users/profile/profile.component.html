@@ -1,1 +1,24 @@
-<p>profile works!</p>
+<form #form="ngForm" (ngSubmit)="editProfile(form)">
+  <label for="firstName">First name:</label><br />
+  <input
+    type="text"
+    id="firstName"
+    name="firstName"
+    [value]="user!.firstName"
+    #inputFirstName="ngModel"
+    ngModel
+  />
+  <br />
+  <label for="lastName">Last name:</label><br />
+  <input
+    type="text"
+    id="lastName"
+    name="lastName"
+    [value]="user!.lastName"
+    #inputLastName="ngModel"
+    ngModel
+  />
+  <br />
+  <button class="cancel" (click)="onCancel($event)">Cancel</button>
+  <button [style]="{ backgroundColor: '#234465' }">Save</button>
+</form>

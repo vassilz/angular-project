@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   user: User | null = null;
+  firstName: string | null = null;
+  lastName: string | null = null;
 
   ngOnInit(): void {
     const uuid = this.route.snapshot.params['uuid'];
@@ -26,6 +28,8 @@ export class ProfileComponent implements OnInit {
     console.log(uuid);
     this.userService.getUserById(uuid).subscribe((user) => {
       this.user = user;
+      this.firstName = user.firstName;
+      this.lastName = user.lastName;
     });
   }
 

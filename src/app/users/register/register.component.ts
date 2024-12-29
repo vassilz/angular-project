@@ -58,8 +58,6 @@ export class RegisterComponent {
     this.userService.getUsers().subscribe((data) => {
       let userCount = data.val()?.length || 0;
 
-      // console.log(this.form.value);
-
       const {
         username,
         email,
@@ -94,7 +92,7 @@ export class RegisterComponent {
         },
         // TODO handle errors with an interceptor
         error(err) {
-          console.log('Registration error' + err);
+          console.error('Registration error' + err);
 
           errorMessageService.setError(err);
           router.navigate(['/error']);

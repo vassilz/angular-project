@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
       },
       // TODO handle errors with an interceptor
       error(err) {
-        console.log('Logout error' + err);
+        console.error('Logout error' + err);
 
         errorMessageService.setError(err);
         router.navigate(['/error']);

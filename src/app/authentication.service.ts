@@ -32,8 +32,8 @@ export class AuthenticationService implements OnDestroy {
       tap((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log('User registered');
-        console.log(user);
+        console.info('User registered successfully');
+        console.debug(user);
         this.user$$.next(user);
       })
     );
@@ -45,8 +45,8 @@ export class AuthenticationService implements OnDestroy {
       tap((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log('User logged in');
-        console.log(user);
+        console.info('User logged in');
+        console.debug(user);
         this.user$$.next(user);
       })
     );
@@ -57,7 +57,7 @@ export class AuthenticationService implements OnDestroy {
     return from(signOut(auth)).pipe(
       tap((userCredential) => {
         // Sign-out successful.
-        console.log('User logged out');
+        console.info('User logged out');
         this.user$$.next(null);
       })
     );

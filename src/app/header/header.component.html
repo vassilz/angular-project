@@ -1,7 +1,11 @@
 @if (isLoggedIn()) {
-<button [routerLink]="['profile', uuid]">Profile</button>
-<button (click)="logout()">Logout</button>
+<div>
+  <button [routerLink]="['profile', uuid]">Profile</button>
+  <button (click)="logout()">Logout</button>
+</div>
 } @else {
-<button routerLink="/login">Login</button>
-<button routerLink="/register">Register</button>
+<div>
+  <button routerLink="/login">Login</button>
+  <button routerLink="/register">Register</button>
+</div>
 }

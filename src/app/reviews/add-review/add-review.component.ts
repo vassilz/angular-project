@@ -29,8 +29,6 @@ export class AddReviewComponent {
     this.reviewService.getReviews(this.bookId).subscribe((data) => {
       let reviewCount = data.val()?.length || 0;
 
-      // console.log(form.value);
-
       const { rating, text } = form.value;
 
       this.reviewService

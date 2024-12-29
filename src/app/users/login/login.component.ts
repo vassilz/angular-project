@@ -20,7 +20,7 @@ export class LoginComponent {
 
   login(form: NgForm) {
     if (form.invalid) {
-      console.log('Invalid login form!');
+      console.warn('Invalid login form!');
       return;
     }
 
@@ -35,7 +35,7 @@ export class LoginComponent {
       },
       // TODO handle errors with an interceptor
       error(err) {
-        console.log('Login error' + err);
+        console.error('Login error' + err);
 
         errorMessageService.setError(err);
         router.navigate(['/error']);

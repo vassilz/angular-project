@@ -4,9 +4,8 @@
     type="text"
     id="firstName"
     name="firstName"
-    value="{{ firstName }}"
     #inputFirstName="ngModel"
-    ngModel
+    [(ngModel)]="firstName"
   />
   <br />
   <label for="lastName">Last name:</label><br />
@@ -14,9 +13,8 @@
     type="text"
     id="lastName"
     name="lastName"
-    value="{{ lastName }}"
     #inputLastName="ngModel"
-    ngModel
+    [(ngModel)]="lastName"
   />
   <br />
   <button class="cancel" (click)="onCancel($event)">Cancel</button>

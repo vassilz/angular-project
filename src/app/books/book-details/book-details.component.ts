@@ -46,8 +46,6 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('Book details init');
-
     const id = this.route.snapshot.params['bookId'];
 
     this.bookSubscription = this.bookService.getBook(id).subscribe((data) => {
@@ -58,15 +56,9 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authenticationService.user$.subscribe(
       (authenticatedUser) => {
         if (!!authenticatedUser) {
-          console.log('Book details');
-          console.log(authenticatedUser);
-
           this.reviewService
             .getReviewByBookAndUser(id, authenticatedUser.uid)
             .subscribe((review) => {
-              console.log('Found review');
-              console.log(review);
-
               this.hasUserReviewedBook.set(!!review);
             });
         }

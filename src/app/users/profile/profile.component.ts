@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
 
   editProfile(form: NgForm) {
     if (form.invalid) {
-      console.log('Invalid profile form!');
+      console.warn('Invalid profile form!');
       return;
     }
 
@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
         this.user!.password
       )
       .subscribe((data) => {
-        console.log('User updated successfully');
+        console.info('User updated successfully');
         this.router.navigate(['/home']);
       });
   }

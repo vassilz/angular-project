@@ -1,18 +1,13 @@
-@if (!!review) {
-<div>Your review: {{ review.rating }}</div>
-<br />
-<div>{{ review.text }}</div>
-} @else {
+@if (isEditMode) {
 <form #form="ngForm" (ngSubmit)="editReview(form)">
   <label for="rating">Rating:</label><br />
   <input
     type="number"
     id="rating"
     name="rating"
-    placeholder="5"
     [class]="inputRating?.touched && inputRating?.errors?.['required'] ? 'input-error' : ''"
     #inputRating="ngModel"
-    ngModel
+    [(ngModel)]="rating"
     required
   />
   @if (inputRating?.touched) {
@@ -23,33 +18,38 @@
   </div>
   }
   <br />
-  <label for="text">Synopsis:</label><br />
+  <label for="text">Text:</label><br />
   <textarea
     [class]="inputText?.touched && inputText?.errors?.['minlength'] ? 'input-error' : ''"
+    #inputText="ngModel"
+    [(ngModel)]="text"
     type="text"
     id="text"
     name="text"
-    placeholder="Doe"
-    #inputText="ngModel"
     rows="5"
     minlength="20"
-    ngModel
   ></textarea>
-  @if (inputText?.touched) {
+  <!-- @if (inputText?.touched) {
   <div>
     @if (inputText?.errors?.['minlength']) {
     <p class="error">Review text must be at least 20 characters long.</p>
     }
   </div>
-  }
+  } -->
   <br /><br />
 
-  <!-- <button class="cancel" (click)="onCancel($event)">Cancel</button> -->
+  <button (click)="onCancel($event)">Cancel</button>
   <button
     [disabled]="form.invalid"
     [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
   >
-    Add
+    Save
   </button>
 </form>
+
+} @else {
+<div>Your review: {{ rating }}</div>
+<br />
+<div>{{ text }}</div>
+<button (click)="toggleEditMode()">Edit</button>
 }

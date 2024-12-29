@@ -1,1 +1,103 @@
-<p>edit-book works!</p>
+<form #form="ngForm" (ngSubmit)="editBook(form)">
+  <label for="name">Name:</label><br />
+  <input
+    type="text"
+    id="name"
+    name="name"
+    placeholder="John"
+    [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
+    #inputName="ngModel"
+    [ngModel]="book.name"
+    required
+  />
+  @if (inputName?.touched) {
+  <div>
+    @if (inputName?.errors?.['required']) {
+    <p class="error">Book name is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="author">Author:</label><br />
+  <input
+    type="text"
+    id="author"
+    name="author"
+    placeholder="Doe"
+    #inputAuthor="ngModel"
+    [ngModel]="book.author"
+    required
+  />
+  @if (inputAuthor?.touched) {
+  <div>
+    @if (inputAuthor?.errors?.['required']) {
+    <p class="error">Author is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="publish_date">Publish date:</label><br />
+  <input
+    type="text"
+    id="publish_date"
+    name="publish_date"
+    placeholder="Doe"
+    #inputPublishDate="ngModel"
+    [ngModel]="book.publishDate"
+    required
+  />
+  @if (inputPublishDate?.touched) {
+  <div>
+    @if (inputPublishDate?.errors?.['required']) {
+    <p class="error">Publish date is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="pages">Pages:</label><br />
+  <input
+    type="text"
+    id="pages"
+    name="pages"
+    placeholder="Doe"
+    #inputPages="ngModel"
+    [ngModel]="book.pagesCount"
+    required
+  />
+  @if (inputPages?.touched) {
+  <div>
+    @if (inputPages?.errors?.['required']) {
+    <p class="error">Pages count is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="synopsis">Synopsis:</label><br />
+  <textarea
+    [class]="inputSynopsis?.touched && inputSynopsis?.errors?.['minlength'] ? 'input-error' : ''"
+    type="text"
+    id="synopsis"
+    name="synopsis"
+    placeholder="Doe"
+    #inputSynopsis="ngModel"
+    rows="5"
+    minlength="20"
+    [ngModel]="book.synopsis"
+  ></textarea>
+  @if (inputSynopsis?.touched) {
+  <div>
+    @if (inputSynopsis?.errors?.['minlength']) {
+    <p class="error">Synopsis must be at least 20 characters long.</p>
+    }
+  </div>
+  }
+  <br /><br />
+
+  <button class="cancel" (click)="onCancel($event)">Cancel</button>
+  <button
+    [disabled]="form.invalid"
+    [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+  >
+    Save
+  </button>
+</form>

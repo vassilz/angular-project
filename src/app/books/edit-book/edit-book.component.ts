@@ -1,12 +1,56 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FirebaseBookService } from '../firebase-book.service';
+import { Subscription } from 'rxjs';
+import { Book } from '../../types/book';
 
 @Component({
   selector: 'app-edit-book',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './edit-book.component.html',
-  styleUrl: './edit-book.component.css'
+  styleUrl: './edit-book.component.css',
 })
-export class EditBookComponent {
+export class EditBookComponent implements OnInit, OnDestroy {
+  book: Book = {} as Book;
+  subscription: Subscription | null = null;
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private bookService: FirebaseBookService
+  ) {}
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.params['bookId'];
+
+    this.subscription = this.bookService.getBook(id).subscribe((data) => {
+      this.book = data.val();
+      this.book.id = id;
+    });
+  }
+
+  editBook(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+
+    const { name, author, publish_date, pages, synopsis } = form.value;
+
+    this.bookService
+      .updateBook(this.book.id, name, author, publish_date, pages, synopsis)
+      .subscribe(() => {
+        this.router.navigate(['/books']);
+      });
+  }
+
+  onCancel(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/books']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }

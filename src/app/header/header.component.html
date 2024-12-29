@@ -1,10 +1,10 @@
 @if (isLoggedIn()) {
-<div>
+<div class="header">
   <button [routerLink]="['profile', uuid]">Profile</button>
   <button (click)="logout()">Logout</button>
 </div>
 } @else {
-<div>
+<div class="header">
   <button routerLink="/login">Login</button>
   <button routerLink="/register">Register</button>
 </div>

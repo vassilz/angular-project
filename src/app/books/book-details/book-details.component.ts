@@ -15,7 +15,8 @@ import { AuthenticationService } from '../../authentication.service';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { EditReviewComponent } from '../../reviews/edit-review/edit-review.component';
 import { FirebaseUserService } from '../../users/firebase-user.service';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-book-details',
@@ -25,6 +26,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
     AddReviewComponent,
     ReviewsListComponent,
     EditReviewComponent,
+    DatePipe,
   ],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css',

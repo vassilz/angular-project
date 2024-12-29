@@ -45,7 +45,7 @@ export class FirebaseBookService {
   }
 
   updateBook(
-    bookId: string,
+    bookId: number,
     name: string,
     author: string,
     publishDate: string,

@@ -1,6 +1,7 @@
 <div>{{ review.rating }}: {{ review.text }}</div>
 <br />
 by {{ user.firstName }} {{ user.lastName }}
+{{ review.reviewDate | elapsedTime }}
 <!-- <div>
   <button [routerLink]="'' + review.id">Edit</button>
 </div> -->

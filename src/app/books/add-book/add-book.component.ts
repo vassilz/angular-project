@@ -38,10 +38,11 @@ export class AddBookComponent implements OnDestroy {
   }
 
   onCancel(event: MouseEvent) {
+    event.preventDefault();
     this.router.navigate(['/books']);
   }
 
   ngOnDestroy(): void {
-    this.subscription!.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }

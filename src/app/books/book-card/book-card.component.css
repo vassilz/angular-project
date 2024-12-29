@@ -1,4 +1,9 @@
 :host {
   display: flex;
   flex-direction: row;
+  width: fit-content;
+}
+
+.details-button {
+  margin-left: 10px;
 }

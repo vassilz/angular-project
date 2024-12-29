@@ -4,12 +4,12 @@
   <p></p>
   <div>Number of pages: {{ book.pagesCount }}</div>
   <br />
-  <div>Published at: {{ book.publishDate }}</div>
+  <div>Published at: {{ book.publishDate | date : "dd.MM.yyyy hh:mm:ss" }}</div>
   <p></p>
   <h4>Synopsis</h4>
   <div>{{ book.synopsis }}</div>
 </div>
-<button routerLink="/books">Back</button>
+<button class="back-button" routerLink="/books">Back to overview</button>
 
 @if (isLoggedIn()) { @if (hasReviewedBook()) {
 <app-edit-review [bookId]="book.id" /> } @else {

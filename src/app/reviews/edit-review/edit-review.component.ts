@@ -43,13 +43,15 @@ export class EditReviewComponent implements OnInit {
 
     const { rating, text } = form.value;
 
+    const now = new Date().toISOString();
     this.reviewService
       .updateReview(
         this.bookId,
         this.review!.id,
         this.authenticationService.user!.uid,
         rating,
-        text
+        text,
+        now
       )
       .subscribe(() => {
         // this.router.navigate(['/books']);

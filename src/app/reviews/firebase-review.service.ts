@@ -53,13 +53,15 @@ export class FirebaseReviewService {
     reviewId: number,
     userid: string,
     rating: number,
-    text: string
+    text: string,
+    reviewDate: string
   ): Observable<void> {
     return from(
       set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
         rating,
         text,
         userid,
+        reviewDate,
       })
     );
   }
@@ -67,14 +69,17 @@ export class FirebaseReviewService {
   updateReview(
     bookId: number,
     reviewId: number,
-    username: string,
+    userid: string,
     rating: number,
-    text: string
+    text: string,
+    reviewDate: string
   ): Observable<void> {
     return from(
       update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
         rating,
         text,
+        userid,
+        reviewDate,
       })
     );
   }

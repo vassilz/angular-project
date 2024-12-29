@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  /* text-align: center; */
+}
+
+.back-button {
+  align-self: center;
+}

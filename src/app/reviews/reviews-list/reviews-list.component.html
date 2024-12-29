@@ -1,3 +1,9 @@
+@if (reviews.length === 0) {
+<div>No reviews yet</div>
+} @else {
+<div>Reviews:</div>
 @for (review of reviews; track $index) {
 <app-review-card [review]="review" />
-}
+<br />
+<br />
+} }

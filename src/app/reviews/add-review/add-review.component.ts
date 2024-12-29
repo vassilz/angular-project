@@ -31,13 +31,15 @@ export class AddReviewComponent {
 
       const { rating, text } = form.value;
 
+      const now = new Date().toISOString();
       this.reviewService
         .createReview(
           this.bookId,
           reviewCount,
           this.authenticationService.user!.uid,
           rating,
-          text
+          text,
+          now
         )
         .subscribe(() => {
           // this.router.navigate(['/books']);

@@ -3,11 +3,12 @@ import { Review } from '../../types/review';
 import { RouterLink } from '@angular/router';
 import { User } from '../../types/user';
 import { FirebaseUserService } from '../../users/firebase-user.service';
+import { ElapsedTimePipe } from '../../pipes/elapsed-time.pipe';
 
 @Component({
   selector: 'app-review-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ElapsedTimePipe],
   templateUrl: './review-card.component.html',
   styleUrl: './review-card.component.css',
 })

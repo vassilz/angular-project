@@ -1,3 +1,6 @@
+@if (isLoading) {
+<app-loader />
+} @else {
 <div>
   <h3>{{ book.name }}</h3>
   by {{ book.author }}
@@ -15,3 +18,4 @@
 <app-edit-review [bookId]="book.id" /> } @else {
 <app-add-review [bookId]="book.id" /> } }
 <app-reviews-list />
+}

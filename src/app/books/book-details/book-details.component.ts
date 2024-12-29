@@ -14,9 +14,9 @@ import { ReviewsListComponent } from '../../reviews/reviews-list/reviews-list.co
 import { AuthenticationService } from '../../authentication.service';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { EditReviewComponent } from '../../reviews/edit-review/edit-review.component';
-import { FirebaseUserService } from '../../users/firebase-user.service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-book-details',
@@ -27,12 +27,15 @@ import { DatePipe } from '@angular/common';
     ReviewsListComponent,
     EditReviewComponent,
     DatePipe,
+    LoaderComponent,
   ],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css',
 })
 export class BookDetailsComponent implements OnInit, OnDestroy {
   book: Book = {} as Book;
+
+  isLoading: boolean = true;
 
   bookSubscription: Subscription | null = null;
   userSubscription: Subscription | null = null;
@@ -43,8 +46,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
     private authenticationService: AuthenticationService,
-    private reviewService: FirebaseReviewService,
-    private userService: FirebaseUserService
+    private reviewService: FirebaseReviewService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +55,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     this.bookSubscription = this.bookService.getBook(id).subscribe((data) => {
       this.book = data.val();
       this.book.id = id;
+      this.isLoading = false;
     });
 
     this.userSubscription = this.authenticationService.user$.subscribe(

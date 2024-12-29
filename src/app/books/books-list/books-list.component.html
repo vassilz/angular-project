@@ -1,5 +1,8 @@
-@if (isLoggedIn()) {
+@if (isLoading) {
+<app-loader />
+} @else { @if (isLoggedIn()) {
 <button routerLink="/books/add">Add book</button>
-} @for (book of books; track $index) {
+} @if (books.length === 0) { No books yet } @else { @for (book of books; track
+$index) {
 <app-book-card [book]="book" />
-}
+} } }

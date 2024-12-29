@@ -5,16 +5,19 @@ import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
 import { Subscription } from 'rxjs';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-books-list',
   standalone: true,
-  imports: [RouterLink, BookCardComponent],
+  imports: [RouterLink, BookCardComponent, LoaderComponent],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
 })
 export class BooksListComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
+
+  isLoading: boolean = true;
 
   constructor(
     private bookService: FirebaseBookService,
@@ -29,6 +32,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
       this.books.forEach((book, index) => {
         book.id = index;
       });
+      this.isLoading = false;
     });
   }
 

@@ -67,6 +67,10 @@ export class EditReviewComponent implements OnInit {
           this.rating = rating;
           this.text = text;
           this.toggleEditMode();
+
+          // this.changeDetection.detectChanges();
+
+          this.rerenderService.rerenderReviews.emit();
         },
         // TODO handle errors with an interceptor
         error: (err) => {
@@ -92,7 +96,7 @@ export class EditReviewComponent implements OnInit {
         this.review = null;
         this.rating = null;
         this.text = null;
-        this.changeDetection.detectChanges();
+        // this.changeDetection.detectChanges();
 
         this.rerenderService.rerenderReviews.emit();
         // this.toggleEditMode();

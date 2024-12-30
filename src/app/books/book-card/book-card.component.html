@@ -1,5 +1,5 @@
-{{ book.name }} by {{ book.author }}
-@if (isAdmin) {
+{{ book.name }} by {{ book.author }}; {{ reviews | averageRating }} of 5,
+{{ reviews.length }} votes @if (isAdmin) {
 <button class="edit-button" [routerLink]="'' + book.id + '/edit'">Edit</button>
 } @else {
 <button class="details-button" [routerLink]="'' + book.id">Details</button>

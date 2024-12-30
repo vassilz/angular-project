@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
+import { RerenderService } from '../../rerender.service';
 
 @Component({
   selector: 'app-add-review',
@@ -18,7 +19,8 @@ export class AddReviewComponent {
   constructor(
     private route: ActivatedRoute,
     private reviewService: FirebaseReviewService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private rerenderService: RerenderService
   ) {}
 
   addReview(form: NgForm) {
@@ -43,6 +45,7 @@ export class AddReviewComponent {
         )
         .subscribe(() => {
           // this.router.navigate(['/books']);
+          this.rerenderService.rerenderReviews.emit();
         });
     });
   }

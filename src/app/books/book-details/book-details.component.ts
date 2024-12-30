@@ -1,6 +1,6 @@
 import {
+  ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   OnInit,
   signal,
@@ -17,6 +17,7 @@ import { EditReviewComponent } from '../../reviews/edit-review/edit-review.compo
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { RerenderService } from '../../rerender.service';
 
 @Component({
   selector: 'app-book-details',
@@ -46,7 +47,9 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
     private authenticationService: AuthenticationService,
-    private reviewService: FirebaseReviewService
+    private reviewService: FirebaseReviewService,
+    private rerenderService: RerenderService,
+    private changeDetection: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,17 +61,12 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
 
-    this.userSubscription = this.authenticationService.user$.subscribe(
-      (authenticatedUser) => {
-        if (!!authenticatedUser) {
-          this.reviewService
-            .getReviewByBookAndUser(id, authenticatedUser.uid)
-            .subscribe((review) => {
-              this.hasUserReviewedBook.set(!!review);
-            });
-        }
-      }
-    );
+    this.loadHasUserReviewedBook(id);
+
+    this.rerenderService.rerenderReviews.subscribe(() => {
+      this.loadHasUserReviewedBook(id);
+      this.changeDetection.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
@@ -82,5 +80,19 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
   hasReviewedBook(): boolean {
     return this.hasUserReviewedBook();
+  }
+
+  loadHasUserReviewedBook(bookId: number): void {
+    this.userSubscription = this.authenticationService.user$.subscribe(
+      (authenticatedUser) => {
+        if (!!authenticatedUser) {
+          this.reviewService
+            .getReviewByBookAndUser(bookId, authenticatedUser.uid)
+            .subscribe((review) => {
+              this.hasUserReviewedBook.set(!!review);
+            });
+        }
+      }
+    );
   }
 }

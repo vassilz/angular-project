@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { Review } from '../../types/review';
 import { ActivatedRoute } from '@angular/router';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 import { LoaderComponent } from '../../shared/loader/loader.component';
+import { RerenderService } from '../../rerender.service';
 
 @Component({
   selector: 'app-reviews-list',
@@ -17,15 +24,27 @@ export class ReviewsListComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private reviewService: FirebaseReviewService
+    private reviewService: FirebaseReviewService,
+    private rerenderService: RerenderService,
+    private changeDetection: ChangeDetectorRef
   ) {}
 
-  reviews: Review[] = [];
+  reviews: WritableSignal<Review[]> = signal<Review[]>([]);
 
   ngOnInit(): void {
     const bookId = this.route.snapshot.params['bookId'];
+    this.loadReviews(bookId);
+
+    this.rerenderService.rerenderReviews.subscribe(() => {
+      this.loadReviews(bookId);
+
+      this.changeDetection.detectChanges();
+    });
+  }
+
+  loadReviews(bookId: number): void {
     this.reviewService.getReviews(bookId).subscribe((data) => {
-      this.reviews = data.val();
+      this.reviews.set(data.val() || []);
       // this.reviews.forEach((review, index) => {
       //   review.id = index;
       // });

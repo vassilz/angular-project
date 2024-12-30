@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Review } from '../../types/review';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { RerenderService } from '../../rerender.service';
 
 @Component({
   selector: 'app-edit-review',
@@ -25,7 +26,9 @@ export class EditReviewComponent implements OnInit {
   constructor(
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
-    private errorHandlingService: ErrorHandlingService
+    private errorHandlingService: ErrorHandlingService,
+    private changeDetection: ChangeDetectorRef,
+    private rerenderService: RerenderService
   ) {}
 
   ngOnInit(): void {
@@ -79,5 +82,25 @@ export class EditReviewComponent implements OnInit {
 
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
+  }
+
+  deleteReview() {
+    const errorHandlingService = this.errorHandlingService;
+    this.reviewService.deleteReview(this.bookId, this.review!.id).subscribe({
+      next: (value) => {
+        // router.navigate(['/books']);
+        this.review = null;
+        this.rating = null;
+        this.text = null;
+        this.changeDetection.detectChanges();
+
+        this.rerenderService.rerenderReviews.emit();
+        // this.toggleEditMode();
+      },
+      // TODO handle errors with an interceptor
+      error: (err) => {
+        errorHandlingService.handleError(err);
+      },
+    });
   }
 }

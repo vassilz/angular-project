@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FirebaseUserService } from './users/firebase-user.service';
-import { BooksListComponent } from './books/books-list/books-list.component';
 import { HeaderComponent } from './header/header.component';
+import { AuthenticationService } from './authentication.service';
+import { initializeApp } from 'firebase/app';
+import { environment } from '../environments/environment';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -20,12 +21,16 @@ import { HeaderComponent } from './header/header.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  constructor(private userService: FirebaseUserService) {}
+  constructor(private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
     // Initialize Firebase
     // const app = initializeApp(environment.firebaseConfig);
     // const analytics = getAnalytics(app);
+
+    initializeApp(environment.firebase);
+
+    this.authenticationService.registerAuthChangeCallback();
   }
   title = 'bookstore';
 }

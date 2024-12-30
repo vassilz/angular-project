@@ -9,8 +9,8 @@ import { Router, RouterLink } from '@angular/router';
 import { matchPasswordsValidator } from './match-passwords.validator';
 import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
-import { ErrorMessageService } from '../../error-message/error-message.service';
 import { User } from 'firebase/auth';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-register',
@@ -43,7 +43,7 @@ export class RegisterComponent {
     private userService: FirebaseUserService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private errorMessageService: ErrorMessageService
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   get passGroup() {
@@ -67,7 +67,7 @@ export class RegisterComponent {
       } = this.form.value;
 
       const router = this.router;
-      const errorMessageService = this.errorMessageService;
+      const errorHandlingService = this.errorHandlingService;
       const userService = this.userService;
 
       this.authenticationService.register(email!, password!).subscribe({
@@ -92,10 +92,7 @@ export class RegisterComponent {
         },
         // TODO handle errors with an interceptor
         error(err) {
-          console.error('Registration error' + err);
-
-          errorMessageService.setError(err);
-          router.navigate(['/error']);
+          errorHandlingService.handleError(err);
         },
         // complete() {
         //   console.log('Subscription complete');

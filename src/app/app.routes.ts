@@ -6,7 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './users/register/register.component';
 import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
-import { ErrorMessageComponent } from './error-message/error-message.component';
+import { ErrorMessageComponent } from './errors/error-message/error-message.component';
 import { EditBookComponent } from './books/edit-book/edit-book.component';
 
 export const routes: Routes = [

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
-import { ErrorMessageService } from '../../error-message/error-message.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ export class LoginComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private errorMessageService: ErrorMessageService
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   login(form: NgForm) {
@@ -27,7 +27,7 @@ export class LoginComponent {
     const { email, password } = form.value;
 
     const router = this.router;
-    const errorMessageService = this.errorMessageService;
+    const errorHandlingService = this.errorHandlingService;
 
     this.authenticationService.login(email, password).subscribe({
       next(value) {
@@ -35,14 +35,8 @@ export class LoginComponent {
       },
       // TODO handle errors with an interceptor
       error(err) {
-        console.error('Login error' + err);
-
-        errorMessageService.setError(err);
-        router.navigate(['/error']);
+        errorHandlingService.handleError(err);
       },
-      // complete() {
-      //   console.log('Subscription complete');
-      // },
     });
   }
 }

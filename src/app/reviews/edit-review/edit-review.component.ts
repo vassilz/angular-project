@@ -3,6 +3,7 @@ import { Review } from '../../types/review';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-edit-review',
@@ -23,7 +24,8 @@ export class EditReviewComponent implements OnInit {
 
   constructor(
     private reviewService: FirebaseReviewService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,9 @@ export class EditReviewComponent implements OnInit {
     const { rating, text } = form.value;
 
     const now = new Date().toISOString();
+
+    const errorHandlingService = this.errorHandlingService;
+
     this.reviewService
       .updateReview(
         this.bookId,
@@ -53,11 +58,17 @@ export class EditReviewComponent implements OnInit {
         text,
         now
       )
-      .subscribe(() => {
-        // this.router.navigate(['/books']);
-        this.rating = rating;
-        this.text = text;
-        this.toggleEditMode();
+      .subscribe({
+        next: (value) => {
+          // router.navigate(['/books']);
+          this.rating = rating;
+          this.text = text;
+          this.toggleEditMode();
+        },
+        // TODO handle errors with an interceptor
+        error: (err) => {
+          errorHandlingService.handleError(err);
+        },
       });
   }
 

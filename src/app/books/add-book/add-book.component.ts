@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-add-book',
@@ -16,7 +17,8 @@ export class AddBookComponent implements OnDestroy {
 
   constructor(
     private bookService: FirebaseBookService,
-    private router: Router
+    private router: Router,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   addBook(form: NgForm) {
@@ -24,16 +26,22 @@ export class AddBookComponent implements OnDestroy {
       return;
     }
 
-    this.subscription = this.bookService.getBooks().subscribe((data) => {
-      let bookCount = data.val()?.length || 0;
+    this.subscription = this.bookService.getBooks().subscribe({
+      next: (data) => {
+        let bookCount = data.val()?.length || 0;
 
-      const { name, author, publish_date, pages, synopsis } = form.value;
+        const { name, author, publish_date, pages, synopsis } = form.value;
 
-      this.bookService
-        .createBook(bookCount, name, author, publish_date, pages, synopsis)
-        .subscribe(() => {
-          this.router.navigate(['/books']);
-        });
+        this.bookService
+          .createBook(bookCount, name, author, publish_date, pages, synopsis)
+          .subscribe(() => {
+            this.router.navigate(['/books']);
+          });
+      },
+      // TODO handle errors with an interceptor
+      error: (err) => {
+        this.errorHandlingService.handleError(err);
+      },
     });
   }
 

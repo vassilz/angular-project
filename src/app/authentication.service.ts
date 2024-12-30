@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   getAuth,
@@ -7,6 +7,7 @@ import {
   signOut,
   User,
   UserCredential,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { BehaviorSubject, from, Observable, Subscription, tap } from 'rxjs';
 
@@ -20,9 +21,32 @@ export class AuthenticationService implements OnDestroy {
   user: User | null = null;
   userSubscription: Subscription | null = null;
 
+  isLoggedIn: boolean = false;
+
   constructor(private router: Router) {
     this.userSubscription = this.user$.subscribe((user) => {
       this.user = user;
+    });
+  }
+
+  registerAuthChangeCallback() {
+    console.log('Authentication service initialized');
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        // ...
+        this.user$$.next(user);
+        this.isLoggedIn = true;
+        console.log('User session is restored');
+      } else {
+        // User is signed out
+        // ...
+        this.user$$.next(null);
+        this.isLoggedIn = false;
+      }
     });
   }
 
@@ -35,6 +59,7 @@ export class AuthenticationService implements OnDestroy {
         console.info('User registered successfully');
         console.debug(user);
         this.user$$.next(user);
+        this.isLoggedIn = true;
       })
     );
   }
@@ -48,6 +73,7 @@ export class AuthenticationService implements OnDestroy {
         console.info('User logged in');
         console.debug(user);
         this.user$$.next(user);
+        this.isLoggedIn = true;
       })
     );
   }
@@ -59,13 +85,14 @@ export class AuthenticationService implements OnDestroy {
         // Sign-out successful.
         console.info('User logged out');
         this.user$$.next(null);
+        this.isLoggedIn = false;
       })
     );
   }
 
-  get isLoggedIn(): boolean {
-    return !!this.user;
-  }
+  // get isLoggedIn(): boolean {
+  //   return !!this.user;
+  // }
 
   ngOnDestroy(): void {
     this.userSubscription?.unsubscribe();

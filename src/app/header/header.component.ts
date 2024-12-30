@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { Router, RouterLink } from '@angular/router';
-import { ErrorMessageService } from '../error-message/error-message.service';
+import { ErrorMessageService } from '../errors/error-message/error-message.service';
 import { User } from 'firebase/auth';
 
 @Component({
@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit {
     });
   }
   isLoggedIn() {
+    // console.log('Is logged in: ' + this.authenticationService.isLoggedIn);
     return this.authenticationService.isLoggedIn;
   }
 }

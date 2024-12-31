@@ -3,7 +3,6 @@ import {
   Database,
   DataSnapshot,
   get,
-  objectVal,
   ref,
   remove,
   set,
@@ -21,7 +20,7 @@ export class FirebaseBookService {
     return from(get(ref(this.db, 'books')));
   }
 
-  getBook(id: string): Observable<DataSnapshot> {
+  getBook(id: number): Observable<DataSnapshot> {
     return from(get(ref(this.db, `books/${id}`)));
   }
 

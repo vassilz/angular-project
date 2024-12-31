@@ -1,5 +1,17 @@
 {{ book.name }} by {{ book.author }}; {{ reviews | averageRating }} of 5,
-{{ reviews.length }} votes @if (isAdmin) {
+{{ reviews.length }} votes @if (isLoggedIn) { @if (isFavorite) {
+<div
+  class="favorite-icon"
+  (click)="toggleFavorite()"
+  title="Remove from favorites"
+>
+  &#9733;
+</div>
+} @else {
+<div class="favorite-icon" (click)="toggleFavorite()" title="Add to favorites">
+  &#9734;
+</div>
+} } @if (isAdmin) {
 <button class="edit-button" [routerLink]="'' + book.id + '/edit'">Edit</button>
 } @else {
 <button class="details-button" [routerLink]="'' + book.id">Details</button>

@@ -82,7 +82,8 @@ export class RegisterComponent {
               email!,
               firstName,
               lastName,
-              password!
+              password!,
+              []
             )
             .subscribe((data) => {
               console.log(data);

@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseUserService } from '../firebase-user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../types/user';
+import { Book } from '../../types/book';
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +23,8 @@ export class ProfileComponent implements OnInit {
   firstName: string | null = null;
   lastName: string | null = null;
 
+  favoriteBooks: Book[] = [];
+
   ngOnInit(): void {
     const uuid = this.route.snapshot.params['uuid'];
 
@@ -29,6 +32,10 @@ export class ProfileComponent implements OnInit {
       this.user = user;
       this.firstName = user.firstName;
       this.lastName = user.lastName;
+    });
+
+    this.userService.getFavoriteBooksForUser(uuid).subscribe((book) => {
+      this.favoriteBooks.push(book);
     });
   }
 
@@ -48,7 +55,8 @@ export class ProfileComponent implements OnInit {
         this.user!.email,
         firstName,
         lastName,
-        this.user!.password
+        this.user!.password,
+        this.user!.favoriteBookIds
       )
       .subscribe((data) => {
         console.info('User updated successfully');

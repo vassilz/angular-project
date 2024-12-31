@@ -7,3 +7,7 @@
 .details-button {
   margin-left: 10px;
 }
+
+.favorite-icon {
+  cursor: pointer;
+}

@@ -20,3 +20,12 @@
   <button class="cancel" (click)="onCancel($event)">Cancel</button>
   <button [style]="{ backgroundColor: '#234465' }">Save</button>
 </form>
+
+<br />
+<br />
+
+Favorite books:
+<br />
+@if (favoriteBooks.length === 0) { No favorite books yet } @else {@for (book of
+favoriteBooks; track $index) { {{ book.name }} by {{ book.author }} <br />
+} }

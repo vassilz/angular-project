@@ -5,6 +5,7 @@ import { AuthenticationService } from '../../authentication.service';
 import { Review } from '../../types/review';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { AverageRatingPipe } from '../../reviews/average-rating.pipe';
+import { FirebaseUserService } from '../../users/firebase-user.service';
 
 @Component({
   selector: 'app-book-card',
@@ -19,18 +20,57 @@ export class BookCardComponent implements OnInit {
 
   reviews: Review[] = [];
 
+  isFavorite: boolean = false;
+
   constructor(
     private authenticationService: AuthenticationService,
-    private reviewService: FirebaseReviewService
+    private reviewService: FirebaseReviewService,
+    private userService: FirebaseUserService
   ) {}
 
   ngOnInit(): void {
     this.reviewService.getReviews(this.book.id).subscribe((data) => {
       this.reviews = data.val() || [];
     });
+
+    this.userService
+      .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
+      .subscribe((bookIds) => {
+        const favoriteBookIds = bookIds || [];
+        this.isFavorite = favoriteBookIds.includes(this.book.id);
+        console.log('Favorite book ids: ' + favoriteBookIds);
+      });
+  }
+
+  get isLoggedIn() {
+    return this.authenticationService.isLoggedIn;
   }
 
   get isAdmin(): boolean {
     return this.authenticationService.user?.email === 'admin@gmail.com';
+  }
+
+  toggleFavorite() {
+    if (this.isFavorite) {
+      this.userService
+        .removeFavoriteBookForUser(
+          this.authenticationService.user!.uid,
+          this.book.id
+        )
+        .subscribe((data) => {
+          console.info(`Book ${this.book.name} removed from favorites`);
+          this.isFavorite = false;
+        });
+    } else {
+      this.userService
+        .addFavoriteBookForUser(
+          this.authenticationService.user!.uid,
+          this.book.id
+        )
+        .subscribe((data) => {
+          console.info(`Book ${this.book.name} added to favorites`);
+          this.isFavorite = true;
+        });
+    }
   }
 }

@@ -9,6 +9,6 @@ export interface User {
   email: string;
   uuid: string;
   password: string;
-  favoriteBooks: Book[];
-  reviews: Review[];
+  favoriteBookIds: number[];
+  // reviews: Review[];
 }

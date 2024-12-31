@@ -1,5 +1,7 @@
-{{ book.name }} by {{ book.author }}; {{ reviews | averageRating }} of 5,
-{{ reviews.length }} votes @if (isLoggedIn) { @if (isFavorite) {
+{{ book.name }} by {{ book.author }}
+@if (reviews.length === 0) { No reviews yet } @else {
+{{ reviews | averageRating }} of 5, {{ reviews.length }} votes } @if
+(isLoggedIn) { @if (isFavorite) {
 <div
   class="favorite-icon"
   (click)="toggleFavorite()"

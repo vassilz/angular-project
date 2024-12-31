@@ -1,15 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Review } from '../types/review';
+import { UtilsService } from '../shared/utils.service';
 
 @Pipe({
   name: 'averageRating',
   standalone: true,
 })
 export class AverageRatingPipe implements PipeTransform {
+  constructor(private utilsService: UtilsService) {}
+
   transform(reviews: Review[], ...args: unknown[]): unknown {
-    return (
-      reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length || 0
-    );
+    return this.utilsService.calculateAverageRating(reviews);
   }
 }

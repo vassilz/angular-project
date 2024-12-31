@@ -2,7 +2,16 @@
 <app-loader />
 } @else { @if (isLoggedIn()) {
 <button routerLink="/books/add">Add book</button>
-} @if (books.length === 0) { No books yet } @else { @for (book of books; track
-$index) {
+<br />
+Sort by:
+<select [(ngModel)]="sortBy" (change)="sortBooks()">
+  @for (sortByOption of sortByOptions; track $index) {
+  <option [value]="sortByOption">{{ sortByOption }}</option>
+  }
+</select>
+Descending:
+<input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
+} @if (books().length === 0) { No books yet } @else { @for (book of books();
+track $index) {
 <app-book-card [book]="book" />
 } } }

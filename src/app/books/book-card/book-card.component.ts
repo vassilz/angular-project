@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
@@ -6,6 +6,7 @@ import { Review } from '../../types/review';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { AverageRatingPipe } from '../../reviews/average-rating.pipe';
 import { FirebaseUserService } from '../../users/firebase-user.service';
+import { RerenderService } from '../../rerender.service';
 
 @Component({
   selector: 'app-book-card',
@@ -25,21 +26,20 @@ export class BookCardComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
-    private userService: FirebaseUserService
+    private userService: FirebaseUserService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private rerenderService: RerenderService
   ) {}
 
   ngOnInit(): void {
-    this.reviewService.getReviews(this.book.id).subscribe((data) => {
-      this.reviews = data.val() || [];
-    });
+    this.loadReviews();
+    this.loadIsFavorite();
 
-    this.userService
-      .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
-      .subscribe((bookIds) => {
-        const favoriteBookIds = bookIds || [];
-        this.isFavorite = favoriteBookIds.includes(this.book.id);
-        console.log('Favorite book ids: ' + favoriteBookIds);
-      });
+    this.rerenderService.rerenderReviews.subscribe(() => {
+      this.loadReviews();
+      this.loadIsFavorite();
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   get isLoggedIn() {
@@ -48,6 +48,22 @@ export class BookCardComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.authenticationService.user?.email === 'admin@gmail.com';
+  }
+
+  loadReviews() {
+    this.reviewService.getReviews(this.book.id).subscribe((data) => {
+      this.reviews = data.val() || [];
+    });
+  }
+
+  loadIsFavorite() {
+    this.userService
+      .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
+      .subscribe((bookIds) => {
+        const favoriteBookIds = bookIds || [];
+        this.isFavorite = favoriteBookIds.includes(this.book.id);
+        console.log('Favorite book ids: ' + favoriteBookIds);
+      });
   }
 
   toggleFavorite() {

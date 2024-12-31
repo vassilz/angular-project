@@ -1,6 +1,16 @@
 @if (isLoading) {
 <app-loader />
 } @else { @if (isLoggedIn()) {
+<input type="text" [(ngModel)]="searchTerm" />
+@if (searchActive) {
+<button (click)="resetSearch()">
+  <img class="search-icon" src="clear-search-icon.png" />
+</button>
+}
+<button (click)="searchBooks()">
+  <img class="search-icon" src="search-icon.png" />
+</button>
+<br /><br />
 <button routerLink="/books/add">Add book</button>
 <br />
 Sort by:
@@ -11,7 +21,8 @@ Sort by:
 </select>
 Descending:
 <input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
+<br /><br />
 } @if (books().length === 0) { No books yet } @else { @for (book of books();
 track $index) {
-<app-book-card [book]="book" />
+<app-book-card [book]="book" [searchTerm]="searchTerm" />
 } } }

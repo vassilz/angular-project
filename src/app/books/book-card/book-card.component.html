@@ -1,4 +1,4 @@
-{{ book.name }} by {{ book.author }}
+<div #basicDetails>{{ book.name }} by {{ book.author }}</div>
 @if (reviews.length === 0) { No reviews yet } @else {
 {{ reviews | averageRating }} of 5, {{ reviews.length }} votes } @if
 (isLoggedIn) { @if (isFavorite) {

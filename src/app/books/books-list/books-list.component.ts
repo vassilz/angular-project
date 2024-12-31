@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
   signal,
+  ViewChild,
   WritableSignal,
 } from '@angular/core';
 import { FirebaseBookService } from '../firebase-book.service';
@@ -102,7 +104,20 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   bookRatings: Map<number, number> = new Map();
 
+  searchTerm: string = '';
+  searchActive: boolean = false;
+
   ngOnInit(): void {
+    this.loadBooks();
+  }
+
+  isLoggedIn() {
+    return this.authenticationService.isLoggedIn;
+  }
+
+  loadBooks() {
+    this.isLoading = true;
+
     this.subscription = this.bookService.getBooks().subscribe((data) => {
       this.books.set(data.val() || []);
       this.books().forEach((book, index) => {
@@ -122,16 +137,8 @@ export class BooksListComponent implements OnInit, OnDestroy {
       forkJoin(reviewObservables).subscribe(() => {
         console.log('All reviews have been processed.');
 
-        if (!!localStorage.getItem(this.SORT_BY_KEY)) {
-          this.sortBy = localStorage.getItem(this.SORT_BY_KEY)!;
-        }
-
-        if (!!localStorage.getItem(this.IS_DESCENDING_KEY)) {
-          this.isDescending =
-            localStorage.getItem(this.IS_DESCENDING_KEY) === 'true';
-        }
-
         // Initial sort
+        this.restoreSorting();
         this.sortBooks();
 
         this.isLoading = false;
@@ -139,8 +146,15 @@ export class BooksListComponent implements OnInit, OnDestroy {
     });
   }
 
-  isLoggedIn() {
-    return this.authenticationService.isLoggedIn;
+  restoreSorting() {
+    if (!!localStorage.getItem(this.SORT_BY_KEY)) {
+      this.sortBy = localStorage.getItem(this.SORT_BY_KEY)!;
+    }
+
+    if (!!localStorage.getItem(this.IS_DESCENDING_KEY)) {
+      this.isDescending =
+        localStorage.getItem(this.IS_DESCENDING_KEY) === 'true';
+    }
   }
 
   sortBooks() {
@@ -162,6 +176,26 @@ export class BooksListComponent implements OnInit, OnDestroy {
     return this.bookRatings.get(bookA.id)! < this.bookRatings.get(bookB.id)!
       ? -1
       : 1;
+  }
+
+  searchBooks() {
+    this.bookService.searchBooks(this.searchTerm).subscribe((foundBooks) => {
+      this.books.set(foundBooks || []);
+      this.books().forEach((book, index) => {
+        // book.id = index;
+      });
+
+      this.changeDetectorRef.detectChanges();
+      this.rerenderService.rerenderReviews.emit();
+
+      this.searchActive = true;
+    });
+  }
+
+  resetSearch() {
+    this.searchTerm = '';
+    this.searchActive = false;
+    this.loadBooks();
   }
 
   ngOnDestroy(): void {

@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
@@ -7,6 +15,7 @@ import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { AverageRatingPipe } from '../../reviews/average-rating.pipe';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { RerenderService } from '../../rerender.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-book-card',
@@ -15,11 +24,18 @@ import { RerenderService } from '../../rerender.service';
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.css',
 })
-export class BookCardComponent implements OnInit {
+export class BookCardComponent implements OnInit, OnDestroy {
   @Input()
   book: Book = {} as Book;
 
+  @Input()
+  searchTerm: string = '';
+
+  @ViewChild('basicDetails') domElement!: ElementRef;
+
   reviews: Review[] = [];
+
+  rerenderSubscription: Subscription | null = null;
 
   isFavorite: boolean = false;
 
@@ -35,11 +51,34 @@ export class BookCardComponent implements OnInit {
     this.loadReviews();
     this.loadIsFavorite();
 
-    this.rerenderService.rerenderReviews.subscribe(() => {
-      this.loadReviews();
-      this.loadIsFavorite();
-      this.changeDetectorRef.detectChanges();
-    });
+    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
+      () => {
+        this.loadReviews();
+        this.loadIsFavorite();
+        this.changeDetectorRef.detectChanges();
+
+        this.highlightSearchTerms();
+      }
+    );
+  }
+
+  // TODO: Reset highlighting when search term changes
+  highlightSearchTerms() {
+    console.log('Highlighting search terms...');
+    console.log(this.searchTerm);
+
+    var detailsDiv = this.domElement.nativeElement;
+    var innerHTML = detailsDiv.innerHTML;
+    var index = innerHTML.indexOf(this.searchTerm);
+    if (index >= 0) {
+      innerHTML =
+        innerHTML.substring(0, index) +
+        "<span style='background-color: orange' class='highlight'>" +
+        innerHTML.substring(index, index + this.searchTerm.length) +
+        '</span>' +
+        innerHTML.substring(index + this.searchTerm.length);
+      detailsDiv.innerHTML = innerHTML;
+    }
   }
 
   get isLoggedIn() {
@@ -53,6 +92,7 @@ export class BookCardComponent implements OnInit {
   loadReviews() {
     this.reviewService.getReviews(this.book.id).subscribe((data) => {
       this.reviews = data.val() || [];
+      // console.log(this.reviews);
     });
   }
 
@@ -62,7 +102,7 @@ export class BookCardComponent implements OnInit {
       .subscribe((bookIds) => {
         const favoriteBookIds = bookIds || [];
         this.isFavorite = favoriteBookIds.includes(this.book.id);
-        console.log('Favorite book ids: ' + favoriteBookIds);
+        // console.log('Favorite book ids: ' + favoriteBookIds);
       });
   }
 
@@ -88,5 +128,9 @@ export class BookCardComponent implements OnInit {
           this.isFavorite = true;
         });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.rerenderSubscription?.unsubscribe();
   }
 }

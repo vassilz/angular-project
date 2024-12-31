@@ -8,7 +8,8 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { from, Observable } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
+import { Book } from '../types/book';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,34 @@ export class FirebaseBookService {
 
   getBook(id: number): Observable<DataSnapshot> {
     return from(get(ref(this.db, `books/${id}`)));
+  }
+
+  searchBooks(term: string): Observable<Book[]> {
+    var foundBooks = new Subject<Book[]>();
+    const observable = from(get(ref(this.db, 'books')));
+
+    //TODO: Cleanup subscriptions!
+    observable.subscribe((data) => {
+      const books: Book[] = data.val() || [];
+      books.forEach((book, index) => {
+        book.id = index;
+      });
+      const filteredBooks: Book[] = books.filter(
+        (book) =>
+          book.name.toLowerCase().includes(term.toLowerCase()) ||
+          book.author.toLowerCase().includes(term.toLowerCase())
+        // book.synopsis?.toLowerCase().includes(term.toLowerCase())
+      );
+      foundBooks.next(filteredBooks);
+
+      // books.forEach((book) => {
+      //   if (book.name.toLowerCase().includes(term.toLowerCase())) {
+      //     foundBooks.next(book);
+      //   }
+      // });
+    });
+
+    return foundBooks.asObservable();
   }
 
   createBook(

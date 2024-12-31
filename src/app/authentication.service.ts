@@ -84,6 +84,7 @@ export class AuthenticationService implements OnDestroy {
       tap((userCredential) => {
         // Sign-out successful.
         console.info('User logged out');
+        localStorage.clear();
         this.user$$.next(null);
         this.isLoggedIn = false;
       })

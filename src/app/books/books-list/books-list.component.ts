@@ -43,6 +43,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   isDescending: boolean = false;
 
+  SORT_BY_KEY: string = 'sortBy';
+  IS_DESCENDING_KEY: string = 'isDescending';
+
   private comparatorFunctions: Map<string, (a: Book, b: Book) => number> =
     new Map([
       [
@@ -106,9 +109,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
         book.id = index;
       });
 
-      // Initial sort
-      this.sortBooks();
-
       const reviewObservables = this.books().map((book) =>
         this.reviewService.getReviews(book.id).pipe(
           map((data) => {
@@ -121,6 +121,19 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
       forkJoin(reviewObservables).subscribe(() => {
         console.log('All reviews have been processed.');
+
+        if (!!localStorage.getItem(this.SORT_BY_KEY)) {
+          this.sortBy = localStorage.getItem(this.SORT_BY_KEY)!;
+        }
+
+        if (!!localStorage.getItem(this.IS_DESCENDING_KEY)) {
+          this.isDescending =
+            localStorage.getItem(this.IS_DESCENDING_KEY) === 'true';
+        }
+
+        // Initial sort
+        this.sortBooks();
+
         this.isLoading = false;
       });
     });
@@ -131,6 +144,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   sortBooks() {
+    localStorage.setItem(this.SORT_BY_KEY, this.sortBy);
+    localStorage.setItem(this.IS_DESCENDING_KEY, this.isDescending.toString());
+
     this.books.set(
       this.books().sort(this.comparatorFunctions.get(this.sortBy))
     );

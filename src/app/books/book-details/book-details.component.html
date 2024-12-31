@@ -2,12 +2,13 @@
 <app-loader />
 } @else {
 <div>
+  <img src="not-found.png" onerror="this.src='no-image-available.png';" />
   <h3>{{ book.name }}</h3>
   by {{ book.author }}
   <p></p>
   <div>Number of pages: {{ book.pagesCount }}</div>
   <br />
-  <div>Published at: {{ book.publishDate | date : "dd.MM.yyyy hh:mm:ss" }}</div>
+  <div>Published at: {{ book.publishDate | date : "dd.MM.yyyy" }}</div>
   <p></p>
   <h4>Synopsis</h4>
   <div>{{ book.synopsis }}</div>

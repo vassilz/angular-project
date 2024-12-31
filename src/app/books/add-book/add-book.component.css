@@ -3,7 +3,7 @@
 } */
 
 .error {
-  color: red;
+  color: #e52424;
 }
 
 input,
@@ -12,5 +12,5 @@ textarea {
 }
 
 input.ng-touched.ng-invalid {
-  border: 1px solid red;
+  border: 1px solid #e52424;
 }

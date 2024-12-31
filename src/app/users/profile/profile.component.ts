@@ -4,6 +4,7 @@ import { FirebaseUserService } from '../firebase-user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../types/user';
 import { Book } from '../../types/book';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private userService: FirebaseUserService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {}
 
   user: User | null = null;
@@ -26,7 +28,7 @@ export class ProfileComponent implements OnInit {
   favoriteBooks: Book[] = [];
 
   ngOnInit(): void {
-    const uuid = this.route.snapshot.params['uuid'];
+    const uuid = this.authenticationService.user!.uid;
 
     this.userService.getUserById(uuid).subscribe((user) => {
       this.user = user;

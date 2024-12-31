@@ -1,6 +1,6 @@
 @if (isLoggedIn()) {
 <div class="header">
-  <button [routerLink]="['profile', uuid]">Profile</button>
+  <button routerLink="/profile">Profile</button>
   <button (click)="logout()">Logout</button>
 </div>
 } @else {

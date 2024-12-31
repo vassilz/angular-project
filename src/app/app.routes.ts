@@ -8,18 +8,20 @@ import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { ErrorMessageComponent } from './errors/error-message/error-message.component';
 import { EditBookComponent } from './books/edit-book/edit-book.component';
+import { AuthGuard } from './auth.guard';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'profile/:uuid', component: ProfileComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'books',
     children: [
       { path: '', component: BooksListComponent },
-      { path: 'add', component: AddBookComponent },
+      { path: 'add', component: AddBookComponent, canActivate: [AuthGuard] },
       {
         path: ':bookId',
         component: BookDetailsComponent,
@@ -27,8 +29,11 @@ export const routes: Routes = [
       {
         path: ':bookId/edit',
         component: EditBookComponent,
+        canActivate: [AuthGuard],
       },
     ],
   },
   { path: 'error', component: ErrorMessageComponent },
+  { path: '404', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/404' },
 ];

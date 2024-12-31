@@ -5,11 +5,3 @@
   justify-content: center;
   min-height: 500px;
 }
-
-.error {
-  color: #e52424;
-}
-
-input.ng-touched.ng-invalid {
-  border: 1px solid #e52424;
-}

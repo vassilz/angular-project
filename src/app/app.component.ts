@@ -4,6 +4,7 @@ import { HeaderComponent } from './header/header.component';
 import { AuthenticationService } from './authentication.service';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
+import { FooterComponent } from './footer/footer.component';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -16,7 +17,7 @@ import { environment } from '../environments/environment';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

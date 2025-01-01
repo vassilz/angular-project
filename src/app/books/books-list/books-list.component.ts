@@ -20,6 +20,7 @@ import { UtilsService } from '../../shared/utils.service';
 import moment from 'moment';
 import { RerenderService } from '../../rerender.service';
 import { JsonPipe } from '@angular/common';
+import { RecentBooksListComponent } from '../recent-books-list/recent-books-list.component';
 
 @Component({
   selector: 'app-books-list',
@@ -30,6 +31,7 @@ import { JsonPipe } from '@angular/common';
     LoaderComponent,
     FormsModule,
     JsonPipe,
+    RecentBooksListComponent,
   ],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
@@ -119,6 +121,10 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   isLoggedIn() {
     return this.authenticationService.isLoggedIn;
+  }
+
+  get isAdmin(): boolean {
+    return this.authenticationService.user?.email === 'admin@gmail.com';
   }
 
   loadBooks() {

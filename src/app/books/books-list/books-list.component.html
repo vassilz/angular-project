@@ -1,29 +1,39 @@
 @if (isLoading) {
 <app-loader />
 } @else { @if (isLoggedIn()) {
-<input type="text" [(ngModel)]="searchTerm" />
-@if (searchActive) {
-<button (click)="resetSearch()">
-  <img class="search-icon" src="clear-search-icon.png" />
-</button>
-}
-<button (click)="searchBooks()">
-  <img class="search-icon" src="search-icon.png" />
-</button>
+<div class="search-box">
+  <input type="text" [(ngModel)]="searchTerm" />
+  @if (searchActive) {
+  <button (click)="resetSearch()">
+    <img class="search-icon" src="clear-search-icon.png" />
+  </button>
+  }
+  <button (click)="searchBooks()">
+    <img class="search-icon" src="search-icon.png" />
+  </button>
+</div>
 <br /><br />
+@if (isAdmin) {
 <button routerLink="/books/add">Add book</button>
 <br />
-Sort by:
-<select [(ngModel)]="sortBy" (change)="sortBooks()">
-  @for (sortByOption of sortByOptions; track $index) {
-  <option [value]="sortByOption">{{ sortByOption }}</option>
-  }
-</select>
-Descending:
-<input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
-<br /><br />
-} @if (books().length === 0) { No books yet } @else { @for (book of books();
-track $index) {
-<!-- {{ book | json }} -->
-<app-book-card [book]="book" [searchTerm]="searchTerm" />
-} } }
+} }
+<div class="books">
+  <div class="books-list">
+    @if (isLoggedIn()) { Sort by:
+    <select [(ngModel)]="sortBy" (change)="sortBooks()">
+      @for (sortByOption of sortByOptions; track $index) {
+      <option [value]="sortByOption">{{ sortByOption }}</option>
+      }
+    </select>
+    Descending:
+    <input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
+    <br /><br />
+    } @if (books().length === 0) { No books yet } @else { @for (book of books();
+    track $index) {
+    <!-- {{ book | json }} -->
+    <app-book-card [book]="book" [searchTerm]="searchTerm" />
+    } }
+  </div>
+  <div class="recent-books-list"><app-recent-books-list /></div>
+</div>
+}

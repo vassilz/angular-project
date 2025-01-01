@@ -1,0 +1,9 @@
+@if (isLoading) {
+<app-loader />
+} @else { Latest books: <br /><br />
+
+@if (recentBooks.length === 0) { No books yet } @else { @for (book of
+recentBooks; track $index) {
+<!-- {{ book | json }} -->
+<app-recent-book-card [book]="book" />
+} } }

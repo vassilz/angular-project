@@ -1,8 +1,13 @@
 .header {
   display: block;
   float: right;
+  margin: 10px;
 }
 
 button + button {
   margin-left: 10px;
+}
+
+:host {
+  background-color: lightblue;
 }

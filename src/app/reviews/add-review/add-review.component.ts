@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-review',
@@ -12,9 +13,12 @@ import { RerenderService } from '../../rerender.service';
   templateUrl: './add-review.component.html',
   styleUrl: './add-review.component.css',
 })
-export class AddReviewComponent {
+export class AddReviewComponent implements OnDestroy {
   @Input()
   bookId: number = 0;
+
+  getReviewsSubscription: Subscription | null = null;
+  createReviewSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,25 +32,32 @@ export class AddReviewComponent {
       return;
     }
 
-    this.reviewService.getReviews(this.bookId).subscribe((data) => {
-      let reviewCount = data.val()?.length || 0;
+    this.getReviewsSubscription = this.reviewService
+      .getReviews(this.bookId)
+      .subscribe((data) => {
+        let reviewCount = data.val()?.length || 0;
 
-      const { rating, text } = form.value;
+        const { rating, text } = form.value;
 
-      const now = new Date().toISOString();
-      this.reviewService
-        .createReview(
-          this.bookId,
-          reviewCount,
-          this.authenticationService.user!.uid,
-          rating,
-          text,
-          now
-        )
-        .subscribe(() => {
-          // this.router.navigate(['/books']);
-          this.rerenderService.rerenderReviews.emit();
-        });
-    });
+        const now = new Date().toISOString();
+        this.createReviewSubscription = this.reviewService
+          .createReview(
+            this.bookId,
+            reviewCount,
+            this.authenticationService.user!.uid,
+            rating,
+            text,
+            now
+          )
+          .subscribe(() => {
+            // this.router.navigate(['/books']);
+            this.rerenderService.rerenderReviews.emit();
+          });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.getReviewsSubscription?.unsubscribe();
+    this.createReviewSubscription?.unsubscribe();
   }
 }

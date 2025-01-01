@@ -1,11 +1,9 @@
 import {
   ChangeDetectorRef,
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
   signal,
-  ViewChild,
   WritableSignal,
 } from '@angular/core';
 import { FirebaseBookService } from '../firebase-book.service';
@@ -31,6 +29,7 @@ import { RerenderService } from '../../rerender.service';
 })
 export class BooksListComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
+  searchSubscription: Subscription | null = null;
 
   isLoading: boolean = true;
 
@@ -179,17 +178,19 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   searchBooks() {
-    this.bookService.searchBooks(this.searchTerm).subscribe((foundBooks) => {
-      this.books.set(foundBooks || []);
-      this.books().forEach((book, index) => {
-        // book.id = index;
+    this.searchSubscription = this.bookService
+      .searchBooks(this.searchTerm)
+      .subscribe((foundBooks) => {
+        this.books.set(foundBooks || []);
+        this.books().forEach((book, index) => {
+          // book.id = index;
+        });
+
+        this.changeDetectorRef.detectChanges();
+        this.rerenderService.rerenderReviews.emit();
+
+        this.searchActive = true;
       });
-
-      this.changeDetectorRef.detectChanges();
-      this.rerenderService.rerenderReviews.emit();
-
-      this.searchActive = true;
-    });
   }
 
   resetSearch() {
@@ -200,5 +201,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription!.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 }

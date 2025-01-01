@@ -1,10 +1,17 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Review } from '../../types/review';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { RerenderService } from '../../rerender.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-review',
@@ -13,8 +20,12 @@ import { RerenderService } from '../../rerender.service';
   templateUrl: './edit-review.component.html',
   styleUrl: './edit-review.component.css',
 })
-export class EditReviewComponent implements OnInit {
+export class EditReviewComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
+
+  getReviewsSubscription: Subscription | null = null;
+  updateReviewSubscription: Subscription | null = null;
+  deleteReviewSubscription: Subscription | null = null;
 
   @Input()
   bookId: number = 0;
@@ -32,7 +43,7 @@ export class EditReviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.reviewService
+    this.getReviewsSubscription = this.reviewService
       .getReviewByBookAndUser(this.bookId, this.authenticationService.user!.uid)
       .subscribe((review) => {
         this.review = review;
@@ -52,7 +63,7 @@ export class EditReviewComponent implements OnInit {
 
     const errorHandlingService = this.errorHandlingService;
 
-    this.reviewService
+    this.updateReviewSubscription = this.reviewService
       .updateReview(
         this.bookId,
         this.review!.id,
@@ -90,21 +101,29 @@ export class EditReviewComponent implements OnInit {
 
   deleteReview() {
     const errorHandlingService = this.errorHandlingService;
-    this.reviewService.deleteReview(this.bookId, this.review!.id).subscribe({
-      next: (value) => {
-        // router.navigate(['/books']);
-        this.review = null;
-        this.rating = null;
-        this.text = null;
-        // this.changeDetection.detectChanges();
+    this.deleteReviewSubscription = this.reviewService
+      .deleteReview(this.bookId, this.review!.id)
+      .subscribe({
+        next: (value) => {
+          // router.navigate(['/books']);
+          this.review = null;
+          this.rating = null;
+          this.text = null;
+          // this.changeDetection.detectChanges();
 
-        this.rerenderService.rerenderReviews.emit();
-        // this.toggleEditMode();
-      },
-      // TODO handle errors with an interceptor
-      error: (err) => {
-        errorHandlingService.handleError(err);
-      },
-    });
+          this.rerenderService.rerenderReviews.emit();
+          // this.toggleEditMode();
+        },
+        // TODO handle errors with an interceptor
+        error: (err) => {
+          errorHandlingService.handleError(err);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.getReviewsSubscription?.unsubscribe();
+    this.updateReviewSubscription?.unsubscribe();
+    this.deleteReviewSubscription?.unsubscribe();
   }
 }

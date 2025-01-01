@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,6 +11,7 @@ import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
 import { User } from 'firebase/auth';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,11 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
+  getUserSubscription: Subscription | null = null;
+  registerSubscription: Subscription | null = null;
+  // createUserSubscription: Subscription | null = null;
+
   form = new FormGroup({
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
@@ -55,7 +60,7 @@ export class RegisterComponent {
       return;
     }
 
-    this.userService.getUsers().subscribe((data) => {
+    this.getUserSubscription = this.userService.getUsers().subscribe((data) => {
       let userCount = data.val()?.length || 0;
 
       const {
@@ -70,35 +75,43 @@ export class RegisterComponent {
       const errorHandlingService = this.errorHandlingService;
       const userService = this.userService;
 
-      this.authenticationService.register(email!, password!).subscribe({
-        next(userCredential) {
-          const user: User = userCredential.user;
-          const uuid = user.uid;
-          userService
-            .createUser(
-              userCount,
-              uuid,
-              username!,
-              email!,
-              firstName,
-              lastName,
-              password!,
-              []
-            )
-            .subscribe((data) => {
-              console.log(data);
-            });
+      this.registerSubscription = this.authenticationService
+        .register(email!, password!)
+        .subscribe({
+          next(userCredential) {
+            const user: User = userCredential.user;
+            const uuid = user.uid;
+            userService
+              .createUser(
+                userCount,
+                uuid,
+                username!,
+                email!,
+                firstName,
+                lastName,
+                password!,
+                []
+              )
+              .subscribe((data) => {
+                console.log(data);
+              });
 
-          router.navigate(['/books']);
-        },
-        // TODO handle errors with an interceptor
-        error(err) {
-          errorHandlingService.handleError(err);
-        },
-        // complete() {
-        //   console.log('Subscription complete');
-        // },
-      });
+            router.navigate(['/books']);
+          },
+          // TODO handle errors with an interceptor
+          error(err) {
+            errorHandlingService.handleError(err);
+          },
+          // complete() {
+          //   console.log('Subscription complete');
+          // },
+        });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.getUserSubscription?.unsubscribe();
+    this.registerSubscription?.unsubscribe();
+    // this.createUserSubscription?.unsubscribe();
   }
 }

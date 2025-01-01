@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,9 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+  subscription: Subscription | null = null;
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
@@ -29,14 +32,20 @@ export class LoginComponent {
     const router = this.router;
     const errorHandlingService = this.errorHandlingService;
 
-    this.authenticationService.login(email, password).subscribe({
-      next(value) {
-        router.navigate(['/books']);
-      },
-      // TODO handle errors with an interceptor
-      error(err) {
-        errorHandlingService.handleError(err);
-      },
-    });
+    this.subscription = this.authenticationService
+      .login(email, password)
+      .subscribe({
+        next(value) {
+          router.navigate(['/books']);
+        },
+        // TODO handle errors with an interceptor
+        error(err) {
+          errorHandlingService.handleError(err);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

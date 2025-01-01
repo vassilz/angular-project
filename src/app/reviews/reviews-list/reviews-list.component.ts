@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   signal,
   WritableSignal,
@@ -11,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reviews-list',
@@ -19,8 +21,11 @@ import { RerenderService } from '../../rerender.service';
   templateUrl: './reviews-list.component.html',
   styleUrl: './reviews-list.component.css',
 })
-export class ReviewsListComponent implements OnInit {
+export class ReviewsListComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
+
+  rerenderSubscription: Subscription | null = null;
+  getReviewsSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,21 +40,30 @@ export class ReviewsListComponent implements OnInit {
     const bookId = this.route.snapshot.params['bookId'];
     this.loadReviews(bookId);
 
-    this.rerenderService.rerenderReviews.subscribe(() => {
-      this.loadReviews(bookId);
+    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
+      () => {
+        this.loadReviews(bookId);
 
-      this.changeDetection.detectChanges();
-    });
+        this.changeDetection.detectChanges();
+      }
+    );
   }
 
   loadReviews(bookId: number): void {
-    this.reviewService.getReviews(bookId).subscribe((data) => {
-      this.reviews.set(data.val() || []);
-      // this.reviews.forEach((review, index) => {
-      //   review.id = index;
-      // });
+    this.getReviewsSubscription = this.reviewService
+      .getReviews(bookId)
+      .subscribe((data) => {
+        this.reviews.set(data.val() || []);
+        // this.reviews.forEach((review, index) => {
+        //   review.id = index;
+        // });
 
-      this.isLoading = false;
-    });
+        this.isLoading = false;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.rerenderSubscription?.unsubscribe();
+    this.getReviewsSubscription?.unsubscribe();
   }
 }

@@ -40,6 +40,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
   bookSubscription: Subscription | null = null;
   userSubscription: Subscription | null = null;
+  rerenderSubscription: Subscription | null = null;
 
   hasUserReviewedBook: WritableSignal<boolean> = signal(false);
 
@@ -63,15 +64,18 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
     this.loadHasUserReviewedBook(id);
 
-    this.rerenderService.rerenderReviews.subscribe(() => {
-      this.loadHasUserReviewedBook(id);
-      this.changeDetection.detectChanges();
-    });
+    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
+      () => {
+        this.loadHasUserReviewedBook(id);
+        this.changeDetection.detectChanges();
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.bookSubscription!.unsubscribe();
     this.userSubscription!.unsubscribe();
+    this.rerenderSubscription!.unsubscribe();
   }
 
   isLoggedIn() {

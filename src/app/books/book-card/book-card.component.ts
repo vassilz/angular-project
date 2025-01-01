@@ -36,6 +36,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
   reviews: Review[] = [];
 
   rerenderSubscription: Subscription | null = null;
+  reviewSubscription: Subscription | null = null;
+  favoriteSubscription: Subscription | null = null;
 
   isFavorite: boolean = false;
 
@@ -64,9 +66,6 @@ export class BookCardComponent implements OnInit, OnDestroy {
 
   // TODO: Reset highlighting when search term changes
   highlightSearchTerms() {
-    console.log('Highlighting search terms...');
-    console.log(this.searchTerm);
-
     var detailsDiv = this.domElement.nativeElement;
     var innerHTML = detailsDiv.innerHTML;
     var index = innerHTML.indexOf(this.searchTerm);
@@ -90,14 +89,16 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   loadReviews() {
-    this.reviewService.getReviews(this.book.id).subscribe((data) => {
-      this.reviews = data.val() || [];
-      // console.log(this.reviews);
-    });
+    this.reviewSubscription = this.reviewService
+      .getReviews(this.book.id)
+      .subscribe((data) => {
+        this.reviews = data.val() || [];
+        // console.log(this.reviews);
+      });
   }
 
   loadIsFavorite() {
-    this.userService
+    this.favoriteSubscription = this.userService
       .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
       .subscribe((bookIds) => {
         const favoriteBookIds = bookIds || [];
@@ -132,5 +133,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.rerenderSubscription?.unsubscribe();
+    this.reviewSubscription?.unsubscribe();
+    this.favoriteSubscription?.unsubscribe();
   }
 }

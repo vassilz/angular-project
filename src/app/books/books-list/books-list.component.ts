@@ -19,11 +19,18 @@ import { UtilsService } from '../../shared/utils.service';
 
 import moment from 'moment';
 import { RerenderService } from '../../rerender.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-books-list',
   standalone: true,
-  imports: [RouterLink, BookCardComponent, LoaderComponent, FormsModule],
+  imports: [
+    RouterLink,
+    BookCardComponent,
+    LoaderComponent,
+    FormsModule,
+    JsonPipe,
+  ],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
 })
@@ -181,10 +188,12 @@ export class BooksListComponent implements OnInit, OnDestroy {
     this.searchSubscription = this.bookService
       .searchBooks(this.searchTerm)
       .subscribe((foundBooks) => {
+        console.log('Found books by search term ' + this.searchTerm + ':');
+        console.log(foundBooks);
+
         this.books.set(foundBooks || []);
-        this.books().forEach((book, index) => {
-          // book.id = index;
-        });
+
+        this.sortBooks();
 
         this.changeDetectorRef.detectChanges();
         this.rerenderService.rerenderReviews.emit();

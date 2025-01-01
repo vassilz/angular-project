@@ -30,7 +30,7 @@ export class FirebaseBookService {
     const observable = from(get(ref(this.db, 'books')));
 
     //TODO: Cleanup subscriptions!
-    observable.subscribe((data) => {
+    const subscription = observable.subscribe((data) => {
       const books: Book[] = data.val() || [];
       books.forEach((book, index) => {
         book.id = index;
@@ -43,6 +43,7 @@ export class FirebaseBookService {
       );
       foundBooks.next(filteredBooks);
 
+      subscription.unsubscribe();
       // books.forEach((book) => {
       //   if (book.name.toLowerCase().includes(term.toLowerCase())) {
       //     foundBooks.next(book);

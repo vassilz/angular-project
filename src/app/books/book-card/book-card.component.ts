@@ -38,6 +38,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
   rerenderSubscription: Subscription | null = null;
   reviewSubscription: Subscription | null = null;
   favoriteSubscription: Subscription | null = null;
+  addFavoriteSubscription: Subscription | null = null;
+  removeFavoriteSubscription: Subscription | null = null;
 
   isFavorite: boolean = false;
 
@@ -50,11 +52,19 @@ export class BookCardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log('Book card component initialized for book: ' + this.book.id);
+    console.log(this.book);
+
     this.loadReviews();
     this.loadIsFavorite();
 
     this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
       () => {
+        console.log(
+          'Book card component re-initialized for book: ' + this.book.id
+        );
+        console.log(this.book);
+
         this.loadReviews();
         this.loadIsFavorite();
         this.changeDetectorRef.detectChanges();
@@ -89,6 +99,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   loadReviews() {
+    this.reviewSubscription?.unsubscribe();
     this.reviewSubscription = this.reviewService
       .getReviews(this.book.id)
       .subscribe((data) => {
@@ -98,6 +109,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   loadIsFavorite() {
+    this.favoriteSubscription?.unsubscribe();
     this.favoriteSubscription = this.userService
       .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
       .subscribe((bookIds) => {
@@ -109,7 +121,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
 
   toggleFavorite() {
     if (this.isFavorite) {
-      this.userService
+      this.removeFavoriteSubscription = this.userService
         .removeFavoriteBookForUser(
           this.authenticationService.user!.uid,
           this.book.id
@@ -119,7 +131,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
           this.isFavorite = false;
         });
     } else {
-      this.userService
+      this.addFavoriteSubscription = this.userService
         .addFavoriteBookForUser(
           this.authenticationService.user!.uid,
           this.book.id
@@ -132,8 +144,12 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('Book card component destroyed for book: ' + this.book.id);
+
     this.rerenderSubscription?.unsubscribe();
     this.reviewSubscription?.unsubscribe();
     this.favoriteSubscription?.unsubscribe();
+    this.addFavoriteSubscription?.unsubscribe();
+    this.removeFavoriteSubscription?.unsubscribe();
   }
 }

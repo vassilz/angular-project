@@ -87,6 +87,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadHasUserReviewedBook(bookId: number): void {
+    this.userSubscription?.unsubscribe();
     this.userSubscription = this.authenticationService.user$.subscribe(
       (authenticatedUser) => {
         if (!!authenticatedUser) {

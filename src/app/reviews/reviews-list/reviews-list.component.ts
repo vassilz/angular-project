@@ -50,6 +50,7 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   }
 
   loadReviews(bookId: number): void {
+    this.getReviewsSubscription?.unsubscribe();
     this.getReviewsSubscription = this.reviewService
       .getReviews(bookId)
       .subscribe((data) => {

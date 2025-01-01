@@ -14,7 +14,8 @@ import { Book } from '../../types/book';
 })
 export class EditBookComponent implements OnInit, OnDestroy {
   book: Book = {} as Book;
-  subscription: Subscription | null = null;
+  getBooksSubscription: Subscription | null = null;
+  updateBookSubscription: Subscription | null = null;
 
   constructor(
     private router: Router,
@@ -25,10 +26,12 @@ export class EditBookComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const id = this.route.snapshot.params['bookId'];
 
-    this.subscription = this.bookService.getBook(id).subscribe((data) => {
-      this.book = data.val();
-      this.book.id = id;
-    });
+    this.getBooksSubscription = this.bookService
+      .getBook(id)
+      .subscribe((data) => {
+        this.book = data.val();
+        this.book.id = id;
+      });
   }
 
   editBook(form: NgForm) {
@@ -38,7 +41,7 @@ export class EditBookComponent implements OnInit, OnDestroy {
 
     const { name, author, publish_date, pages, synopsis } = form.value;
 
-    this.bookService
+    this.updateBookSubscription = this.bookService
       .updateBook(this.book.id, name, author, publish_date, pages, synopsis)
       .subscribe(() => {
         this.router.navigate(['/books']);
@@ -51,6 +54,7 @@ export class EditBookComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.getBooksSubscription!.unsubscribe();
+    this.updateBookSubscription?.unsubscribe();
   }
 }

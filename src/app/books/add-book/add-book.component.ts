@@ -13,7 +13,8 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
   styleUrl: './add-book.component.css',
 })
 export class AddBookComponent implements OnDestroy {
-  subscription: Subscription | null = null;
+  getBooksSubscription: Subscription | null = null;
+  createBookSubscription: Subscription | null = null;
 
   constructor(
     private bookService: FirebaseBookService,
@@ -26,13 +27,13 @@ export class AddBookComponent implements OnDestroy {
       return;
     }
 
-    this.subscription = this.bookService.getBooks().subscribe({
+    this.getBooksSubscription = this.bookService.getBooks().subscribe({
       next: (data) => {
         let bookCount = data.val()?.length || 0;
 
         const { name, author, publish_date, pages, synopsis } = form.value;
 
-        this.bookService
+        this.createBookSubscription = this.bookService
           .createBook(bookCount, name, author, publish_date, pages, synopsis)
           .subscribe(() => {
             this.router.navigate(['/books']);
@@ -51,6 +52,7 @@ export class AddBookComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.getBooksSubscription?.unsubscribe();
+    this.createBookSubscription?.unsubscribe();
   }
 }

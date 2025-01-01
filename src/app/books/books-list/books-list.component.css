@@ -20,3 +20,14 @@
   margin-left: auto;
   min-width: 300px;
 }
+
+.paging-previous-button,
+.paging-next-button {
+  width: 28px;
+  cursor: pointer;
+}
+
+img.disabled {
+  /* filter: grayscale(100%); */
+  cursor: default;
+}

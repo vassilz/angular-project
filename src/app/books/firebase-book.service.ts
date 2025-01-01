@@ -18,8 +18,26 @@ import moment from 'moment';
 export class FirebaseBookService {
   constructor(private db: Database) {}
 
-  getBooks(): Observable<DataSnapshot> {
-    return from(get(ref(this.db, 'books')));
+  getBooks(start: number = 0, count: number = -1): Observable<Book[]> {
+    //TODO optimize this
+    var result = new Subject<Book[]>();
+    const observable = from(get(ref(this.db, 'books')));
+
+    const subscription = observable.subscribe((data) => {
+      const books: Book[] = data.val() || [];
+      books.forEach((book, index) => {
+        book.id = index;
+      });
+      books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
+      const foundBooks: Book[] = books.slice(
+        start,
+        count === -1 ? books.length : start + count
+      );
+      result.next(foundBooks);
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
   }
 
   getRecentBooks(count: number): Observable<Book[]> {

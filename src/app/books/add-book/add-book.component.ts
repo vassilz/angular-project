@@ -28,8 +28,8 @@ export class AddBookComponent implements OnDestroy {
     }
 
     this.getBooksSubscription = this.bookService.getBooks().subscribe({
-      next: (data) => {
-        let bookCount = data.val()?.length || 0;
+      next: (books) => {
+        let bookCount = books?.length || 0;
 
         const { name, author, publish_date, pages, synopsis } = form.value;
 

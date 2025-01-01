@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Book } from '../../types/book';
-import { ElapsedTimePipe } from '../../shared/pipes/elapsed-time.pipe';
+import { Book } from '../../../types/book';
+import { ElapsedTimePipe } from '../../../shared/pipes/elapsed-time.pipe';
 
 @Component({
   selector: 'app-recent-book-card',

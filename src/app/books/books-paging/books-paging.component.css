@@ -1,0 +1,5 @@
+.paging-previous-button,
+.paging-next-button {
+  width: 28px;
+  cursor: pointer;
+}

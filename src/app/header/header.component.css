@@ -1,7 +1,17 @@
 .header {
-  display: block;
-  float: right;
+  display: flex;
+  flex-direction: row;
+  /* float: right; */
   margin: 10px;
+}
+
+.title {
+  margin: 0px;
+  /* float: left; */
+}
+
+.button-group {
+  margin-left: auto;
 }
 
 button + button {

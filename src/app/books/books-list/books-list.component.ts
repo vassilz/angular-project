@@ -20,7 +20,8 @@ import { UtilsService } from '../../shared/utils.service';
 import moment from 'moment';
 import { RerenderService } from '../../rerender.service';
 import { JsonPipe } from '@angular/common';
-import { RecentBooksListComponent } from '../recent-books-list/recent-books-list.component';
+import { RecentBooksListComponent } from '../recent/recent-books-list/recent-books-list.component';
+import { BooksPagingComponent } from '../books-paging/books-paging.component';
 
 @Component({
   selector: 'app-books-list',
@@ -32,6 +33,7 @@ import { RecentBooksListComponent } from '../recent-books-list/recent-books-list
     FormsModule,
     JsonPipe,
     RecentBooksListComponent,
+    BooksPagingComponent,
   ],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
@@ -110,6 +112,11 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
 
+  pageStart: number = 0;
+  pageSize: number = 5;
+  // isLastPage: boolean = false;
+  currentPage: number = 0;
+
   bookRatings: Map<number, number> = new Map();
 
   searchTerm: string = '';
@@ -130,32 +137,32 @@ export class BooksListComponent implements OnInit, OnDestroy {
   loadBooks() {
     this.isLoading = true;
 
-    this.subscription = this.bookService.getBooks().subscribe((data) => {
-      this.books.set(data.val() || []);
-      this.books().forEach((book, index) => {
-        book.id = index;
+    this.subscription = this.bookService
+      .getBooks(this.pageStart, this.pageSize)
+      .subscribe((books) => {
+        this.books.set(books || []);
+        this.currentPage = this.books().length;
+
+        const reviewObservables = this.books().map((book) =>
+          this.reviewService.getReviews(book.id).pipe(
+            map((data) => {
+              const reviews = data.val() || [];
+              const rating = this.utilsService.calculateAverageRating(reviews);
+              this.bookRatings.set(book.id, rating);
+            })
+          )
+        );
+
+        forkJoin(reviewObservables).subscribe(() => {
+          console.log('All reviews have been processed.');
+
+          // Initial sort
+          this.restoreSorting();
+          this.sortBooks();
+
+          this.isLoading = false;
+        });
       });
-
-      const reviewObservables = this.books().map((book) =>
-        this.reviewService.getReviews(book.id).pipe(
-          map((data) => {
-            const reviews = data.val() || [];
-            const rating = this.utilsService.calculateAverageRating(reviews);
-            this.bookRatings.set(book.id, rating);
-          })
-        )
-      );
-
-      forkJoin(reviewObservables).subscribe(() => {
-        console.log('All reviews have been processed.');
-
-        // Initial sort
-        this.restoreSorting();
-        this.sortBooks();
-
-        this.isLoading = false;
-      });
-    });
   }
 
   restoreSorting() {
@@ -190,6 +197,12 @@ export class BooksListComponent implements OnInit, OnDestroy {
       : 1;
   }
 
+  keyUp(event: KeyboardEvent) {
+    if (event.code === 'Enter') {
+      this.searchBooks();
+    }
+  }
+
   searchBooks() {
     this.searchSubscription = this.bookService
       .searchBooks(this.searchTerm)
@@ -211,6 +224,22 @@ export class BooksListComponent implements OnInit, OnDestroy {
   resetSearch() {
     this.searchTerm = '';
     this.searchActive = false;
+    this.loadBooks();
+  }
+
+  previousPage() {
+    if (this.pageStart === 0) {
+      return;
+    }
+    this.pageStart = Math.max(0, this.pageStart - this.pageSize);
+    this.loadBooks();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.pageSize) {
+      return;
+    }
+    this.pageStart += this.pageSize;
     this.loadBooks();
   }
 

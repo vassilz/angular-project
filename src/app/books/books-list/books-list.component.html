@@ -2,7 +2,7 @@
 <app-loader />
 } @else { @if (isLoggedIn()) {
 <div class="search-box">
-  <input type="text" [(ngModel)]="searchTerm" />
+  <input type="text" [(ngModel)]="searchTerm" (keyup)="keyUp($event)" />
   @if (searchActive) {
   <button (click)="resetSearch()">
     <img class="search-icon" src="clear-search-icon.png" />
@@ -32,7 +32,30 @@
     track $index) {
     <!-- {{ book | json }} -->
     <app-book-card [book]="book" [searchTerm]="searchTerm" />
-    } }
+    }
+
+    <!-- TODO: extract as a separate component  -->
+    <!-- <app-books-paging [start]="pagingStart" [count]="pagingCount" /> -->
+
+    <img
+      [class]="'paging-previous-button' + (pageStart === 0 ? ' disabled' : '')"
+      [src]="pageStart === 0 ? 'chevron-left-light.png' : 'chevron-left.png'"
+      (click)="previousPage()"
+    />
+
+    {{ pageStart }} - {{ pageStart + currentPage }}
+    <img
+      [class]="
+        'paging-next-button' + (currentPage < pageSize ? ' disabled' : '')
+      "
+      [src]="
+        currentPage < pageSize ? 'chevron-right-light.png' : 'chevron-right.png'
+      "
+      (click)="nextPage()"
+    />
+    <!---->
+
+    }
   </div>
   <div class="recent-books-list"><app-recent-books-list /></div>
 </div>

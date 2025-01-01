@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Book } from '../../types/book';
+import { Book } from '../../../types/book';
 import { RecentBookCardComponent } from '../recent-book-card/recent-book-card.component';
 import { Subscription } from 'rxjs';
-import { FirebaseBookService } from '../firebase-book.service';
-import { LoaderComponent } from '../../shared/loader/loader.component';
+import { FirebaseBookService } from '../../firebase-book.service';
+import { LoaderComponent } from '../../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-recent-books-list',

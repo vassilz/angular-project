@@ -1,4 +1,6 @@
-<div #basicDetails>{{ book.name }} by {{ book.author }}</div>
+<div
+  [innerHTML]="book.name + ' by ' + book.author | highlightSearch : searchTerm"
+></div>
 @if (reviews.length === 0) { No reviews yet } @else {
 {{ reviews | averageRating }} of 5, {{ reviews.length }} votes } @if
 (isLoggedIn) { @if (isFavorite) {

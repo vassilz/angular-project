@@ -16,11 +16,12 @@ import { AverageRatingPipe } from '../../reviews/average-rating.pipe';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { RerenderService } from '../../rerender.service';
 import { Subscription } from 'rxjs';
+import { HighlightSearchPipe } from '../../highlight-search.pipe';
 
 @Component({
   selector: 'app-book-card',
   standalone: true,
-  imports: [RouterLink, AverageRatingPipe],
+  imports: [RouterLink, AverageRatingPipe, HighlightSearchPipe],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.css',
 })
@@ -31,7 +32,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
   @Input()
   searchTerm: string = '';
 
-  @ViewChild('basicDetails') domElement!: ElementRef;
+  // @ViewChild('basicDetails') domElement!: ElementRef;
 
   reviews: Review[] = [];
 
@@ -69,26 +70,27 @@ export class BookCardComponent implements OnInit, OnDestroy {
         this.loadIsFavorite();
         this.changeDetectorRef.detectChanges();
 
-        this.highlightSearchTerms();
+        // TODO: implement highlighting properly
+        // this.highlightSearchTerms();
       }
     );
   }
 
   // TODO: Reset highlighting when search term changes
-  highlightSearchTerms() {
-    var detailsDiv = this.domElement.nativeElement;
-    var innerHTML = detailsDiv.innerHTML;
-    var index = innerHTML.indexOf(this.searchTerm);
-    if (index >= 0) {
-      innerHTML =
-        innerHTML.substring(0, index) +
-        "<span style='background-color: orange' class='highlight'>" +
-        innerHTML.substring(index, index + this.searchTerm.length) +
-        '</span>' +
-        innerHTML.substring(index + this.searchTerm.length);
-      detailsDiv.innerHTML = innerHTML;
-    }
-  }
+  // highlightSearchTerms() {
+  //   var detailsDiv = this.domElement.nativeElement;
+  //   var innerHTML = detailsDiv.innerHTML;
+  //   var index = innerHTML.indexOf(this.searchTerm);
+  //   if (index >= 0) {
+  //     innerHTML =
+  //       innerHTML.substring(0, index) +
+  //       "<span style='background-color: orange' class='highlight'>" +
+  //       innerHTML.substring(index, index + this.searchTerm.length) +
+  //       '</span>' +
+  //       innerHTML.substring(index + this.searchTerm.length);
+  //     detailsDiv.innerHTML = innerHTML;
+  //   }
+  // }
 
   get isLoggedIn() {
     return this.authenticationService.isLoggedIn;

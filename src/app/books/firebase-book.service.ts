@@ -87,23 +87,36 @@ export class FirebaseBookService {
     return from(get(ref(this.db, `books/${id}`)));
   }
 
-  searchBooks(term: string): Observable<Book[]> {
-    var foundBooks = new Subject<Book[]>();
+  searchBooks(
+    term: string,
+    start: number = 0,
+    count: number = -1
+  ): Observable<Book[]> {
+    var result = new Subject<Book[]>();
     const observable = from(get(ref(this.db, 'books')));
 
     //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
-      const books: Book[] = data.val() || [];
+      var books: Book[] = data.val() || [];
       books.forEach((book, index) => {
         book.id = index;
       });
       const filteredBooks: Book[] = books.filter(
         (book) =>
-          book.name.toLowerCase().includes(term.toLowerCase()) ||
-          book.author.toLowerCase().includes(term.toLowerCase())
+          !!book &&
+          (book.name.toLowerCase().includes(term.toLowerCase()) ||
+            book.author.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
-      foundBooks.next(filteredBooks);
+      filteredBooks.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
+      const end =
+        count === -1
+          ? filteredBooks.length
+          : Math.min(start + count, filteredBooks.length);
+
+      const foundBooks: Book[] = filteredBooks.slice(start, end);
+
+      result.next(foundBooks);
 
       subscription.unsubscribe();
       // books.forEach((book) => {
@@ -113,7 +126,28 @@ export class FirebaseBookService {
       // });
     });
 
-    return foundBooks.asObservable();
+    return result.asObservable();
+  }
+
+  getSearchBooksCount(term: string): Observable<number> {
+    var result = new Subject<number>();
+    const observable = from(get(ref(this.db, 'books')));
+
+    const subscription = observable.subscribe((data) => {
+      var books: Book[] = data.val() || [];
+      const filteredBooks: Book[] = books.filter(
+        (book) =>
+          !!book &&
+          (book.name.toLowerCase().includes(term.toLowerCase()) ||
+            book.author.toLowerCase().includes(term.toLowerCase()))
+        // book.synopsis?.toLowerCase().includes(term.toLowerCase())
+      );
+
+      result.next(filteredBooks.length);
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
   }
 
   createBook(

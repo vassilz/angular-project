@@ -44,6 +44,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   searchSubscription: Subscription | null = null;
   countSubscription: Subscription | null = null;
   userSubscription: Subscription | null = null;
+  pageSizeSubscription: Subscription | null = null;
 
   isLoading: boolean = true;
 
@@ -129,32 +130,59 @@ export class BooksListComponent implements OnInit, OnDestroy {
   searchActive: boolean = false;
 
   ngOnInit(): void {
-    this.isLoading = true;
+    // this.isLoading = true;
 
-    this.countSubscription = this.bookService
-      .getBooksCount()
-      .subscribe((count) => {
-        this.allBooksCount = count;
-      });
+    // this.countSubscription = this.bookService
+    //   .getBooksCount()
+    //   .subscribe((count) => {
+    //     this.allBooksCount = count;
+    //   });
 
     const pageSizeLoaded = new Subject<void>();
-    const pageSizeSubscription = pageSizeLoaded.subscribe(() => {
+    this.pageSizeSubscription = pageSizeLoaded.subscribe(() => {
       this.loadBooks();
-      pageSizeSubscription.unsubscribe();
+      // pageSizeSubscription.unsubscribe();
     });
 
-    if (!!this.authenticationService.user) {
-      this.userSubscription = this.userService
-        .getUserById(this.authenticationService.user.uid)
-        .subscribe((user) => {
-          this.pageSize = user.settings.pageSize;
-          pageSizeLoaded.next();
-        });
-    } else {
-      pageSizeLoaded.next();
-    }
+    this.authenticationService.user$.subscribe((user) => {
+      if (!!user) {
+        console.log('Loading page size for user: ' + user.uid);
 
-    this.loadBooks();
+        this.userSubscription = this.userService
+          .getUserById(user.uid)
+          .subscribe((user) => {
+            this.pageSize = user.settings.pageSize;
+            console.log('Page size loaded: ' + this.pageSize);
+
+            pageSizeLoaded.next();
+          });
+      } else {
+        console.log('Loading default page size');
+
+        pageSizeLoaded.next();
+      }
+    });
+
+    // if (this.authenticationService.isLoggedIn) {
+    //   console.log(
+    //     'Loading page size for user: ' + this.authenticationService.user!.uid
+    //   );
+
+    //   this.userSubscription = this.userService
+    //     .getUserById(this.authenticationService.user!.uid)
+    //     .subscribe((user) => {
+    //       this.pageSize = user.settings.pageSize;
+    //       console.log('Page size loaded: ' + this.pageSize);
+
+    //       pageSizeLoaded.next();
+    //     });
+    // } else {
+    //   console.log('Loading default page size');
+
+    //   pageSizeLoaded.next();
+    // }
+
+    // this.loadBooks();
 
     this.rerenderService.rerenderBooks.subscribe(() => {
       this.loadBooks();
@@ -170,6 +198,15 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   loadBooks() {
+    this.isLoading = true;
+
+    this.countSubscription?.unsubscribe();
+    this.countSubscription = this.bookService
+      .getBooksCount()
+      .subscribe((count) => {
+        this.allBooksCount = count;
+      });
+
     this.subscription = this.bookService
       .getBooks(this.pageStart, this.pageSize)
       .subscribe((books) => {
@@ -237,13 +274,21 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   searchBooks() {
+    this.countSubscription?.unsubscribe();
+    this.countSubscription = this.bookService
+      .getSearchBooksCount(this.searchTerm)
+      .subscribe((count) => {
+        this.allBooksCount = count;
+      });
+
     this.searchSubscription = this.bookService
-      .searchBooks(this.searchTerm)
+      .searchBooks(this.searchTerm, this.pageStart, this.pageSize)
       .subscribe((foundBooks) => {
         console.log('Found books by search term ' + this.searchTerm + ':');
         console.log(foundBooks);
 
         this.books.set(foundBooks || []);
+        this.currentPage = this.books().length;
 
         this.sortBooks();
 
@@ -280,5 +325,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
     this.subscription!.unsubscribe();
     this.searchSubscription?.unsubscribe();
     this.countSubscription!.unsubscribe();
+    this.userSubscription?.unsubscribe();
+    this.pageSizeSubscription?.unsubscribe();
   }
 }

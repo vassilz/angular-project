@@ -61,18 +61,18 @@ export class BookCardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('Book card component initialized for book: ' + this.book.id);
-    console.log(this.book);
+    // console.log('Book card component initialized for book: ' + this.book.id);
+    // console.log(this.book);
 
     this.loadReviews();
     this.loadIsFavorite();
 
     this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
       () => {
-        console.log(
-          'Book card component re-initialized for book: ' + this.book.id
-        );
-        console.log(this.book);
+        // console.log(
+        //   'Book card component re-initialized for book: ' + this.book.id
+        // );
+        // console.log(this.book);
 
         this.loadReviews();
         this.loadIsFavorite();
@@ -175,7 +175,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Book card component destroyed for book: ' + this.book.id);
+    // console.log('Book card component destroyed for book: ' + this.book.id);
 
     this.rerenderSubscription?.unsubscribe();
     this.reviewSubscription?.unsubscribe();

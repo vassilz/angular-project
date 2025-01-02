@@ -11,7 +11,7 @@ import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
-import { forkJoin, map, Subscription } from 'rxjs';
+import { forkJoin, map, Subject, Subscription } from 'rxjs';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
@@ -22,6 +22,7 @@ import { RerenderService } from '../../rerender.service';
 import { JsonPipe } from '@angular/common';
 import { RecentBooksListComponent } from '../recent/recent-books-list/recent-books-list.component';
 import { BooksPagingComponent } from '../books-paging/books-paging.component';
+import { FirebaseUserService } from '../../users/firebase-user.service';
 
 @Component({
   selector: 'app-books-list',
@@ -42,6 +43,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
   searchSubscription: Subscription | null = null;
   countSubscription: Subscription | null = null;
+  userSubscription: Subscription | null = null;
 
   isLoading: boolean = true;
 
@@ -108,7 +110,8 @@ export class BooksListComponent implements OnInit, OnDestroy {
     private reviewService: FirebaseReviewService,
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private rerenderService: RerenderService
+    private rerenderService: RerenderService,
+    private userService: FirebaseUserService
   ) {}
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
@@ -126,11 +129,30 @@ export class BooksListComponent implements OnInit, OnDestroy {
   searchActive: boolean = false;
 
   ngOnInit(): void {
+    this.isLoading = true;
+
     this.countSubscription = this.bookService
       .getBooksCount()
       .subscribe((count) => {
         this.allBooksCount = count;
       });
+
+    const pageSizeLoaded = new Subject<void>();
+    const pageSizeSubscription = pageSizeLoaded.subscribe(() => {
+      this.loadBooks();
+      pageSizeSubscription.unsubscribe();
+    });
+
+    if (!!this.authenticationService.user) {
+      this.userSubscription = this.userService
+        .getUserById(this.authenticationService.user.uid)
+        .subscribe((user) => {
+          this.pageSize = user.settings.pageSize;
+          pageSizeLoaded.next();
+        });
+    } else {
+      pageSizeLoaded.next();
+    }
 
     this.loadBooks();
 
@@ -148,8 +170,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   loadBooks() {
-    this.isLoading = true;
-
     this.subscription = this.bookService
       .getBooks(this.pageStart, this.pageSize)
       .subscribe((books) => {

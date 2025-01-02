@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
   firstName: string | null = null;
   lastName: string | null = null;
-  // pageSize: number = 5;
+  pageSize: number = 5;
 
   favoriteBooks: Book[] = [];
 
@@ -42,6 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.user = user;
         this.firstName = user.firstName;
         this.lastName = user.lastName;
+        this.pageSize = user.settings.pageSize;
       });
 
     this.favoritesSubscription = this.userService
@@ -57,7 +58,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { firstName, lastName } = form.value;
+    const { firstName, lastName, pageSize } = form.value;
 
     this.updateUserSubscription = this.userService
       .updateUser(
@@ -68,7 +69,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         firstName,
         lastName,
         this.user!.password,
-        this.user!.favoriteBookIds
+        this.user!.favoriteBookIds,
+        { pageSize }
       )
       .subscribe((data) => {
         console.info('User updated successfully');

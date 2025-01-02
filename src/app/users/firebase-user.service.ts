@@ -14,6 +14,7 @@ import { User } from '../types/user';
 import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
 import { FirebaseBookService } from '../books/firebase-book.service';
+import { Settings } from '../types/settings';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,8 @@ export class FirebaseUserService {
     firstName: string | null | undefined,
     lastName: string | null | undefined,
     password: string,
-    favoriteBookIds: number[] = []
+    favoriteBookIds: number[] = [],
+    settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     return from(
       set(ref(this.db, `users/${userId}`), {
@@ -40,6 +42,7 @@ export class FirebaseUserService {
         lastName,
         password,
         favoriteBookIds,
+        settings,
       })
     );
   }
@@ -174,7 +177,8 @@ export class FirebaseUserService {
     firstName: string,
     lastName: string,
     password: string,
-    favoriteBookIds: number[] = []
+    favoriteBookIds: number[] = [],
+    settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     return from(
       update(ref(this.db, 'users/' + userId), {
@@ -185,6 +189,7 @@ export class FirebaseUserService {
         lastName,
         password,
         favoriteBookIds,
+        settings,
       })
     );
   }

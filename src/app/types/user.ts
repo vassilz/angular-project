@@ -1,5 +1,6 @@
 import { Book } from './book';
 import { Review } from './review';
+import { Settings } from './settings';
 
 export interface User {
   id: number;
@@ -10,5 +11,6 @@ export interface User {
   uuid: string;
   password: string;
   favoriteBookIds: number[];
+  settings: Settings;
   // reviews: Review[];
 }

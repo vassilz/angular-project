@@ -7,4 +7,5 @@
   margin-top: 20px;
   height: 90vh;
   min-height: 500px;
+  /* overflow-y: auto; */
 }

@@ -17,6 +17,8 @@ import { FirebaseUserService } from '../../users/firebase-user.service';
 import { RerenderService } from '../../rerender.service';
 import { Subscription } from 'rxjs';
 import { HighlightSearchPipe } from '../../highlight-search.pipe';
+import { FirebaseBookService } from '../firebase-book.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-book-card',
@@ -41,6 +43,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
   favoriteSubscription: Subscription | null = null;
   addFavoriteSubscription: Subscription | null = null;
   removeFavoriteSubscription: Subscription | null = null;
+  deleteSubscription: Subscription | null = null;
 
   isFavorite: boolean = false;
 
@@ -49,7 +52,9 @@ export class BookCardComponent implements OnInit, OnDestroy {
     private reviewService: FirebaseReviewService,
     private userService: FirebaseUserService,
     private changeDetectorRef: ChangeDetectorRef,
-    private rerenderService: RerenderService
+    private rerenderService: RerenderService,
+    private bookService: FirebaseBookService,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   ngOnInit(): void {
@@ -145,6 +150,21 @@ export class BookCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteBook() {
+    this.deleteSubscription = this.bookService
+      .deleteBook(this.book.id)
+      .subscribe({
+        next: () => {
+          console.log('Book ' + this.book.name + 'deleted successfully');
+          this.rerenderService.rerenderBooks.emit();
+        },
+        // TODO handle errors with an interceptor
+        error: (err) => {
+          this.errorHandlingService.handleError(err);
+        },
+      });
+  }
+
   ngOnDestroy(): void {
     console.log('Book card component destroyed for book: ' + this.book.id);
 
@@ -153,5 +173,6 @@ export class BookCardComponent implements OnInit, OnDestroy {
     this.favoriteSubscription?.unsubscribe();
     this.addFavoriteSubscription?.unsubscribe();
     this.removeFavoriteSubscription?.unsubscribe();
+    this.deleteSubscription?.unsubscribe();
   }
 }

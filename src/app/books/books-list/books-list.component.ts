@@ -41,6 +41,7 @@ import { BooksPagingComponent } from '../books-paging/books-paging.component';
 export class BooksListComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
   searchSubscription: Subscription | null = null;
+  countSubscription: Subscription | null = null;
 
   isLoading: boolean = true;
 
@@ -112,6 +113,8 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
 
+  allBooksCount: number = 0;
+
   pageStart: number = 0;
   pageSize: number = 5;
   // isLastPage: boolean = false;
@@ -123,7 +126,17 @@ export class BooksListComponent implements OnInit, OnDestroy {
   searchActive: boolean = false;
 
   ngOnInit(): void {
+    this.countSubscription = this.bookService
+      .getBooksCount()
+      .subscribe((count) => {
+        this.allBooksCount = count;
+      });
+
     this.loadBooks();
+
+    this.rerenderService.rerenderBooks.subscribe(() => {
+      this.loadBooks();
+    });
   }
 
   isLoggedIn() {
@@ -246,5 +259,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription!.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.countSubscription!.unsubscribe();
   }
 }

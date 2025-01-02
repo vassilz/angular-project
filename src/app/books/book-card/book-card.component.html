@@ -17,6 +17,7 @@
 </div>
 } } @if (isAdmin) {
 <button class="edit-button" [routerLink]="'' + book.id + '/edit'">Edit</button>
+<button class="delete-button" (click)="deleteBook()">Delete</button>
 } @else {
 <button class="details-button" [routerLink]="'' + book.id">Details</button>
 }

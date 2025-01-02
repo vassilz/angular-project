@@ -29,6 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
   firstName: string | null = null;
   lastName: string | null = null;
+  // pageSize: number = 5;
 
   favoriteBooks: Book[] = [];
 

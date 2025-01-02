@@ -24,16 +24,33 @@ export class FirebaseBookService {
     const observable = from(get(ref(this.db, 'books')));
 
     const subscription = observable.subscribe((data) => {
-      const books: Book[] = data.val() || [];
+      var books: Book[] = data.val() || [];
+      books = books.filter((book) => !!book);
       books.forEach((book, index) => {
         book.id = index;
       });
       books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
-      const foundBooks: Book[] = books.slice(
-        start,
-        count === -1 ? books.length : start + count
-      );
+      const end =
+        count === -1 ? books.length : Math.min(start + count, books.length);
+
+      const foundBooks: Book[] = books.slice(start, end);
+
       result.next(foundBooks);
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
+  }
+
+  getBooksCount(): Observable<number> {
+    var result = new Subject<number>();
+    const observable = from(get(ref(this.db, 'books')));
+
+    const subscription = observable.subscribe((data) => {
+      var books: Book[] = data.val() || [];
+      books = books.filter((book) => !!book);
+
+      result.next(books.length);
       subscription.unsubscribe();
     });
 
@@ -46,7 +63,8 @@ export class FirebaseBookService {
 
     //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
-      const books: Book[] = data.val() || [];
+      var books: Book[] = data.val() || [];
+      books = books.filter((book) => !!book);
       books.forEach((book, index) => {
         book.id = index;
       });
@@ -136,7 +154,7 @@ export class FirebaseBookService {
     );
   }
 
-  deleteBook(bookId: string): Observable<void> {
+  deleteBook(bookId: number): Observable<void> {
     return from(remove(ref(this.db, 'books/' + bookId)));
   }
 }

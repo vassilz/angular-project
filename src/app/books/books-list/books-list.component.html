@@ -46,10 +46,13 @@
     {{ pageStart }} - {{ pageStart + currentPage }}
     <img
       [class]="
-        'paging-next-button' + (currentPage < pageSize ? ' disabled' : '')
+        'paging-next-button' +
+        (pageStart + currentPage >= allBooksCount ? ' disabled' : '')
       "
       [src]="
-        currentPage < pageSize ? 'chevron-right-light.png' : 'chevron-right.png'
+        pageStart + currentPage >= allBooksCount
+          ? 'chevron-right-light.png'
+          : 'chevron-right.png'
       "
       (click)="nextPage()"
     />

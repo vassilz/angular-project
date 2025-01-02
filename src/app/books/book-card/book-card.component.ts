@@ -34,6 +34,9 @@ export class BookCardComponent implements OnInit, OnDestroy {
   @Input()
   searchTerm: string = '';
 
+  @ViewChild('confirmDeletionDialog')
+  confirmDeletionDialog: ElementRef | null = null;
+
   // @ViewChild('basicDetails') domElement!: ElementRef;
 
   reviews: Review[] = [];
@@ -150,6 +153,10 @@ export class BookCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDelete() {
+    this.confirmDeletionDialog!.nativeElement.showModal();
+  }
+
   deleteBook() {
     this.deleteSubscription = this.bookService
       .deleteBook(this.book.id)
@@ -157,6 +164,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
         next: () => {
           console.log('Book ' + this.book.name + 'deleted successfully');
           this.rerenderService.rerenderBooks.emit();
+
+          this.confirmDeletionDialog!.nativeElement.close();
         },
         // TODO handle errors with an interceptor
         error: (err) => {

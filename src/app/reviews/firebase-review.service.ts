@@ -62,6 +62,7 @@ export class FirebaseReviewService {
         text,
         userid,
         reviewDate,
+        likedBy: [],
       })
     );
   }
@@ -72,7 +73,8 @@ export class FirebaseReviewService {
     userid: string,
     rating: number,
     text: string,
-    reviewDate: string
+    reviewDate: string,
+    likedBy: string[]
   ): Observable<void> {
     return from(
       update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
@@ -80,11 +82,80 @@ export class FirebaseReviewService {
         text,
         userid,
         reviewDate,
+        likedBy,
       })
     );
   }
 
   deleteReview(bookId: number, reviewId: number): Observable<void> {
     return from(remove(ref(this.db, `books/${bookId}/reviews/${reviewId}`)));
+  }
+
+  getLikesCountForReview(bookId: number, reviewId: number): Observable<number> {
+    const observable = from(
+      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    );
+
+    var likesCount = new Subject<number>();
+    const subscription = observable.subscribe((data) => {
+      const review: Review = data.val();
+
+      if (!!review) {
+        likesCount.next(review.likedBy.length);
+      } else {
+        likesCount.next(0);
+      }
+      subscription.unsubscribe();
+    });
+
+    return likesCount.asObservable();
+  }
+
+  isReviewLikedByUser(
+    bookId: number,
+    reviewId: number,
+    userId: string
+  ): Observable<boolean> {
+    const observable = from(
+      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    );
+
+    var isLiked = new Subject<boolean>();
+    const subscription = observable.subscribe((data) => {
+      const review: Review = data.val();
+
+      if (!!review) {
+        isLiked.next(review.likedBy.includes(userId));
+      } else {
+        isLiked.next(false);
+      }
+      subscription.unsubscribe();
+    });
+
+    return isLiked.asObservable();
+  }
+
+  likeReview(
+    bookId: number,
+    reviewId: number,
+    userId: string
+  ): Observable<void> {
+    return from(
+      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        likedBy: [userId],
+      })
+    );
+  }
+
+  dislikeReview(
+    bookId: number,
+    reviewId: number,
+    userId: string
+  ): Observable<void> {
+    return from(
+      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        likedBy: [],
+      })
+    );
   }
 }

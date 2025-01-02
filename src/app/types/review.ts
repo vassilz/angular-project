@@ -8,4 +8,5 @@ export interface Review {
   text: string;
   rating: number;
   reviewDate: string;
+  likedBy: string[];
 }

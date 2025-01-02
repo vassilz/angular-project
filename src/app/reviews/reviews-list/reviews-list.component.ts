@@ -24,6 +24,8 @@ import { Subscription } from 'rxjs';
 export class ReviewsListComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
 
+  bookId: number = 0;
+
   rerenderSubscription: Subscription | null = null;
   getReviewsSubscription: Subscription | null = null;
 
@@ -37,12 +39,12 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   reviews: WritableSignal<Review[]> = signal<Review[]>([]);
 
   ngOnInit(): void {
-    const bookId = this.route.snapshot.params['bookId'];
-    this.loadReviews(bookId);
+    this.bookId = this.route.snapshot.params['bookId'];
+    this.loadReviews(this.bookId);
 
     this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
       () => {
-        this.loadReviews(bookId);
+        this.loadReviews(this.bookId);
 
         this.changeDetection.detectChanges();
       }

@@ -2,6 +2,15 @@
 <br />
 by {{ user.firstName }} {{ user.lastName }}
 {{ review.reviewDate | elapsedTime }}
-<!-- <div>
-  <button [routerLink]="'' + review.id">Edit</button>
-</div> -->
+<br />
+<br />
+{{ likesCount }} people found this helpful
+<br />
+@if (isLoggedIn) { Was this review helpful?
+<button
+  (click)="isLikedByCurrentUser ? dislikeReview() : likeReview()"
+  [style]="{ backgroundColor: isLikedByCurrentUser ? '#234465' : '' }"
+>
+  Yes
+</button>
+}

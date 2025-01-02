@@ -70,7 +70,8 @@ export class EditReviewComponent implements OnInit, OnDestroy {
         this.authenticationService.user!.uid,
         rating,
         text,
-        now
+        now,
+        this.review!.likedBy
       )
       .subscribe({
         next: (value) => {

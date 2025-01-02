@@ -5,7 +5,7 @@
 } @else {
 <div>Reviews:</div>
 @for (review of reviews(); track $index) {
-<app-review-card [review]="review" />
+<app-review-card [review]="review" [bookId]="bookId" />
 <br />
 <br />
 } } }

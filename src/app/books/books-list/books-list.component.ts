@@ -249,7 +249,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   nextPage() {
-    if (this.currentPage < this.pageSize) {
+    if (this.pageStart + this.currentPage >= this.allBooksCount) {
       return;
     }
     this.pageStart += this.pageSize;

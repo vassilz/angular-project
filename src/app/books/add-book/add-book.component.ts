@@ -13,7 +13,6 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
   styleUrl: './add-book.component.css',
 })
 export class AddBookComponent implements OnDestroy {
-  getBooksSubscription: Subscription | null = null;
   createBookSubscription: Subscription | null = null;
 
   constructor(
@@ -27,23 +26,13 @@ export class AddBookComponent implements OnDestroy {
       return;
     }
 
-    this.getBooksSubscription = this.bookService.getBooks().subscribe({
-      next: (books) => {
-        let bookCount = books?.length || 0;
+    const { name, author, publish_date, pages, synopsis } = form.value;
 
-        const { name, author, publish_date, pages, synopsis } = form.value;
-
-        this.createBookSubscription = this.bookService
-          .createBook(bookCount, name, author, publish_date, pages, synopsis)
-          .subscribe(() => {
-            this.router.navigate(['/books']);
-          });
-      },
-      // TODO handle errors with an interceptor
-      error: (err) => {
-        this.errorHandlingService.handleError(err);
-      },
-    });
+    this.createBookSubscription = this.bookService
+      .createBook(name, author, publish_date, pages, synopsis)
+      .subscribe(() => {
+        this.router.navigate(['/books']);
+      });
   }
 
   onCancel(event: MouseEvent) {
@@ -52,7 +41,6 @@ export class AddBookComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.getBooksSubscription?.unsubscribe();
     this.createBookSubscription?.unsubscribe();
   }
 }

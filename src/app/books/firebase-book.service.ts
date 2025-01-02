@@ -25,10 +25,10 @@ export class FirebaseBookService {
 
     const subscription = observable.subscribe((data) => {
       var books: Book[] = data.val() || [];
-      books = books.filter((book) => !!book);
       books.forEach((book, index) => {
         book.id = index;
       });
+      books = books.filter((book) => !!book);
       books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
       const end =
         count === -1 ? books.length : Math.min(start + count, books.length);
@@ -64,10 +64,10 @@ export class FirebaseBookService {
     //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
       var books: Book[] = data.val() || [];
-      books = books.filter((book) => !!book);
       books.forEach((book, index) => {
         book.id = index;
       });
+      books = books.filter((book) => !!book);
       books.sort((bookA, bookB) =>
         this.compareDates(bookB.publishDate, bookA.publishDate)
       );
@@ -117,22 +117,34 @@ export class FirebaseBookService {
   }
 
   createBook(
-    bookId: number,
     name: string,
     author: string,
     publishDate: string,
     pagesCount: number,
     synopsis?: string
   ): Observable<void> {
-    return from(
-      set(ref(this.db, 'books/' + bookId), {
-        name,
-        author,
-        publishDate,
-        pagesCount,
-        synopsis,
-      })
-    );
+    var result = new Subject<void>();
+    const observable = from(get(ref(this.db, 'books')));
+
+    const subscription = observable.subscribe((data) => {
+      const books: Book[] = data.val() || [];
+      const nextBookId = books.length;
+      subscription.unsubscribe();
+
+      from(
+        set(ref(this.db, 'books/' + nextBookId), {
+          name,
+          author,
+          publishDate,
+          pagesCount,
+          synopsis,
+        })
+      ).subscribe(() => {
+        result.next();
+      });
+    });
+
+    return result.asObservable();
   }
 
   updateBook(

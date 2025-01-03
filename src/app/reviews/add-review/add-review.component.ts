@@ -34,8 +34,8 @@ export class AddReviewComponent implements OnDestroy {
 
     this.getReviewsSubscription = this.reviewService
       .getReviews(this.bookId)
-      .subscribe((data) => {
-        let reviewCount = data.val()?.length || 0;
+      .subscribe((reviews) => {
+        let reviewCount = reviews.length;
 
         const { rating, text } = form.value;
 

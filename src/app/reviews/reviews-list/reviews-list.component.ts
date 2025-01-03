@@ -55,8 +55,8 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     this.getReviewsSubscription?.unsubscribe();
     this.getReviewsSubscription = this.reviewService
       .getReviews(bookId)
-      .subscribe((data) => {
-        this.reviews.set(data.val() || []);
+      .subscribe((reviews) => {
+        this.reviews.set(reviews);
         // this.reviews.forEach((review, index) => {
         //   review.id = index;
         // });

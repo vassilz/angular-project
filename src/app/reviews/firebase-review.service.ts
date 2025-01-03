@@ -18,8 +18,38 @@ import { Review } from '../types/review';
 export class FirebaseReviewService {
   constructor(private db: Database) {}
 
-  getReviews(bookId: number): Observable<DataSnapshot> {
-    return from(get(ref(this.db, `books/${bookId}/reviews`)));
+  getReviews(bookId: number): Observable<Review[]> {
+    const foundReviews = new Subject<Review[]>();
+    const observable = from(get(ref(this.db, `books/${bookId}/reviews`)));
+    observable.subscribe((data) => {
+      const reviews: Review[] = data.val() || [];
+
+      reviews.forEach((review, index) => {
+        review.id = index;
+      });
+
+      foundReviews.next(reviews);
+    });
+
+    return foundReviews.asObservable();
+  }
+
+  getReviewById(bookId: number, reviewId: number): Observable<Review> {
+    const observable = from(
+      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    );
+
+    var foundReview = new Subject<Review>();
+    observable.subscribe((data) => {
+      const review: Review = data.val();
+      if (!!review) {
+        review.id = reviewId;
+      }
+
+      foundReview.next(review);
+    });
+
+    return foundReview.asObservable();
   }
 
   getReviewByBookAndUser(
@@ -140,11 +170,24 @@ export class FirebaseReviewService {
     reviewId: number,
     userId: string
   ): Observable<void> {
-    return from(
-      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-        likedBy: [userId],
-      })
-    );
+    const result = new Subject<void>();
+
+    this.getReviewById(bookId, reviewId).subscribe((review) => {
+      if (review.likedBy.includes(userId)) {
+        // Nothing to do
+        result.next();
+      } else {
+        from(
+          update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+            likedBy: [...review.likedBy, userId],
+          })
+        ).subscribe(() => {
+          result.next();
+        });
+      }
+    });
+
+    return result.asObservable();
   }
 
   dislikeReview(
@@ -152,10 +195,22 @@ export class FirebaseReviewService {
     reviewId: number,
     userId: string
   ): Observable<void> {
-    return from(
-      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-        likedBy: [],
-      })
-    );
+    const result = new Subject<void>();
+    this.getReviewById(bookId, reviewId).subscribe((review) => {
+      if (!review.likedBy.includes(userId)) {
+        // Nothing to do
+        result.next();
+      } else {
+        from(
+          update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+            likedBy: review.likedBy.filter((id) => id !== userId),
+          })
+        ).subscribe(() => {
+          result.next();
+        });
+      }
+    });
+
+    return result.asObservable();
   }
 }

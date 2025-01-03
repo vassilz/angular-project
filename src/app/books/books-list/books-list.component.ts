@@ -215,8 +215,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
         const reviewObservables = this.books().map((book) =>
           this.reviewService.getReviews(book.id).pipe(
-            map((data) => {
-              const reviews = data.val() || [];
+            map((reviews) => {
               const rating = this.utilsService.calculateAverageRating(reviews);
               this.bookRatings.set(book.id, rating);
             })

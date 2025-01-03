@@ -112,8 +112,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
     this.reviewSubscription?.unsubscribe();
     this.reviewSubscription = this.reviewService
       .getReviews(this.book.id)
-      .subscribe((data) => {
-        this.reviews = data.val() || [];
+      .subscribe((reviews) => {
+        this.reviews = reviews;
         // console.log(this.reviews);
       });
   }

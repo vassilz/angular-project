@@ -151,9 +151,16 @@ export class BooksListComponent implements OnInit, OnDestroy {
         this.userSubscription = this.userService
           .getUserById(user.uid)
           .subscribe((user) => {
-            this.pageSize = user.settings.pageSize;
-            console.log('Page size loaded: ' + this.pageSize);
-
+            if (!!user.settings) {
+              this.pageSize = user.settings.pageSize;
+              console.log('Page size loaded: ' + this.pageSize);
+            } else {
+              console.log(
+                'No settings found for user: ' +
+                  user.uuid +
+                  '. Loading default page size.'
+              );
+            }
             pageSizeLoaded.next();
           });
       } else {
@@ -213,6 +220,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
         this.books.set(books || []);
         this.currentPage = this.books().length;
 
+        // TODO - fix completion of forkJoin below
+        this.isLoading = false;
+
         const reviewObservables = this.books().map((book) =>
           this.reviewService.getReviews(book.id).pipe(
             map((reviews) => {
@@ -229,7 +239,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
           this.restoreSorting();
           this.sortBooks();
 
-          this.isLoading = false;
+          // this.isLoading = false;
         });
       });
   }

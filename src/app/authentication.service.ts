@@ -8,6 +8,8 @@ import {
   User,
   UserCredential,
   onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { BehaviorSubject, from, Observable, Subscription, tap } from 'rxjs';
 
@@ -64,9 +66,27 @@ export class AuthenticationService implements OnDestroy {
     );
   }
 
-  login(email: string, password: string): Observable<UserCredential> {
+  loginWithEmailAndPassword(
+    email: string,
+    password: string
+  ): Observable<UserCredential> {
     const auth = getAuth();
     return from(signInWithEmailAndPassword(auth, email, password)).pipe(
+      tap((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.info('User logged in');
+        console.debug(user);
+        this.user$$.next(user);
+        this.isLoggedIn = true;
+      })
+    );
+  }
+
+  loginWithGoogle() {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    return from(signInWithPopup(auth, provider)).pipe(
       tap((userCredential) => {
         // Signed in
         const user = userCredential.user;

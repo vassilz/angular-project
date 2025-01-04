@@ -23,7 +23,6 @@ export class FirebaseUserService {
   constructor(private db: Database, private bookService: FirebaseBookService) {}
 
   createUser(
-    userId: number,
     uuid: string,
     username: string,
     email: string,
@@ -33,18 +32,31 @@ export class FirebaseUserService {
     favoriteBookIds: number[] = [],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
-    return from(
-      set(ref(this.db, `users/${userId}`), {
-        username,
-        uuid,
-        email,
-        firstName,
-        lastName,
-        password,
-        favoriteBookIds,
-        settings,
-      })
-    );
+    var result = new Subject<void>();
+    const observable = from(get(ref(this.db, 'users')));
+
+    const subscription = observable.subscribe((data) => {
+      const users: User[] = data.val() || [];
+      const nextUserId = users.length;
+      subscription.unsubscribe();
+
+      from(
+        set(ref(this.db, `users/${nextUserId}`), {
+          username,
+          uuid,
+          email,
+          firstName,
+          lastName,
+          password,
+          favoriteBookIds,
+          settings,
+        })
+      ).subscribe(() => {
+        result.next();
+      });
+    });
+
+    return result.asObservable();
   }
 
   getUsers(): Observable<DataSnapshot> {

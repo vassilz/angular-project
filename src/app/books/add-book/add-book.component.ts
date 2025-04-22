@@ -4,6 +4,7 @@ import { FirebaseBookService } from '../firebase-book.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { JettyBookService } from '../jetty-book.service';
 
 @Component({
   selector: 'app-add-book',
@@ -16,7 +17,8 @@ export class AddBookComponent implements OnDestroy {
   createBookSubscription: Subscription | null = null;
 
   constructor(
-    private bookService: FirebaseBookService,
+    // private bookService: FirebaseBookService,
+    private bookService: JettyBookService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService
   ) {}

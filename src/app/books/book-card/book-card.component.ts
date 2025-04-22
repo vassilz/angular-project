@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { HighlightSearchPipe } from '../../highlight-search.pipe';
 import { FirebaseBookService } from '../firebase-book.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { JettyBookService } from '../jetty-book.service';
 
 @Component({
   selector: 'app-book-card',
@@ -56,7 +57,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
     private userService: FirebaseUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    private bookService: FirebaseBookService,
+    // private bookService: FirebaseBookService,
+    private bookService: JettyBookService,
     private errorHandlingService: ErrorHandlingService
   ) {}
 

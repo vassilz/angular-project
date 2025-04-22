@@ -23,6 +23,7 @@ import { JsonPipe } from '@angular/common';
 import { RecentBooksListComponent } from '../recent/recent-books-list/recent-books-list.component';
 import { BooksPagingComponent } from '../books-paging/books-paging.component';
 import { FirebaseUserService } from '../../users/firebase-user.service';
+import { JettyBookService } from '../jetty-book.service';
 
 @Component({
   selector: 'app-books-list',
@@ -40,11 +41,11 @@ import { FirebaseUserService } from '../../users/firebase-user.service';
   styleUrl: './books-list.component.css',
 })
 export class BooksListComponent implements OnInit, OnDestroy {
-  subscription: Subscription | null = null;
-  searchSubscription: Subscription | null = null;
-  countSubscription: Subscription | null = null;
-  userSubscription: Subscription | null = null;
-  pageSizeSubscription: Subscription | null = null;
+  subscription?: Subscription;
+  searchSubscription?: Subscription;
+  countSubscription?: Subscription;
+  userSubscription?: Subscription;
+  pageSizeSubscription?: Subscription;
 
   isLoading: boolean = true;
 
@@ -106,7 +107,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
     ]);
 
   constructor(
-    private bookService: FirebaseBookService,
+    private bookService: JettyBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private utilsService: UtilsService,
@@ -130,14 +131,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
   searchActive: boolean = false;
 
   ngOnInit(): void {
-    // this.isLoading = true;
-
-    // this.countSubscription = this.bookService
-    //   .getBooksCount()
-    //   .subscribe((count) => {
-    //     this.allBooksCount = count;
-    //   });
-
     const pageSizeLoaded = new Subject<void>();
     this.pageSizeSubscription = pageSizeLoaded.subscribe(() => {
       this.loadBooks();
@@ -169,27 +162,6 @@ export class BooksListComponent implements OnInit, OnDestroy {
         pageSizeLoaded.next();
       }
     });
-
-    // if (this.authenticationService.isLoggedIn) {
-    //   console.log(
-    //     'Loading page size for user: ' + this.authenticationService.user!.uid
-    //   );
-
-    //   this.userSubscription = this.userService
-    //     .getUserById(this.authenticationService.user!.uid)
-    //     .subscribe((user) => {
-    //       this.pageSize = user.settings.pageSize;
-    //       console.log('Page size loaded: ' + this.pageSize);
-
-    //       pageSizeLoaded.next();
-    //     });
-    // } else {
-    //   console.log('Loading default page size');
-
-    //   pageSizeLoaded.next();
-    // }
-
-    // this.loadBooks();
 
     this.rerenderService.rerenderBooks.subscribe(() => {
       this.loadBooks();
@@ -283,6 +255,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   searchBooks() {
+    if (this.searchTerm == null || this.searchTerm === '') {
+      return;
+    }
     this.countSubscription?.unsubscribe();
     this.countSubscription = this.bookService
       .getSearchBooksCount(this.searchTerm)
@@ -331,9 +306,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription!.unsubscribe();
+    this.subscription?.unsubscribe();
     this.searchSubscription?.unsubscribe();
-    this.countSubscription!.unsubscribe();
+    this.countSubscription?.unsubscribe();
     this.userSubscription?.unsubscribe();
     this.pageSizeSubscription?.unsubscribe();
   }

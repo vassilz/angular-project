@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
+import { JettyBookService } from '../jetty-book.service';
 
 @Component({
   selector: 'app-book-details',
@@ -46,7 +47,8 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private bookService: FirebaseBookService,
+    // private bookService: FirebaseBookService,
+    private bookService: JettyBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private rerenderService: RerenderService,
@@ -56,8 +58,8 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const id = this.route.snapshot.params['bookId'];
 
-    this.bookSubscription = this.bookService.getBook(id).subscribe((data) => {
-      this.book = data.val();
+    this.bookSubscription = this.bookService.getBook(id).subscribe((book) => {
+      this.book = book;
       this.book.id = id;
       this.isLoading = false;
     });

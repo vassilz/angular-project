@@ -4,6 +4,7 @@ import { RecentBookCardComponent } from '../recent-book-card/recent-book-card.co
 import { Subscription } from 'rxjs';
 import { FirebaseBookService } from '../../firebase-book.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { JettyBookService } from '../../jetty-book.service';
 
 @Component({
   selector: 'app-recent-books-list',
@@ -19,7 +20,7 @@ export class RecentBooksListComponent implements OnInit {
 
   subscription: Subscription | null = null;
 
-  constructor(private bookService: FirebaseBookService) {}
+  constructor(private bookService: JettyBookService) {}
 
   ngOnInit(): void {
     this.loadRecentBooks();

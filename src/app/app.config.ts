@@ -7,6 +7,8 @@ import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
 import { provideDatabase } from '@angular/fire/database';
 import { getDatabase } from 'firebase/database';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { appInterceptor } from './app.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),
+    provideHttpClient(withInterceptors([appInterceptor])),
   ],
 };

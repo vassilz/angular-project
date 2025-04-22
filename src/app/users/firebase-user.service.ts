@@ -15,12 +15,17 @@ import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
 import { FirebaseBookService } from '../books/firebase-book.service';
 import { Settings } from '../types/settings';
+import { JettyBookService } from '../books/jetty-book.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseUserService {
-  constructor(private db: Database, private bookService: FirebaseBookService) {}
+  constructor(
+    private db: Database,
+    // private bookService: FirebaseBookService
+    private bookService: JettyBookService
+  ) {}
 
   createUser(
     uuid: string,
@@ -96,8 +101,8 @@ export class FirebaseUserService {
     this.getUserById(userId).subscribe((user) => {
       const bookIds: number[] = user.favoriteBookIds || [];
       bookIds.forEach((id) => {
-        this.bookService.getBook(id).subscribe((data) => {
-          const book = data.val();
+        this.bookService.getBook(id).subscribe((book) => {
+          // const book = book.val();
           if (!!book) {
             favoriteBooks.next(book);
           }

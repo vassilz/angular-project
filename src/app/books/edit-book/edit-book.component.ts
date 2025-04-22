@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Subscription } from 'rxjs';
 import { Book } from '../../types/book';
+import { JettyBookService } from '../jetty-book.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -20,7 +21,8 @@ export class EditBookComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private bookService: FirebaseBookService
+    // private bookService: FirebaseBookService
+    private bookService: JettyBookService
   ) {}
 
   ngOnInit(): void {
@@ -28,8 +30,8 @@ export class EditBookComponent implements OnInit, OnDestroy {
 
     this.getBooksSubscription = this.bookService
       .getBook(id)
-      .subscribe((data) => {
-        this.book = data.val();
+      .subscribe((book) => {
+        this.book = book;
         this.book.id = id;
       });
   }

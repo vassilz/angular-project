@@ -11,11 +11,12 @@ import {
 import { from, Observable, Subject } from 'rxjs';
 import { Book } from '../types/book';
 import moment from 'moment';
+import { BookService } from './book.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FirebaseBookService {
+export class FirebaseBookService implements BookService {
   constructor(private db: Database) {}
 
   getBooks(start: number = 0, count: number = -1): Observable<Book[]> {
@@ -83,8 +84,19 @@ export class FirebaseBookService {
     return moment(dateA).isBefore(dateB) ? -1 : 1;
   }
 
-  getBook(id: number): Observable<DataSnapshot> {
-    return from(get(ref(this.db, `books/${id}`)));
+  getBook(id: number): Observable<Book | null> {
+    var result = new Subject<Book | null>();
+    const observable = from(get(ref(this.db, `books/${id}`)));
+    observable.subscribe((data) => {
+      const book: Book = data.val();
+      if (!!book) {
+        book.id = id;
+        result.next(book);
+      } else {
+        result.next(null);
+      }
+    });
+    return result.asObservable();
   }
 
   searchBooks(

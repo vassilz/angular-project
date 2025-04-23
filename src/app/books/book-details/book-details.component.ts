@@ -59,8 +59,7 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.params['bookId'];
 
     this.bookSubscription = this.bookService.getBook(id).subscribe((book) => {
-      this.book = book;
-      this.book.id = id;
+      this.book = book!;
       this.isLoading = false;
     });
 

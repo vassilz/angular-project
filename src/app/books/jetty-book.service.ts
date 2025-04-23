@@ -3,11 +3,12 @@ import { from, Observable, Subject, tap } from 'rxjs';
 import { Book } from '../types/book';
 import moment from 'moment';
 import { HttpClient } from '@angular/common/http';
+import { BookService } from './book.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class JettyBookService {
+export class JettyBookService implements BookService {
   constructor(private http: HttpClient) {}
 
   getBooks(start: number = 0, count: number = -1): Observable<Book[]> {
@@ -73,7 +74,7 @@ export class JettyBookService {
     return moment(dateA).isBefore(dateB) ? -1 : 1;
   }
 
-  getBook(id: number): Observable<Book> {
+  getBook(id: number): Observable<Book | null> {
     return this.http.get<Book>(`/api/books/${id}`);
   }
 
@@ -179,15 +180,21 @@ export class JettyBookService {
     publishDate: string,
     pagesCount: number,
     synopsis?: string
-  ): Observable<Book> {
-    return this.http.put<Book>(`/api/books`, {
-      bookId,
-      name,
-      author,
-      publishDate,
-      pagesCount,
-      synopsis,
-    });
+  ): Observable<void> {
+    var result = new Subject<void>();
+    this.http
+      .put<Book>(`/api/books`, {
+        bookId,
+        name,
+        author,
+        publishDate,
+        pagesCount,
+        synopsis,
+      })
+      .subscribe(() => {
+        result.next();
+      });
+    return result.asObservable();
   }
 
   deleteBook(bookId: number): Observable<void> {

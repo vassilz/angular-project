@@ -1,29 +1,20 @@
 import { Injectable } from '@angular/core';
-import {
-  Database,
-  DataSnapshot,
-  get,
-  objectVal,
-  ref,
-  remove,
-  set,
-  update,
-} from '@angular/fire/database';
 import { from, Observable, Subject } from 'rxjs';
 import { Review } from '../types/review';
+import { HttpClient } from '@angular/common/http';
 import { ReviewService } from './review.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FirebaseReviewService implements ReviewService {
-  constructor(private db: Database) {}
+export class JettyReviewService implements ReviewService {
+  constructor(private http: HttpClient) {}
 
   getReviews(bookId: number): Observable<Review[]> {
     const foundReviews = new Subject<Review[]>();
-    const observable = from(get(ref(this.db, `books/${bookId}/reviews`)));
-    observable.subscribe((data) => {
-      const reviews: Review[] = data.val() || [];
+    const observable = this.http.get<Review[]>(`/api/books/${bookId}/reviews`);
+    observable.subscribe((reviews) => {
+      //   const reviews: Review[] = reviews.val() || [];
 
       reviews.forEach((review, index) => {
         review.id = index;
@@ -36,13 +27,13 @@ export class FirebaseReviewService implements ReviewService {
   }
 
   getReviewById(bookId: number, reviewId: number): Observable<Review | null> {
-    const observable = from(
-      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    const observable = this.http.get<Review>(
+      `/api/books/${bookId}/reviews/${reviewId}`
     );
 
     var foundReview = new Subject<Review | null>();
-    observable.subscribe((data) => {
-      const review: Review = data.val();
+    observable.subscribe((review) => {
+      //   const review: Review = review.val();
       if (!!review) {
         review.id = reviewId;
       }
@@ -57,11 +48,11 @@ export class FirebaseReviewService implements ReviewService {
     bookId: number,
     userId: string
   ): Observable<Review | null> {
-    const observable = from(get(ref(this.db, `books/${bookId}/reviews`)));
+    const observable = this.http.get<Review[]>(`/api/books/${bookId}/reviews`);
 
     var foundReview = new Subject<Review | null>();
-    observable.subscribe((data) => {
-      const reviews: Review[] = data.val();
+    observable.subscribe((reviews) => {
+      //   const reviews: Review[] = reviews.val();
 
       if (!!reviews) {
         reviews.forEach((review, index) => {
@@ -87,15 +78,20 @@ export class FirebaseReviewService implements ReviewService {
     text: string,
     reviewDate: string
   ): Observable<void> {
-    return from(
-      set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+    var result = new Subject<void>();
+    this.http
+      .post<Review>(`/api/books/${bookId}/reviews/${reviewId}`, {
         rating,
         text,
         userid,
         reviewDate,
         likedBy: [],
       })
-    );
+      .subscribe(() => {
+        result.next();
+      });
+
+    return result.asObservable();
   }
 
   updateReview(
@@ -107,29 +103,33 @@ export class FirebaseReviewService implements ReviewService {
     reviewDate: string,
     likedBy: string[]
   ): Observable<void> {
-    return from(
-      update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+    var result = new Subject<void>();
+    this.http
+      .put<Review>(`/api/books/${bookId}/reviews/${reviewId}`, {
         rating,
         text,
         userid,
         reviewDate,
         likedBy,
       })
-    );
+      .subscribe(() => {
+        result.next();
+      });
+    return result.asObservable();
   }
 
   deleteReview(bookId: number, reviewId: number): Observable<void> {
-    return from(remove(ref(this.db, `books/${bookId}/reviews/${reviewId}`)));
+    return this.http.delete<void>(`/api/books/${bookId}/reviews/${reviewId}`);
   }
 
   getLikesCountForReview(bookId: number, reviewId: number): Observable<number> {
-    const observable = from(
-      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    const observable = this.http.get<Review>(
+      `/api/books/${bookId}/reviews/${reviewId}`
     );
 
     var likesCount = new Subject<number>();
-    const subscription = observable.subscribe((data) => {
-      const review: Review = data.val();
+    const subscription = observable.subscribe((review) => {
+      //   const review: Review = review.val();
 
       if (!!review) {
         likesCount.next(review.likedBy.length);
@@ -147,13 +147,13 @@ export class FirebaseReviewService implements ReviewService {
     reviewId: number,
     userId: string
   ): Observable<boolean> {
-    const observable = from(
-      get(ref(this.db, `books/${bookId}/reviews/${reviewId}`))
+    const observable = this.http.get<Review>(
+      `/api/books/${bookId}/reviews/${reviewId}`
     );
 
     var isLiked = new Subject<boolean>();
-    const subscription = observable.subscribe((data) => {
-      const review: Review = data.val();
+    const subscription = observable.subscribe((review) => {
+      //   const review: Review = review.val();
 
       if (!!review) {
         isLiked.next(review.likedBy.includes(userId));
@@ -178,13 +178,13 @@ export class FirebaseReviewService implements ReviewService {
         // Nothing to do
         result.next();
       } else {
-        from(
-          update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-            likedBy: [...review.likedBy, userId],
-          })
-        ).subscribe(() => {
-          result.next();
-        });
+        // from(
+        //   update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        //     likedBy: [...review.likedBy, userId],
+        //   })
+        // ).subscribe(() => {
+        //   result.next();
+        // });
       }
     });
 
@@ -202,13 +202,13 @@ export class FirebaseReviewService implements ReviewService {
         // Nothing to do
         result.next();
       } else {
-        from(
-          update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-            likedBy: review.likedBy.filter((id) => id !== userId),
-          })
-        ).subscribe(() => {
-          result.next();
-        });
+        // from(
+        //   update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
+        //     likedBy: review.likedBy.filter((id) => id !== userId),
+        //   })
+        // ).subscribe(() => {
+        //   result.next();
+        // });
       }
     });
 

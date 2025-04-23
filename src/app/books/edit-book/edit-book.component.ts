@@ -31,8 +31,7 @@ export class EditBookComponent implements OnInit, OnDestroy {
     this.getBooksSubscription = this.bookService
       .getBook(id)
       .subscribe((book) => {
-        this.book = book;
-        this.book.id = id;
+        this.book = book!;
       });
   }
 

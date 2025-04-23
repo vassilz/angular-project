@@ -1,30 +1,18 @@
 import { Injectable } from '@angular/core';
-import {
-  Database,
-  DataSnapshot,
-  get,
-  objectVal,
-  ref,
-  remove,
-  set,
-  update,
-} from '@angular/fire/database';
 import { from, Observable, Subject } from 'rxjs';
 import { User } from '../types/user';
-import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
-import { FirebaseBookService } from '../books/firebase-book.service';
 import { Settings } from '../types/settings';
 import { JettyBookService } from '../books/jetty-book.service';
+import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FirebaseUserService implements UserService {
+export class JettyUserService implements UserService {
   constructor(
-    private db: Database,
-    // private bookService: FirebaseBookService
+    private http: HttpClient,
     private bookService: JettyBookService
   ) {}
 
@@ -39,15 +27,15 @@ export class FirebaseUserService implements UserService {
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     var result = new Subject<void>();
-    const observable = from(get(ref(this.db, 'users')));
+    const observable = this.http.get<User[]>('/api/users');
 
-    const subscription = observable.subscribe((data) => {
-      const users: User[] = data.val() || [];
+    const subscription = observable.subscribe((users) => {
       const nextUserId = users.length;
       subscription.unsubscribe();
 
-      from(
-        set(ref(this.db, `users/${nextUserId}`), {
+      this.http
+        .post<User>('/api/users', {
+          nextUserId,
           username,
           uuid,
           email,
@@ -57,40 +45,24 @@ export class FirebaseUserService implements UserService {
           favoriteBookIds,
           settings,
         })
-      ).subscribe(() => {
-        result.next();
-      });
+        .subscribe(() => {
+          result.next();
+        });
     });
 
     return result.asObservable();
   }
 
   getUsers(): Observable<User[]> {
-    var result = new Subject<User[]>();
-    const observable = from(get(ref(this.db, 'users')));
-
-    const subscription = observable.subscribe((data) => {
-      let users: User[] = data.val() || [];
-
-      users = users.filter((user) => !!user);
-      users.forEach((user, index) => {
-        user.id = index;
-      });
-
-      result.next(users);
-
-      subscription.unsubscribe();
-    });
-
-    return result.asObservable();
+    return this.http.get<User[]>('/api/users');
   }
 
   getUserById(userId: string): Observable<User | null> {
-    const observable = from(get(ref(this.db, 'users')));
+    const observable = this.http.get<User[]>('/api/users');
 
     var foundUser = new Subject<User>();
-    observable.subscribe((data) => {
-      const users: User[] = data.val();
+    observable.subscribe((users) => {
+      //   const users: User[] = users.val();
 
       users.forEach((user, index) => {
         user.id = index;
@@ -106,8 +78,7 @@ export class FirebaseUserService implements UserService {
   getFavoriteBookIdsForUser(userId: string): Observable<number[]> {
     var favoriteBookIds = new Subject<number[]>();
     this.getUserById(userId).subscribe((user) => {
-      // TODO : Check if user is null
-      const bookIds: number[] = user!.favoriteBookIds || [];
+      const bookIds: number[] = user.favoriteBookIds || [];
       favoriteBookIds.next(bookIds);
     });
 
@@ -117,8 +88,7 @@ export class FirebaseUserService implements UserService {
   getFavoriteBooksForUser(userId: string): Observable<Book> {
     var favoriteBooks = new Subject<Book>();
     this.getUserById(userId).subscribe((user) => {
-      // TODO : Check if user is null
-      const bookIds: number[] = user!.favoriteBookIds || [];
+      const bookIds: number[] = user.favoriteBookIds || [];
       bookIds.forEach((id) => {
         this.bookService.getBook(id).subscribe((book) => {
           // const book = book.val();
@@ -136,31 +106,29 @@ export class FirebaseUserService implements UserService {
     const subject = new Subject<void>();
 
     this.getUserById(userId).subscribe((user) => {
-      if (!!user) {
-        var favoriteBookIds = user.favoriteBookIds || [];
-        const index = favoriteBookIds.indexOf(bookId);
-        if (index === -1) {
-          favoriteBookIds.push(bookId);
-        }
-
-        console.log(favoriteBookIds);
-
-        this.updateUser(
-          user.id,
-          user.username,
-          user.uuid,
-          user.email,
-          user.firstName,
-          user.lastName,
-          user.password,
-          favoriteBookIds
-        ).subscribe((data) => {
-          console.info('User updated successfully');
-          // this.router.navigate(['/home']);
-
-          subject.next();
-        });
+      var favoriteBookIds = user.favoriteBookIds || [];
+      const index = favoriteBookIds.indexOf(bookId);
+      if (index === -1) {
+        favoriteBookIds.push(bookId);
       }
+
+      console.log(favoriteBookIds);
+
+      this.updateUser(
+        user.id,
+        user.username,
+        user.uuid,
+        user.email,
+        user.firstName,
+        user.lastName,
+        user.password,
+        favoriteBookIds
+      ).subscribe((data) => {
+        console.info('User updated successfully');
+        // this.router.navigate(['/home']);
+
+        subject.next();
+      });
     });
 
     return subject.asObservable();
@@ -170,29 +138,27 @@ export class FirebaseUserService implements UserService {
     const subject = new Subject<void>();
 
     this.getUserById(userId).subscribe((user) => {
-      if (!!user) {
-        var favoriteBookIds = user.favoriteBookIds || [];
-        const index = favoriteBookIds.indexOf(bookId);
-        if (index > -1) {
-          // only splice array when item is found
-          favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
-        }
-
-        this.updateUser(
-          user.id,
-          user.username,
-          user.uuid,
-          user.email,
-          user.firstName,
-          user.lastName,
-          user.password,
-          favoriteBookIds
-        ).subscribe((data) => {
-          // this.router.navigate(['/home']);
-
-          subject.next();
-        });
+      var favoriteBookIds = user.favoriteBookIds || [];
+      const index = favoriteBookIds.indexOf(bookId);
+      if (index > -1) {
+        // only splice array when item is found
+        favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
       }
+
+      this.updateUser(
+        user.id,
+        user.username,
+        user.uuid,
+        user.email,
+        user.firstName,
+        user.lastName,
+        user.password,
+        favoriteBookIds
+      ).subscribe((data) => {
+        // this.router.navigate(['/home']);
+
+        subject.next();
+      });
     });
 
     return subject.asObservable();
@@ -220,8 +186,10 @@ export class FirebaseUserService implements UserService {
     favoriteBookIds: number[] = [],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
-    return from(
-      update(ref(this.db, 'users/' + userId), {
+    var result = new Subject<void>();
+    this.http
+      .put<User>(`/api/users`, {
+        userId,
         username,
         uuid,
         email,
@@ -231,16 +199,13 @@ export class FirebaseUserService implements UserService {
         favoriteBookIds,
         settings,
       })
-    );
+      .subscribe(() => {
+        result.next();
+      });
+    return result.asObservable();
   }
 
   deleteUser(userId: number): Observable<void> {
-    return from(remove(ref(this.db, 'users/' + userId)));
-  }
-
-  doStuff() {
-    const doc = ref(this.db, 'user');
-    console.log(doc);
-    objectVal(doc).subscribe((data: any) => console.log(data));
+    return this.http.delete<void>(`/api/users/${userId}`);
   }
 }

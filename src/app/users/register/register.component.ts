@@ -12,6 +12,7 @@ import { AuthenticationService } from '../../authentication.service';
 import { User } from 'firebase/auth';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { Subscription } from 'rxjs';
+import { JettyUserService } from '../jetty-user.service';
 
 @Component({
   selector: 'app-register',
@@ -44,7 +45,8 @@ export class RegisterComponent implements OnDestroy {
   });
 
   constructor(
-    private userService: FirebaseUserService,
+    // private userService: FirebaseUserService,
+    private userService: JettyUserService,
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService

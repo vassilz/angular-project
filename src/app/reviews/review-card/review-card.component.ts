@@ -7,6 +7,7 @@ import { ElapsedTimePipe } from '../../shared/pipes/elapsed-time.pipe';
 import { Subject, Subscription } from 'rxjs';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
+import { JettyUserService } from '../../users/jetty-user.service';
 
 @Component({
   selector: 'app-review-card',
@@ -30,7 +31,8 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
 
   constructor(
-    private userService: FirebaseUserService,
+    // private userService: FirebaseUserService,
+    private userService: JettyUserService,
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService
   ) {}
@@ -39,7 +41,7 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
     this.subscription = this.userService
       .getUserById(this.review.userid)
       .subscribe((user) => {
-        this.user = user;
+        this.user = user!;
       });
 
     this.reviewService

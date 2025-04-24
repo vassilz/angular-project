@@ -6,6 +6,7 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { Subscription } from 'rxjs';
 import { User } from 'firebase/auth';
 import { FirebaseUserService } from '../firebase-user.service';
+import { JettyUserService } from '../jetty-user.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnDestroy {
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    private userService: FirebaseUserService
+    // private userService: FirebaseUserService
+    private userService: JettyUserService
   ) {}
 
   loginWithEmailAndPassword(form: NgForm) {

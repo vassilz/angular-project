@@ -174,13 +174,13 @@ export class FirebaseReviewService implements ReviewService {
     const result = new Subject<void>();
 
     this.getReviewById(bookId, reviewId).subscribe((review) => {
-      if (review.likedBy.includes(userId)) {
+      if (review!.likedBy.includes(userId)) {
         // Nothing to do
         result.next();
       } else {
         from(
           update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-            likedBy: [...review.likedBy, userId],
+            likedBy: [...review!.likedBy, userId],
           })
         ).subscribe(() => {
           result.next();
@@ -198,13 +198,13 @@ export class FirebaseReviewService implements ReviewService {
   ): Observable<void> {
     const result = new Subject<void>();
     this.getReviewById(bookId, reviewId).subscribe((review) => {
-      if (!review.likedBy.includes(userId)) {
+      if (!review!.likedBy.includes(userId)) {
         // Nothing to do
         result.next();
       } else {
         from(
           update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-            likedBy: review.likedBy.filter((id) => id !== userId),
+            likedBy: review!.likedBy.filter((id) => id !== userId),
           })
         ).subscribe(() => {
           result.next();

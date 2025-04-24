@@ -20,6 +20,7 @@ import { HighlightSearchPipe } from '../../highlight-search.pipe';
 import { FirebaseBookService } from '../firebase-book.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyBookService } from '../jetty-book.service';
+import { JettyUserService } from '../../users/jetty-user.service';
 
 @Component({
   selector: 'app-book-card',
@@ -54,7 +55,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
-    private userService: FirebaseUserService,
+    // private userService: FirebaseUserService,
+    private userService: JettyUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
     // private bookService: FirebaseBookService,

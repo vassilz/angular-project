@@ -6,6 +6,7 @@ import { User } from '../../types/user';
 import { Book } from '../../types/book';
 import { AuthenticationService } from '../../authentication.service';
 import { Subscription } from 'rxjs';
+import { JettyUserService } from '../jetty-user.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   updateUserSubscription: Subscription | null = null;
 
   constructor(
-    private userService: FirebaseUserService,
+    // private userService: FirebaseUserService,
+    private userService: JettyUserService,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService
@@ -40,9 +42,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .getUserById(uuid)
       .subscribe((user) => {
         this.user = user;
-        this.firstName = user.firstName;
-        this.lastName = user.lastName;
-        this.pageSize = user.settings.pageSize;
+        this.firstName = user!.firstName;
+        this.lastName = user!.lastName;
+        this.pageSize = user!.settings.pageSize;
       });
 
     this.favoritesSubscription = this.userService

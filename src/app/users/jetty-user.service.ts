@@ -78,7 +78,7 @@ export class JettyUserService implements UserService {
   getFavoriteBookIdsForUser(userId: string): Observable<number[]> {
     var favoriteBookIds = new Subject<number[]>();
     this.getUserById(userId).subscribe((user) => {
-      const bookIds: number[] = user.favoriteBookIds || [];
+      const bookIds: number[] = user!.favoriteBookIds || [];
       favoriteBookIds.next(bookIds);
     });
 
@@ -88,7 +88,7 @@ export class JettyUserService implements UserService {
   getFavoriteBooksForUser(userId: string): Observable<Book> {
     var favoriteBooks = new Subject<Book>();
     this.getUserById(userId).subscribe((user) => {
-      const bookIds: number[] = user.favoriteBookIds || [];
+      const bookIds: number[] = user!.favoriteBookIds || [];
       bookIds.forEach((id) => {
         this.bookService.getBook(id).subscribe((book) => {
           // const book = book.val();
@@ -106,29 +106,33 @@ export class JettyUserService implements UserService {
     const subject = new Subject<void>();
 
     this.getUserById(userId).subscribe((user) => {
-      var favoriteBookIds = user.favoriteBookIds || [];
-      const index = favoriteBookIds.indexOf(bookId);
-      if (index === -1) {
-        favoriteBookIds.push(bookId);
+      if (!!user) {
+        var favoriteBookIds = user.favoriteBookIds || [];
+        const index = favoriteBookIds.indexOf(bookId);
+        if (index === -1) {
+          favoriteBookIds.push(bookId);
+        }
+
+        console.log(favoriteBookIds);
+
+        this.updateUser(
+          user.id,
+          user.username,
+          user.uuid,
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.password,
+          favoriteBookIds
+        ).subscribe((data) => {
+          console.info('User updated successfully');
+          // this.router.navigate(['/home']);
+
+          subject.next();
+        });
+      } else {
+        console.error(`User with id ${userId} not found`);
       }
-
-      console.log(favoriteBookIds);
-
-      this.updateUser(
-        user.id,
-        user.username,
-        user.uuid,
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.password,
-        favoriteBookIds
-      ).subscribe((data) => {
-        console.info('User updated successfully');
-        // this.router.navigate(['/home']);
-
-        subject.next();
-      });
     });
 
     return subject.asObservable();
@@ -138,27 +142,31 @@ export class JettyUserService implements UserService {
     const subject = new Subject<void>();
 
     this.getUserById(userId).subscribe((user) => {
-      var favoriteBookIds = user.favoriteBookIds || [];
-      const index = favoriteBookIds.indexOf(bookId);
-      if (index > -1) {
-        // only splice array when item is found
-        favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
+      if (!!user) {
+        var favoriteBookIds = user.favoriteBookIds || [];
+        const index = favoriteBookIds.indexOf(bookId);
+        if (index > -1) {
+          // only splice array when item is found
+          favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
+        }
+
+        this.updateUser(
+          user.id,
+          user.username,
+          user.uuid,
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.password,
+          favoriteBookIds
+        ).subscribe((data) => {
+          // this.router.navigate(['/home']);
+
+          subject.next();
+        });
+      } else {
+        console.error(`User with id ${userId} not found`);
       }
-
-      this.updateUser(
-        user.id,
-        user.username,
-        user.uuid,
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.password,
-        favoriteBookIds
-      ).subscribe((data) => {
-        // this.router.navigate(['/home']);
-
-        subject.next();
-      });
     });
 
     return subject.asObservable();

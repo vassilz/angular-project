@@ -24,6 +24,7 @@ import { RecentBooksListComponent } from '../recent/recent-books-list/recent-boo
 import { BooksPagingComponent } from '../books-paging/books-paging.component';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { JettyBookService } from '../jetty-book.service';
+import { JettyUserService } from '../../users/jetty-user.service';
 
 @Component({
   selector: 'app-books-list',
@@ -113,7 +114,8 @@ export class BooksListComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    private userService: FirebaseUserService
+    // private userService: FirebaseUserService
+    private userService: JettyUserService
   ) {}
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
@@ -144,13 +146,13 @@ export class BooksListComponent implements OnInit, OnDestroy {
         this.userSubscription = this.userService
           .getUserById(user.uid)
           .subscribe((user) => {
-            if (!!user.settings) {
-              this.pageSize = user.settings.pageSize;
+            if (!!user!.settings) {
+              this.pageSize = user!.settings.pageSize;
               console.log('Page size loaded: ' + this.pageSize);
             } else {
               console.log(
                 'No settings found for user: ' +
-                  user.uuid +
+                  user!.uuid +
                   '. Loading default page size.'
               );
             }

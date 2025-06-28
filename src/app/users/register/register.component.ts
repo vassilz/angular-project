@@ -45,8 +45,8 @@ export class RegisterComponent implements OnDestroy {
   });
 
   constructor(
-    // private userService: FirebaseUserService,
-    private userService: JettyUserService,
+    private userService: FirebaseUserService,
+    // private userService: JettyUserService,
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService

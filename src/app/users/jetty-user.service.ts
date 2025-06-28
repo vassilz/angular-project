@@ -6,6 +6,7 @@ import { Settings } from '../types/settings';
 import { JettyBookService } from '../books/jetty-book.service';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
+import { FirebaseBookService } from '../books/firebase-book.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ import { UserService } from './user.service';
 export class JettyUserService implements UserService {
   constructor(
     private http: HttpClient,
-    private bookService: JettyBookService
+    // private bookService: JettyBookService
+    private bookService: FirebaseBookService
   ) {}
 
   createUser(

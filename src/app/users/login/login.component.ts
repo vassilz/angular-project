@@ -22,9 +22,9 @@ export class LoginComponent implements OnDestroy {
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    // private userService: FirebaseUserService
-    private userService: JettyUserService
-  ) {}
+    private userService: FirebaseUserService
+  ) // private userService: JettyUserService
+  {}
 
   loginWithEmailAndPassword(form: NgForm) {
     if (form.invalid) {

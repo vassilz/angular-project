@@ -5,6 +5,10 @@ import { AuthenticationService } from './authentication.service';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './footer/footer.component';
+import { ToastService } from './toast/toast.service';
+
+import { trigger, transition, style, animate } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -17,12 +21,26 @@ import { FooterComponent } from './footer/footer.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  animations: [
+    trigger('fade', [
+      transition('void => *', [
+        style({ opacity: 0 }),
+        animate('500ms ease-in-out', style({ opacity: 1 })),
+      ]),
+      transition('* => void', [
+        animate('500ms ease-in-out', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class AppComponent implements OnInit {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    protected toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     // Initialize Firebase
@@ -34,4 +52,8 @@ export class AppComponent implements OnInit {
     this.authenticationService.registerAuthChangeCallback();
   }
   title = 'bookstore';
+
+  removeToast(index: number) {
+    this.toastService.remove(index);
+  }
 }

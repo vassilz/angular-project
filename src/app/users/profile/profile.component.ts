@@ -21,8 +21,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   updateUserSubscription: Subscription | null = null;
 
   constructor(
-    // private userService: FirebaseUserService,
-    private userService: JettyUserService,
+    private userService: FirebaseUserService,
+    // private userService: JettyUserService,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService

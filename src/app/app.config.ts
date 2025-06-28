@@ -9,6 +9,7 @@ import { provideDatabase } from '@angular/fire/database';
 import { getDatabase } from 'firebase/database';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { appInterceptor } from './app.interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),
     provideHttpClient(withInterceptors([appInterceptor])),
+    provideAnimations(),
   ],
 };

@@ -1,19 +1,28 @@
-<div
-  [innerHTML]="book.name + ' by ' + book.author | highlightSearch : searchTerm"
-></div>
-@if (isLoggedIn) { @if (isFavorite) {
-<div
-  class="favorite-icon"
-  (click)="toggleFavorite()"
-  title="Remove from favorites"
->
-  &#9733;
+<div class="title-section">
+  <div
+    [innerHTML]="
+      book.name + ' by ' + book.author | highlightSearch : searchTerm
+    "
+  ></div>
+  @if (isLoggedIn) { @if (isFavorite) {
+  <div
+    class="favorite-icon"
+    (click)="toggleFavorite()"
+    title="Remove from favorites"
+  >
+    &#9733;
+  </div>
+  } @else {
+  <div
+    class="favorite-icon"
+    (click)="toggleFavorite()"
+    title="Add to favorites"
+  >
+    &#9734;
+  </div>
+  } }
 </div>
-} @else {
-<div class="favorite-icon" (click)="toggleFavorite()" title="Add to favorites">
-  &#9734;
-</div>
-} }
+
 <div class="rating">
   @if (reviews.length === 0) { No reviews yet } @else {
   {{ reviews | averageRating }} of 5, {{ reviews.length }} votes }

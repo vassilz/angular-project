@@ -47,8 +47,8 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    // private bookService: FirebaseBookService,
-    private bookService: JettyBookService,
+    private bookService: FirebaseBookService,
+    // private bookService: JettyBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private rerenderService: RerenderService,

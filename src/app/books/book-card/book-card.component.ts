@@ -21,6 +21,7 @@ import { FirebaseBookService } from '../firebase-book.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
+import { ToastService } from '../../toast/toast.service';
 
 @Component({
   selector: 'app-book-card',
@@ -55,13 +56,14 @@ export class BookCardComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
-    // private userService: FirebaseUserService,
-    private userService: JettyUserService,
+    private userService: FirebaseUserService,
+    // private userService: JettyUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    // private bookService: FirebaseBookService,
-    private bookService: JettyBookService,
-    private errorHandlingService: ErrorHandlingService
+    private bookService: FirebaseBookService,
+    // private bookService: JettyBookService,
+    private errorHandlingService: ErrorHandlingService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -143,6 +145,9 @@ export class BookCardComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
           console.info(`Book ${this.book.name} removed from favorites`);
           this.isFavorite = false;
+          this.toastService.add(
+            `Book ${this.book.name} removed from favorites`
+          );
         });
     } else {
       this.addFavoriteSubscription = this.userService
@@ -153,6 +158,7 @@ export class BookCardComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
           console.info(`Book ${this.book.name} added to favorites`);
           this.isFavorite = true;
+          this.toastService.add(`Book ${this.book.name} added to favorites`);
         });
     }
   }

@@ -31,8 +31,8 @@ export class ReviewCardComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
 
   constructor(
-    // private userService: FirebaseUserService,
-    private userService: JettyUserService,
+    private userService: FirebaseUserService,
+    // private userService: JettyUserService,
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService
   ) {}

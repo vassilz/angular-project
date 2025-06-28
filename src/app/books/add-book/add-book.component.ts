@@ -17,8 +17,8 @@ export class AddBookComponent implements OnDestroy {
   createBookSubscription: Subscription | null = null;
 
   constructor(
-    // private bookService: FirebaseBookService,
-    private bookService: JettyBookService,
+    private bookService: FirebaseBookService,
+    // private bookService: JettyBookService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService
   ) {}

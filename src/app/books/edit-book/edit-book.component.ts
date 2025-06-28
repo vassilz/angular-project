@@ -21,9 +21,9 @@ export class EditBookComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    // private bookService: FirebaseBookService
-    private bookService: JettyBookService
-  ) {}
+    private bookService: FirebaseBookService
+  ) // private bookService: JettyBookService
+  {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['bookId'];

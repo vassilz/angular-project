@@ -20,7 +20,7 @@ export class RecentBooksListComponent implements OnInit {
 
   subscription: Subscription | null = null;
 
-  constructor(private bookService: JettyBookService) {}
+  constructor(private bookService: FirebaseBookService) {}
 
   ngOnInit(): void {
     this.loadRecentBooks();

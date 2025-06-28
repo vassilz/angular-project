@@ -108,15 +108,16 @@ export class BooksListComponent implements OnInit, OnDestroy {
     ]);
 
   constructor(
-    private bookService: JettyBookService,
+    // private bookService: JettyBookService,
+    private bookService: FirebaseBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    // private userService: FirebaseUserService
-    private userService: JettyUserService
-  ) {}
+    private userService: FirebaseUserService
+  ) // private userService: JettyUserService
+  {}
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
 

@@ -24,9 +24,9 @@ import { UserService } from './user.service';
 export class FirebaseUserService implements UserService {
   constructor(
     private db: Database,
-    // private bookService: FirebaseBookService
-    private bookService: JettyBookService
-  ) {}
+    private bookService: FirebaseBookService
+  ) // private bookService: JettyBookService
+  {}
 
   createUser(
     uuid: string,

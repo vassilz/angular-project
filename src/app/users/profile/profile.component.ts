@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseUserService } from '../firebase-user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../types/user';
 import { Book } from '../../types/book';
 import { AuthenticationService } from '../../authentication.service';
-import { Subscription } from 'rxjs';
 import { JettyUserService } from '../jetty-user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-profile',
@@ -15,31 +15,20 @@ import { JettyUserService } from '../jetty-user.service';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit, OnDestroy {
-  getUserSubscription: Subscription | null = null;
-  favoritesSubscription: Subscription | null = null;
-  updateUserSubscription: Subscription | null = null;
-
+export class ProfileComponent {
   constructor(
     private userService: FirebaseUserService,
     // private userService: JettyUserService,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService
-  ) {}
-
-  user: User | null = null;
-  firstName: string | null = null;
-  lastName: string | null = null;
-  pageSize: number = 5;
-
-  favoriteBooks: Book[] = [];
-
-  ngOnInit(): void {
+    private authenticationService: AuthenticationService,
+    private destroyRef: DestroyRef
+  ) {
     const uuid = this.authenticationService.user!.uid;
 
-    this.getUserSubscription = this.userService
+    this.userService
       .getUserById(uuid)
+      .pipe(takeUntilDestroyed())
       .subscribe((user) => {
         this.user = user;
         this.firstName = user!.firstName;
@@ -47,12 +36,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.pageSize = user!.settings.pageSize;
       });
 
-    this.favoritesSubscription = this.userService
+    this.userService
       .getFavoriteBooksForUser(uuid)
+      .pipe(takeUntilDestroyed())
       .subscribe((book) => {
         this.favoriteBooks.push(book);
       });
   }
+
+  user: User | null = null;
+  firstName: string | null = null;
+  lastName: string | null = null;
+  pageSize: number = 5;
+
+  favoriteBooks: Book[] = [];
 
   editProfile(form: NgForm) {
     if (form.invalid) {
@@ -62,7 +59,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const { firstName, lastName, pageSize } = form.value;
 
-    this.updateUserSubscription = this.userService
+    this.userService
       .updateUser(
         this.user!.id,
         this.user!.username,
@@ -74,6 +71,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.user!.favoriteBookIds,
         { pageSize }
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         console.info('User updated successfully');
         this.router.navigate(['/home']);
@@ -83,11 +81,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onCancel(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/home']);
-  }
-
-  ngOnDestroy(): void {
-    this.getUserSubscription!.unsubscribe();
-    this.favoritesSubscription!.unsubscribe();
-    this.updateUserSubscription?.unsubscribe();
   }
 }

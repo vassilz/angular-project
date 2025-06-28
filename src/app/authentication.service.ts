@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
   getAuth,
@@ -11,22 +12,21 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from 'firebase/auth';
-import { BehaviorSubject, from, Observable, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, from, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticationService implements OnDestroy {
+export class AuthenticationService {
   private user$$ = new BehaviorSubject<User | null>(null);
   user$ = this.user$$.asObservable();
 
   user: User | null = null;
-  userSubscription: Subscription | null = null;
 
   isLoggedIn: boolean = false;
 
   constructor(private router: Router) {
-    this.userSubscription = this.user$.subscribe((user) => {
+    this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       this.user = user;
     });
   }
@@ -114,8 +114,4 @@ export class AuthenticationService implements OnDestroy {
   // get isLoggedIn(): boolean {
   //   return !!this.user;
   // }
-
-  ngOnDestroy(): void {
-    this.userSubscription?.unsubscribe();
-  }
 }

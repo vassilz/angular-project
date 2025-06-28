@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Book } from '../../../types/book';
 import { RecentBookCardComponent } from '../recent-book-card/recent-book-card.component';
-import { Subscription } from 'rxjs';
 import { FirebaseBookService } from '../../firebase-book.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { JettyBookService } from '../../jetty-book.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-recent-books-list',
@@ -13,30 +13,27 @@ import { JettyBookService } from '../../jetty-book.service';
   templateUrl: './recent-books-list.component.html',
   styleUrl: './recent-books-list.component.css',
 })
-export class RecentBooksListComponent implements OnInit {
-  recentBooks: Book[] = [];
+export class RecentBooksListComponent {
+  recentBooks = signal<Book[]>([]);
 
-  isLoading: boolean = true;
+  isLoading = signal<boolean>(true);
 
-  subscription: Subscription | null = null;
-
-  constructor(private bookService: FirebaseBookService) {}
-
-  ngOnInit(): void {
+  constructor(private bookService: FirebaseBookService) {
     this.loadRecentBooks();
   }
 
   loadRecentBooks(count: number = 5) {
-    this.isLoading = true;
+    this.isLoading.set(true);
 
-    this.subscription = this.bookService
+    this.bookService
       .getRecentBooks(count)
+      .pipe(takeUntilDestroyed())
       .subscribe((books) => {
-        this.recentBooks = books || [];
-        this.recentBooks.forEach((book, index) => {
+        this.recentBooks.set(books || []);
+        this.recentBooks().forEach((book, index) => {
           book.id = index;
         });
-        this.isLoading = false;
+        this.isLoading.set(false);
       });
   }
 }

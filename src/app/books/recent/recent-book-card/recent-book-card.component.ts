@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Book } from '../../../types/book';
 import { ElapsedTimePipe } from '../../../shared/pipes/elapsed-time.pipe';
 
@@ -10,6 +10,5 @@ import { ElapsedTimePipe } from '../../../shared/pipes/elapsed-time.pipe';
   styleUrl: './recent-book-card.component.css',
 })
 export class RecentBookCardComponent {
-  @Input()
-  book: Book = {} as Book;
+  book = input.required<Book>();
 }

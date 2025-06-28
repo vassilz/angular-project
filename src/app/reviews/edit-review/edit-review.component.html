@@ -1,4 +1,4 @@
-@if (isEditMode) {
+@if (isEditMode()) {
 <form #form="ngForm" (ngSubmit)="editReview(form)">
   <label for="rating">Rating:</label><br />
   <input

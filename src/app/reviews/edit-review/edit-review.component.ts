@@ -1,9 +1,9 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
-  OnDestroy,
-  OnInit,
+  DestroyRef,
+  input,
+  signal,
 } from '@angular/core';
 import { Review } from '../../types/review';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -11,7 +11,7 @@ import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { RerenderService } from '../../rerender.service';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit-review',
@@ -20,15 +20,10 @@ import { Subscription } from 'rxjs';
   templateUrl: './edit-review.component.html',
   styleUrl: './edit-review.component.css',
 })
-export class EditReviewComponent implements OnInit, OnDestroy {
-  isEditMode: boolean = false;
+export class EditReviewComponent {
+  isEditMode = signal<boolean>(false);
 
-  getReviewsSubscription: Subscription | null = null;
-  updateReviewSubscription: Subscription | null = null;
-  deleteReviewSubscription: Subscription | null = null;
-
-  @Input()
-  bookId: number = 0;
+  bookId = input.required<number>();
 
   review: Review | null = null;
   rating: number | null = null;
@@ -39,12 +34,15 @@ export class EditReviewComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private errorHandlingService: ErrorHandlingService,
     private changeDetection: ChangeDetectorRef,
-    private rerenderService: RerenderService
-  ) {}
-
-  ngOnInit(): void {
-    this.getReviewsSubscription = this.reviewService
-      .getReviewByBookAndUser(this.bookId, this.authenticationService.user!.uid)
+    private rerenderService: RerenderService,
+    private destroyRef: DestroyRef
+  ) {
+    this.reviewService
+      .getReviewByBookAndUser(
+        this.bookId(),
+        this.authenticationService.user!.uid
+      )
+      .pipe(takeUntilDestroyed())
       .subscribe((review) => {
         this.review = review;
         this.rating = review!.rating;
@@ -63,9 +61,9 @@ export class EditReviewComponent implements OnInit, OnDestroy {
 
     const errorHandlingService = this.errorHandlingService;
 
-    this.updateReviewSubscription = this.reviewService
+    this.reviewService
       .updateReview(
-        this.bookId,
+        this.bookId(),
         this.review!.id,
         this.authenticationService.user!.uid,
         rating,
@@ -73,6 +71,7 @@ export class EditReviewComponent implements OnInit, OnDestroy {
         now,
         this.review!.likedBy
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (value) => {
           // router.navigate(['/books']);
@@ -97,13 +96,14 @@ export class EditReviewComponent implements OnInit, OnDestroy {
   }
 
   toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
+    this.isEditMode.set(!this.isEditMode());
   }
 
   deleteReview() {
     const errorHandlingService = this.errorHandlingService;
-    this.deleteReviewSubscription = this.reviewService
-      .deleteReview(this.bookId, this.review!.id)
+    this.reviewService
+      .deleteReview(this.bookId(), this.review!.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (value) => {
           // router.navigate(['/books']);
@@ -120,11 +120,5 @@ export class EditReviewComponent implements OnInit, OnDestroy {
           errorHandlingService.handleError(err);
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    this.getReviewsSubscription?.unsubscribe();
-    this.updateReviewSubscription?.unsubscribe();
-    this.deleteReviewSubscription?.unsubscribe();
   }
 }

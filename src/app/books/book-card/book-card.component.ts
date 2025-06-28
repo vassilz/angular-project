@@ -1,11 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
-  Input,
-  OnDestroy,
+  input,
   OnInit,
-  ViewChild,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
@@ -15,13 +16,13 @@ import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { AverageRatingPipe } from '../../reviews/average-rating.pipe';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { RerenderService } from '../../rerender.service';
-import { Subscription } from 'rxjs';
 import { HighlightSearchPipe } from '../../highlight-search.pipe';
 import { FirebaseBookService } from '../firebase-book.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 import { ToastService } from '../../toast/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-card',
@@ -30,26 +31,16 @@ import { ToastService } from '../../toast/toast.service';
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.css',
 })
-export class BookCardComponent implements OnInit, OnDestroy {
-  @Input()
-  book: Book = {} as Book;
+export class BookCardComponent implements OnInit {
+  book = input.required<Book>();
 
-  @Input()
-  searchTerm: string = '';
+  searchTerm = input<string>('');
 
-  @ViewChild('confirmDeletionDialog')
-  confirmDeletionDialog: ElementRef | null = null;
+  confirmDeletionDialog = viewChild.required('confirmDeletionDialog', {
+    read: ElementRef,
+  });
 
-  // @ViewChild('basicDetails') domElement!: ElementRef;
-
-  reviews: Review[] = [];
-
-  rerenderSubscription: Subscription | null = null;
-  reviewSubscription: Subscription | null = null;
-  favoriteSubscription: Subscription | null = null;
-  addFavoriteSubscription: Subscription | null = null;
-  removeFavoriteSubscription: Subscription | null = null;
-  deleteSubscription: Subscription | null = null;
+  reviews = signal<Review[]>([]);
 
   isFavorite: boolean = false;
 
@@ -63,7 +54,8 @@ export class BookCardComponent implements OnInit, OnDestroy {
     private bookService: FirebaseBookService,
     // private bookService: JettyBookService,
     private errorHandlingService: ErrorHandlingService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
@@ -73,21 +65,19 @@ export class BookCardComponent implements OnInit, OnDestroy {
     this.loadReviews();
     this.loadIsFavorite();
 
-    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
-      () => {
-        // console.log(
-        //   'Book card component re-initialized for book: ' + this.book.id
-        // );
-        // console.log(this.book);
+    this.rerenderService.rerenderReviews.subscribe(() => {
+      // console.log(
+      //   'Book card component re-initialized for book: ' + this.book.id
+      // );
+      // console.log(this.book);
 
-        this.loadReviews();
-        this.loadIsFavorite();
-        this.changeDetectorRef.detectChanges();
+      this.loadReviews();
+      this.loadIsFavorite();
+      this.changeDetectorRef.detectChanges();
 
-        // TODO: implement highlighting properly
-        // this.highlightSearchTerms();
-      }
-    );
+      // TODO: implement highlighting properly
+      // this.highlightSearchTerms();
+    });
   }
 
   // TODO: Reset highlighting when search term changes
@@ -115,34 +105,34 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   loadReviews() {
-    this.reviewSubscription?.unsubscribe();
-    this.reviewSubscription = this.reviewService
-      .getReviews(this.book.id)
+    this.reviewService
+      .getReviews(this.book().id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((reviews) => {
-        this.reviews = reviews;
-        // console.log(this.reviews);
+        this.reviews.set(reviews);
       });
   }
 
   loadIsFavorite() {
-    this.favoriteSubscription?.unsubscribe();
-    this.favoriteSubscription = this.userService
+    this.userService
       .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((bookIds) => {
         const favoriteBookIds = bookIds || [];
-        this.isFavorite = favoriteBookIds.includes(this.book.id);
+        this.isFavorite = favoriteBookIds.includes(this.book().id);
         // console.log('Favorite book ids: ' + favoriteBookIds);
       });
   }
 
   toggleFavorite() {
     if (this.isFavorite) {
-      this.removeFavoriteSubscription = this.userService
+      this.userService
         .removeFavoriteBookForUser(
           this.authenticationService.user!.uid,
-          this.book.id
+          this.book().id
         )
-        .subscribe((data) => {
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => {
           console.info(`Book ${this.book.name} removed from favorites`);
           this.isFavorite = false;
           this.toastService.add(
@@ -150,12 +140,13 @@ export class BookCardComponent implements OnInit, OnDestroy {
           );
         });
     } else {
-      this.addFavoriteSubscription = this.userService
+      this.userService
         .addFavoriteBookForUser(
           this.authenticationService.user!.uid,
-          this.book.id
+          this.book().id
         )
-        .subscribe((data) => {
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
           console.info(`Book ${this.book.name} added to favorites`);
           this.isFavorite = true;
           this.toastService.add(`Book ${this.book.name} added to favorites`);
@@ -164,34 +155,24 @@ export class BookCardComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    this.confirmDeletionDialog!.nativeElement.showModal();
+    this.confirmDeletionDialog().nativeElement.showModal();
   }
 
   deleteBook() {
-    this.deleteSubscription = this.bookService
-      .deleteBook(this.book.id)
+    this.bookService
+      .deleteBook(this.book().id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           console.log('Book ' + this.book.name + 'deleted successfully');
           this.rerenderService.rerenderBooks.emit();
 
-          this.confirmDeletionDialog!.nativeElement.close();
+          this.confirmDeletionDialog().nativeElement.close();
         },
         // TODO handle errors with an interceptor
         error: (err) => {
           this.errorHandlingService.handleError(err);
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    // console.log('Book card component destroyed for book: ' + this.book.id);
-
-    this.rerenderSubscription?.unsubscribe();
-    this.reviewSubscription?.unsubscribe();
-    this.favoriteSubscription?.unsubscribe();
-    this.addFavoriteSubscription?.unsubscribe();
-    this.removeFavoriteSubscription?.unsubscribe();
-    this.deleteSubscription?.unsubscribe();
   }
 }

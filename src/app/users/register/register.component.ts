@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, DestroyRef } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,8 +11,8 @@ import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
 import { User } from 'firebase/auth';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
-import { Subscription } from 'rxjs';
 import { JettyUserService } from '../jetty-user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register',
@@ -21,10 +21,7 @@ import { JettyUserService } from '../jetty-user.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent implements OnDestroy {
-  registerSubscription: Subscription | null = null;
-  // createUserSubscription: Subscription | null = null;
-
+export class RegisterComponent {
   form = new FormGroup({
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
@@ -49,7 +46,8 @@ export class RegisterComponent implements OnDestroy {
     // private userService: JettyUserService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private errorHandlingService: ErrorHandlingService
+    private errorHandlingService: ErrorHandlingService,
+    private destroyRef: DestroyRef
   ) {}
 
   get passGroup() {
@@ -73,8 +71,9 @@ export class RegisterComponent implements OnDestroy {
     const errorHandlingService = this.errorHandlingService;
     const userService = this.userService;
 
-    this.registerSubscription = this.authenticationService
+    this.authenticationService
       .register(email!, password!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next(userCredential) {
           const user: User = userCredential.user;
@@ -107,10 +106,5 @@ export class RegisterComponent implements OnDestroy {
         //   console.log('Subscription complete');
         // },
       });
-  }
-
-  ngOnDestroy(): void {
-    this.registerSubscription?.unsubscribe();
-    // this.createUserSubscription?.unsubscribe();
   }
 }

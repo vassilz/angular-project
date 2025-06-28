@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   signal,
   WritableSignal,
@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reviews-list',
@@ -21,52 +21,45 @@ import { Subscription } from 'rxjs';
   templateUrl: './reviews-list.component.html',
   styleUrl: './reviews-list.component.css',
 })
-export class ReviewsListComponent implements OnInit, OnDestroy {
-  isLoading: boolean = true;
+export class ReviewsListComponent implements OnInit {
+  isLoading = signal<boolean>(true);
 
   bookId: number = 0;
-
-  rerenderSubscription: Subscription | null = null;
-  getReviewsSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private reviewService: FirebaseReviewService,
     private rerenderService: RerenderService,
-    private changeDetection: ChangeDetectorRef
-  ) {}
+    private changeDetection: ChangeDetectorRef,
+    private destroyRef: DestroyRef
+  ) {
+    this.bookId = this.route.snapshot.params['bookId'];
+    this.loadReviews(this.bookId);
+  }
 
   reviews: WritableSignal<Review[]> = signal<Review[]>([]);
 
   ngOnInit(): void {
-    this.bookId = this.route.snapshot.params['bookId'];
-    this.loadReviews(this.bookId);
-
-    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
-      () => {
+    this.rerenderService.rerenderReviews
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         this.loadReviews(this.bookId);
 
         this.changeDetection.detectChanges();
-      }
-    );
+      });
   }
 
   loadReviews(bookId: number): void {
-    this.getReviewsSubscription?.unsubscribe();
-    this.getReviewsSubscription = this.reviewService
+    this.reviewService
       .getReviews(bookId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((reviews) => {
         this.reviews.set(reviews);
         // this.reviews.forEach((review, index) => {
         //   review.id = index;
         // });
 
-        this.isLoading = false;
+        this.isLoading.set(false);
       });
-  }
-
-  ngOnDestroy(): void {
-    this.rerenderSubscription?.unsubscribe();
-    this.getReviewsSubscription?.unsubscribe();
   }
 }

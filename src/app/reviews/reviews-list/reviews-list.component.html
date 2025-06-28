@@ -1,6 +1,6 @@
 @if (reviews().length === 0) {
 <div>No reviews yet</div>
-} @else { @if (isLoading) {
+} @else { @if (isLoading()) {
 <app-loader />
 } @else {
 <div>Reviews:</div>

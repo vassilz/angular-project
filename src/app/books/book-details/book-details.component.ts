@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   signal,
   WritableSignal,
@@ -14,11 +14,11 @@ import { ReviewsListComponent } from '../../reviews/reviews-list/reviews-list.co
 import { AuthenticationService } from '../../authentication.service';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { EditReviewComponent } from '../../reviews/edit-review/edit-review.component';
-import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
 import { JettyBookService } from '../jetty-book.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-details',
@@ -34,14 +34,12 @@ import { JettyBookService } from '../jetty-book.service';
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css',
 })
-export class BookDetailsComponent implements OnInit, OnDestroy {
+export class BookDetailsComponent implements OnInit {
   book: Book = {} as Book;
 
-  isLoading: boolean = true;
+  bookId: number = 0;
 
-  bookSubscription: Subscription | null = null;
-  userSubscription: Subscription | null = null;
-  rerenderSubscription: Subscription | null = null;
+  isLoading = signal<boolean>(true);
 
   hasUserReviewedBook: WritableSignal<boolean> = signal(false);
 
@@ -52,31 +50,29 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private rerenderService: RerenderService,
-    private changeDetection: ChangeDetectorRef
-  ) {}
+    private changeDetection: ChangeDetectorRef,
+    private destroyRef: DestroyRef
+  ) {
+    this.bookId = this.route.snapshot.params['bookId'];
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.params['bookId'];
-
-    this.bookSubscription = this.bookService.getBook(id).subscribe((book) => {
-      this.book = book!;
-      this.isLoading = false;
-    });
-
-    this.loadHasUserReviewedBook(id);
-
-    this.rerenderSubscription = this.rerenderService.rerenderReviews.subscribe(
-      () => {
-        this.loadHasUserReviewedBook(id);
-        this.changeDetection.detectChanges();
-      }
-    );
+    this.bookService
+      .getBook(this.bookId)
+      .pipe(takeUntilDestroyed())
+      .subscribe((book) => {
+        this.book = book!;
+        this.isLoading.set(false);
+      });
   }
 
-  ngOnDestroy(): void {
-    this.bookSubscription!.unsubscribe();
-    this.userSubscription!.unsubscribe();
-    this.rerenderSubscription!.unsubscribe();
+  ngOnInit(): void {
+    this.loadHasUserReviewedBook(this.bookId);
+
+    this.rerenderService.rerenderReviews
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadHasUserReviewedBook(this.bookId);
+        this.changeDetection.detectChanges();
+      });
   }
 
   isLoggedIn() {
@@ -88,9 +84,9 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadHasUserReviewedBook(bookId: number): void {
-    this.userSubscription?.unsubscribe();
-    this.userSubscription = this.authenticationService.user$.subscribe(
-      (authenticatedUser) => {
+    this.authenticationService.user$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((authenticatedUser) => {
         if (!!authenticatedUser) {
           this.reviewService
             .getReviewByBookAndUser(bookId, authenticatedUser.uid)
@@ -98,7 +94,6 @@ export class BookDetailsComponent implements OnInit, OnDestroy {
               this.hasUserReviewedBook.set(!!review);
             });
         }
-      }
-    );
+      });
   }
 }

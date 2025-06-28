@@ -1,10 +1,10 @@
-<div>{{ review.rating }}: {{ review.text }}</div>
+<div>{{ review().rating }}: {{ review().text }}</div>
 <br />
 by {{ user.firstName }} {{ user.lastName }}
-{{ review.reviewDate | elapsedTime }}
+{{ review().reviewDate | elapsedTime }}
 <br />
 <br />
-{{ likesCount }} people found this helpful
+{{ likesCount() }} people found this helpful
 <br />
 @if (isLoggedIn) { Was this review helpful?
 <button

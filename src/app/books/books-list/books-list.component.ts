@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   signal,
   WritableSignal,
@@ -11,11 +11,12 @@ import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
-import { forkJoin, map, Subject, Subscription } from 'rxjs';
+import { forkJoin, map, Subject } from 'rxjs';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { UtilsService } from '../../shared/utils.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import moment from 'moment';
 import { RerenderService } from '../../rerender.service';
@@ -41,14 +42,8 @@ import { JettyUserService } from '../../users/jetty-user.service';
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
 })
-export class BooksListComponent implements OnInit, OnDestroy {
-  subscription?: Subscription;
-  searchSubscription?: Subscription;
-  countSubscription?: Subscription;
-  userSubscription?: Subscription;
-  pageSizeSubscription?: Subscription;
-
-  isLoading: boolean = true;
+export class BooksListComponent implements OnInit {
+  isLoading = signal<boolean>(true);
 
   sortBy: string = 'name';
   sortByOptions: string[] = [
@@ -115,9 +110,9 @@ export class BooksListComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    private userService: FirebaseUserService
-  ) // private userService: JettyUserService
-  {}
+    private userService: FirebaseUserService,
+    private destroyRef: DestroyRef // private userService: JettyUserService
+  ) {}
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
 
@@ -135,17 +130,17 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const pageSizeLoaded = new Subject<void>();
-    this.pageSizeSubscription = pageSizeLoaded.subscribe(() => {
+    pageSizeLoaded.subscribe(() => {
       this.loadBooks();
-      // pageSizeSubscription.unsubscribe();
     });
 
     this.authenticationService.user$.subscribe((user) => {
       if (!!user) {
         console.log('Loading page size for user: ' + user.uid);
 
-        this.userSubscription = this.userService
+        this.userService
           .getUserById(user.uid)
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             if (!!user!.settings) {
               this.pageSize = user!.settings.pageSize;
@@ -164,6 +159,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
         pageSizeLoaded.next();
       }
+      pageSizeLoaded.complete();
     });
 
     this.rerenderService.rerenderBooks.subscribe(() => {
@@ -180,23 +176,24 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   loadBooks() {
-    this.isLoading = true;
+    this.isLoading.set(true);
 
-    this.countSubscription?.unsubscribe();
-    this.countSubscription = this.bookService
+    this.bookService
       .getBooksCount()
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((count) => {
         this.allBooksCount = count;
       });
 
-    this.subscription = this.bookService
+    this.bookService
       .getBooks(this.pageStart, this.pageSize)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books || []);
         this.currentPage = this.books().length;
 
         // TODO - fix completion of forkJoin below
-        this.isLoading = false;
+        this.isLoading.set(false);
 
         const reviewObservables = this.books().map((book) =>
           this.reviewService.getReviews(book.id).pipe(
@@ -207,15 +204,17 @@ export class BooksListComponent implements OnInit, OnDestroy {
           )
         );
 
-        forkJoin(reviewObservables).subscribe(() => {
-          console.log('All reviews have been processed.');
+        forkJoin(reviewObservables)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            console.log('All reviews have been processed.');
 
-          // Initial sort
-          this.restoreSorting();
-          this.sortBooks();
+            // Initial sort
+            this.restoreSorting();
+            this.sortBooks();
 
-          // this.isLoading = false;
-        });
+            // this.isLoading = false;
+          });
       });
   }
 
@@ -261,15 +260,16 @@ export class BooksListComponent implements OnInit, OnDestroy {
     if (this.searchTerm == null || this.searchTerm === '') {
       return;
     }
-    this.countSubscription?.unsubscribe();
-    this.countSubscription = this.bookService
+    this.bookService
       .getSearchBooksCount(this.searchTerm)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((count) => {
         this.allBooksCount = count;
       });
 
-    this.searchSubscription = this.bookService
+    this.bookService
       .searchBooks(this.searchTerm, this.pageStart, this.pageSize)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((foundBooks) => {
         console.log('Found books by search term ' + this.searchTerm + ':');
         console.log(foundBooks);
@@ -306,13 +306,5 @@ export class BooksListComponent implements OnInit, OnDestroy {
     }
     this.pageStart += this.pageSize;
     this.loadBooks();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-    this.searchSubscription?.unsubscribe();
-    this.countSubscription?.unsubscribe();
-    this.userSubscription?.unsubscribe();
-    this.pageSizeSubscription?.unsubscribe();
   }
 }

@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, DestroyRef, input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-add-review',
@@ -13,18 +13,15 @@ import { Subscription } from 'rxjs';
   templateUrl: './add-review.component.html',
   styleUrl: './add-review.component.css',
 })
-export class AddReviewComponent implements OnDestroy {
-  @Input()
-  bookId: number = 0;
-
-  getReviewsSubscription: Subscription | null = null;
-  createReviewSubscription: Subscription | null = null;
+export class AddReviewComponent {
+  bookId = input.required<number>();
 
   constructor(
     private route: ActivatedRoute,
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
-    private rerenderService: RerenderService
+    private rerenderService: RerenderService,
+    private destroyRef: DestroyRef
   ) {}
 
   addReview(form: NgForm) {
@@ -32,32 +29,29 @@ export class AddReviewComponent implements OnDestroy {
       return;
     }
 
-    this.getReviewsSubscription = this.reviewService
-      .getReviews(this.bookId)
+    this.reviewService
+      .getReviews(this.bookId())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((reviews) => {
         let reviewCount = reviews.length;
 
         const { rating, text } = form.value;
 
         const now = new Date().toISOString();
-        this.createReviewSubscription = this.reviewService
+        this.reviewService
           .createReview(
-            this.bookId,
+            this.bookId(),
             reviewCount,
             this.authenticationService.user!.uid,
             rating,
             text,
             now
           )
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             // this.router.navigate(['/books']);
             this.rerenderService.rerenderReviews.emit();
           });
       });
-  }
-
-  ngOnDestroy(): void {
-    this.getReviewsSubscription?.unsubscribe();
-    this.createReviewSubscription?.unsubscribe();
   }
 }

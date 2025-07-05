@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FirebaseAuthorService } from '../firebase-author.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Author } from '../../types/author';
@@ -10,7 +10,7 @@ import { FirebaseBookService } from '../../books/firebase-book.service';
 @Component({
   selector: 'app-author-details',
   standalone: true,
-  imports: [JsonPipe],
+  imports: [JsonPipe, RouterLink],
   templateUrl: './author-details.component.html',
   styleUrl: './author-details.component.css',
 })

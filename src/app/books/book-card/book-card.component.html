@@ -1,9 +1,9 @@
 <div class="title-section">
-  <div
-    [innerHTML]="
-      book().name + ' by ' + authorName() | highlightSearch : searchTerm()
-    "
-  ></div>
+  <div [innerHTML]="book().name | highlightSearch : searchTerm()"></div>
+  <span>
+    by
+    <a [routerLink]="['/authors', book().authorId]">{{ authorName() }}</a>
+  </span>
   @if (isLoggedIn) { @if (isFavorite) {
   <div
     class="favorite-icon"

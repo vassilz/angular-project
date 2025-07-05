@@ -19,6 +19,7 @@ import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
 import { JettyBookService } from '../jetty-book.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 
 @Component({
   selector: 'app-book-details',
@@ -39,6 +40,8 @@ export class BookDetailsComponent implements OnInit {
 
   bookId: number = 0;
 
+  authorName = signal<string>('');
+
   isLoading = signal<boolean>(true);
 
   hasUserReviewedBook: WritableSignal<boolean> = signal(false);
@@ -49,6 +52,7 @@ export class BookDetailsComponent implements OnInit {
     // private bookService: JettyBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
+    private authorService: FirebaseAuthorService,
     private rerenderService: RerenderService,
     private changeDetection: ChangeDetectorRef,
     private destroyRef: DestroyRef
@@ -61,6 +65,8 @@ export class BookDetailsComponent implements OnInit {
       .subscribe((book) => {
         this.book = book!;
         this.isLoading.set(false);
+
+        this.loadAuthor();
       });
   }
 
@@ -77,6 +83,16 @@ export class BookDetailsComponent implements OnInit {
 
   isLoggedIn() {
     return this.authenticationService.isLoggedIn;
+  }
+
+  loadAuthor() {
+    console.log('Loading author :', this.book.authorId);
+    this.authorService
+      .getAuthor(this.book.authorId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((author) => {
+        this.authorName.set(author?.name || 'Unknown Author');
+      });
   }
 
   hasReviewedBook(): boolean {

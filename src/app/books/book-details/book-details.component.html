@@ -4,7 +4,7 @@
 <div>
   <img src="not-found.png" onerror="this.src='no-image-available.png';" />
   <h3>{{ book.name }}</h3>
-  by {{ book.author }}
+  by <a [routerLink]="['/authors', book.authorId]">{{ authorName() }}</a>
   <p></p>
   <div>Number of pages: {{ book.pagesCount }}</div>
   <br />

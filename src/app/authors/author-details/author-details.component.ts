@@ -28,7 +28,7 @@ export class AuthorDetailsComponent implements OnInit {
     private bookService: FirebaseBookService,
     private destroyRef: DestroyRef
   ) {
-    this.authorId = this.route.snapshot.params['authorId'];
+    this.authorId = parseInt(this.route.snapshot.params['authorId']);
 
     this.authorService
       .getAuthor(this.authorId)

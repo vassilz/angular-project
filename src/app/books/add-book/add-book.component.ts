@@ -1,5 +1,11 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Router } from '@angular/router';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
@@ -8,15 +14,27 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../toast/toast.service';
 import { Author } from '../../types/author';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
+import { isPastValidator } from './is-past.validator';
 
 @Component({
   selector: 'app-add-book',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-book.component.html',
   styleUrl: './add-book.component.css',
 })
 export class AddBookComponent implements OnInit {
+  form = new FormGroup({
+    name: new FormControl('', { nonNullable: true }),
+    author: new FormControl(0, { nonNullable: true }),
+    publish_date: new FormControl(new Date(), {
+      validators: [isPastValidator()],
+      nonNullable: true,
+    }),
+    pages: new FormControl(0, { nonNullable: true }),
+    synopsis: new FormControl('', { nonNullable: true }),
+  });
+
   isLoading = signal<boolean>(true);
 
   authors = signal<Author[]>([]);
@@ -47,17 +65,17 @@ export class AddBookComponent implements OnInit {
       });
   }
 
-  addBook(form: NgForm) {
-    if (form.invalid) {
+  addBook() {
+    if (this.form.invalid) {
       return;
     }
 
-    console.log('Form value:', form.value);
+    console.log('Form value:', this.form.value);
 
-    const { name, author, publish_date, pages, synopsis } = form.value;
+    const { name, author, publish_date, pages, synopsis } = this.form.value;
 
     this.bookService
-      .createBook(name, author, publish_date, pages, synopsis)
+      .createBook(name!, author!, publish_date!, pages!, synopsis)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.toastService.add(`Book ${name} created successfully`);

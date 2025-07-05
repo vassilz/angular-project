@@ -148,7 +148,7 @@ export class JettyBookService implements BookService {
   createBook(
     name: string,
     authorId: number,
-    publishDate: string,
+    publishDate: Date,
     pagesCount: number,
     synopsis?: string
   ): Observable<void> {

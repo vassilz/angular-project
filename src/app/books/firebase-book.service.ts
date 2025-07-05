@@ -65,6 +65,7 @@ export class FirebaseBookService implements BookService {
         book.id = index;
       });
       books = books.filter((book) => !!book);
+
       books = books.filter((book) => book.authorId === authorId);
 
       result.next(books);
@@ -192,7 +193,7 @@ export class FirebaseBookService implements BookService {
   createBook(
     name: string,
     authorId: number,
-    publishDate: string,
+    publishDate: Date,
     pagesCount: number,
     synopsis?: string
   ): Observable<void> {

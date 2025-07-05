@@ -1,35 +1,33 @@
 @for (author of authors(); track author.id) {
 <p>{{ author.name }}</p>
 }
-<form #form="ngForm" (ngSubmit)="addBook(form)">
+<form [formGroup]="form" (ngSubmit)="addBook()">
   <label for="name">Name:</label><br />
   <input
     type="text"
     id="name"
-    name="name"
+    formControlName="name"
     placeholder="John"
-    [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
-    #inputName="ngModel"
-    ngModel
+    [class]="form.get('name')?.touched && form.get('name')?.errors?.['required'] ? 'input-error' : ''"
     required
   />
-  @if (inputName?.touched) {
+  @if (form.get('name')?.touched) {
   <div>
-    @if (inputName?.errors?.['required']) {
+    @if (form.get('name')?.errors?.['required']) {
     <p class="error">Book name is required.</p>
     }
   </div>
   }
   <br />
   <label for="author">Author:</label><br />
-  <select id="author" name="author" #inputAuthor="ngModel" ngModel required>
+  <select id="author" formControlName="author" required>
     @for (author of authors(); track author.id) {
     <option [value]="author.id">{{ author.name }}</option>
     }
   </select>
-  @if (inputAuthor?.touched) {
+  @if (form.get('author')?.touched) {
   <div>
-    @if (inputAuthor?.errors?.['required']) {
+    @if (form.get('author')?.errors?.['required']) {
     <p class="error">Author is required.</p>
     }
   </div>
@@ -37,18 +35,18 @@
   <br />
   <label for="publish_date">Publish date:</label><br />
   <input
-    type="text"
+    type="date"
     id="publish_date"
-    name="publish_date"
+    formControlName="publish_date"
     placeholder="Doe"
-    #inputPublishDate="ngModel"
-    ngModel
     required
   />
-  @if (inputPublishDate?.touched) {
+  @if (form.get('publish_date')?.touched) {
   <div>
-    @if (inputPublishDate?.errors?.['required']) {
+    @if (form.get('publish_date')?.errors?.['required']) {
     <p class="error">Publish date is required.</p>
+    } @if (form.get('publish_date')?.errors?.['notInPast']) {
+    <p class="error">Publish date must be in the past.</p>
     }
   </div>
   }
@@ -57,15 +55,13 @@
   <input
     type="text"
     id="pages"
-    name="pages"
+    formControlName="pages"
     placeholder="Doe"
-    #inputPages="ngModel"
-    ngModel
     required
   />
-  @if (inputPages?.touched) {
+  @if (form.get('pages')?.touched) {
   <div>
-    @if (inputPages?.errors?.['required']) {
+    @if (form.get('pages')?.errors?.['required']) {
     <p class="error">Pages count is required.</p>
     }
   </div>
@@ -73,19 +69,18 @@
   <br />
   <label for="synopsis">Synopsis:</label><br />
   <textarea
-    [class]="inputSynopsis?.touched && inputSynopsis?.errors?.['minlength'] ? 'input-error' : ''"
+    [class]="form.get('synopsis')?.touched && form.get('synopsis')?.errors?.['minlength'] ? 'input-error' : ''"
     type="text"
     id="synopsis"
     name="synopsis"
     placeholder="Doe"
-    #inputSynopsis="ngModel"
     rows="5"
     minlength="20"
-    ngModel
+    formControlName="synopsis"
   ></textarea>
-  @if (inputSynopsis?.touched) {
+  @if (form.get('synopsis')?.touched) {
   <div>
-    @if (inputSynopsis?.errors?.['minlength']) {
+    @if (form.get('synopsis')?.errors?.['minlength']) {
     <p class="error">Synopsis must be at least 20 characters long.</p>
     }
   </div>

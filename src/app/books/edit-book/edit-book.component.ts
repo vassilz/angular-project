@@ -1,10 +1,11 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Book } from '../../types/book';
 import { JettyBookService } from '../jetty-book.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -16,10 +17,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class EditBookComponent {
   book: Book = {} as Book;
 
+  authorName = signal<string>('');
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
+    private authorService: FirebaseAuthorService,
     private destroyRef: DestroyRef // private bookService: JettyBookService
   ) {
     const id = this.route.snapshot.params['bookId'];
@@ -29,6 +33,16 @@ export class EditBookComponent {
       .pipe(takeUntilDestroyed())
       .subscribe((book) => {
         this.book = book!;
+        this.loadAuthor();
+      });
+  }
+
+  loadAuthor() {
+    this.authorService
+      .getAuthor(this.book.authorId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((author) => {
+        this.authorName.set(author?.name || 'Unknown Author');
       });
   }
 

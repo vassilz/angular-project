@@ -25,8 +25,8 @@
     name="author"
     placeholder="Doe"
     #inputAuthor="ngModel"
-    [ngModel]="book.author"
-    required
+    [ngModel]="authorName()"
+    disabled
   />
   @if (inputAuthor?.touched) {
   <div>

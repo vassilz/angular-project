@@ -1,4 +1,6 @@
-{{ author() | json }}
+Name: {{ author()?.name }}
+<p>Country: {{ author()?.country }}</p>
+<p>Born: {{ author()?.birthDate | date }}</p>
 
 Books: @for (book of books(); track book.id) {
 <div>

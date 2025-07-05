@@ -7,6 +7,8 @@ import { Book } from '../../types/book';
 import { AuthenticationService } from '../../authentication.service';
 import { JettyUserService } from '../jetty-user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FirebaseAuthorService } from '../../authors/firebase-author.service';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -16,12 +18,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
+  bookAuthors: Map<number, string> = new Map();
+
   constructor(
     private userService: FirebaseUserService,
     // private userService: JettyUserService,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private authorService: FirebaseAuthorService,
     private destroyRef: DestroyRef
   ) {
     const uuid = this.authenticationService.user!.uid;
@@ -41,6 +46,20 @@ export class ProfileComponent {
       .pipe(takeUntilDestroyed())
       .subscribe((book) => {
         this.favoriteBooks.push(book);
+      });
+
+    const authorObservables = this.favoriteBooks.map((book) =>
+      this.authorService.getAuthor(book.authorId).pipe(
+        map((author) => {
+          this.bookAuthors.set(book.id, author!.name);
+        })
+      )
+    );
+
+    forkJoin(authorObservables)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        console.log('All authors have been processed.');
       });
   }
 

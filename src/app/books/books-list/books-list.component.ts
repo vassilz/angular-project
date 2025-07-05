@@ -125,7 +125,6 @@ export class BooksListComponent implements OnInit {
   currentPage: number = 0;
 
   bookRatings: Map<number, number> = new Map();
-  bookAuthors: Map<number, string> = new Map();
 
   searchTerm: string = '';
   searchActive: boolean = false;
@@ -194,6 +193,10 @@ export class BooksListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books || []);
+        if (this.isDescending) {
+          this.books().reverse();
+        }
+
         this.currentPage = this.books().length;
 
         // TODO - fix completion of forkJoin below
@@ -237,6 +240,8 @@ export class BooksListComponent implements OnInit {
     localStorage.setItem(this.SORT_BY_KEY, this.sortBy);
     localStorage.setItem(this.IS_DESCENDING_KEY, this.isDescending.toString());
 
+    this.loadBooks();
+    this.rerenderService.rerenderReviews.emit();
     // this.books.set(
     //   this.books().sort(this.comparatorFunctions.get(this.sortBy))
     // );

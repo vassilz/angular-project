@@ -1,0 +1,64 @@
+<form #form="ngForm" (ngSubmit)="addAuthor(form)">
+  <label for="name">Name:</label><br />
+  <input
+    type="text"
+    id="name"
+    name="name"
+    placeholder="John"
+    [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
+    #inputName="ngModel"
+    ngModel
+    required
+  />
+  @if (inputName?.touched) {
+  <div>
+    @if (inputName?.errors?.['required']) {
+    <p class="error">Author name is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="birth_date">Birth date:</label><br />
+  <input
+    type="date"
+    id="birth_date"
+    name="birth_date"
+    #inputBirthDate="ngModel"
+    ngModel
+    required
+  />
+  @if (inputBirthDate?.touched) {
+  <div>
+    @if (inputBirthDate?.errors?.['required']) {
+    <p class="error">Birth date is required.</p>
+    }
+  </div>
+  }
+  <br />
+  <label for="country">Country:</label><br />
+  <input
+    type="text"
+    id="country"
+    name="country"
+    placeholder="Argentina"
+    #inputCountry="ngModel"
+    ngModel
+    required
+  />
+  @if (inputCountry?.touched) {
+  <div>
+    @if (inputCountry?.errors?.['required']) {
+    <p class="error">Country is required.</p>
+    }
+  </div>
+  }
+  <br /><br />
+
+  <button class="cancel" (click)="onCancel($event)">Cancel</button>
+  <button
+    [disabled]="form.invalid"
+    [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+  >
+    Add
+  </button>
+</form>

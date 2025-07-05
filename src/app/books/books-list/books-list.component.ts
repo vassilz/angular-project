@@ -26,6 +26,7 @@ import { BooksPagingComponent } from '../books-paging/books-paging.component';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
+import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 
 @Component({
   selector: 'app-books-list',
@@ -59,48 +60,48 @@ export class BooksListComponent implements OnInit {
   SORT_BY_KEY: string = 'sortBy';
   IS_DESCENDING_KEY: string = 'isDescending';
 
-  private comparatorFunctions: Map<string, (a: Book, b: Book) => number> =
-    new Map([
-      [
-        'name',
-        (bookA, bookB) =>
-          this.isDescending
-            ? bookB.name.localeCompare(bookA.name)
-            : bookA.name.localeCompare(bookB.name),
-      ],
-      [
-        'author',
-        (bookA, bookB) =>
-          this.isDescending
-            ? bookB.author.localeCompare(bookA.author)
-            : bookA.author.localeCompare(bookB.author),
-      ],
-      [
-        'publishDate',
-        (bookA, bookB) =>
-          this.isDescending
-            ? this.compareDates(bookB.publishDate, bookA.publishDate)
-            : this.compareDates(bookA.publishDate, bookB.publishDate),
-      ],
-      [
-        'pages',
-        (bookA, bookB) =>
-          this.isDescending
-            ? bookB.pagesCount < bookA.pagesCount
-              ? -1
-              : 1
-            : bookA.pagesCount < bookB.pagesCount
-            ? -1
-            : 1,
-      ],
-      [
-        'rating',
-        (bookA, bookB) =>
-          this.isDescending
-            ? this.compareRatings(bookB, bookA)
-            : this.compareRatings(bookA, bookB),
-      ],
-    ]);
+  // private comparatorFunctions: Map<string, (a: Book, b: Book) => number> =
+  //   new Map([
+  //     [
+  //       'name',
+  //       (bookA, bookB) =>
+  //         this.isDescending
+  //           ? bookB.name.localeCompare(bookA.name)
+  //           : bookA.name.localeCompare(bookB.name),
+  //     ],
+  //     [
+  //       'author',
+  //       (bookA, bookB) =>
+  //         this.isDescending
+  //           ? bookB.authorId.localeCompare(bookA.authorId)
+  //           : bookA.authorId.localeCompare(bookB.authorId),
+  //     ],
+  //     [
+  //       'publishDate',
+  //       (bookA, bookB) =>
+  //         this.isDescending
+  //           ? this.compareDates(bookB.publishDate, bookA.publishDate)
+  //           : this.compareDates(bookA.publishDate, bookB.publishDate),
+  //     ],
+  //     [
+  //       'pages',
+  //       (bookA, bookB) =>
+  //         this.isDescending
+  //           ? bookB.pagesCount < bookA.pagesCount
+  //             ? -1
+  //             : 1
+  //           : bookA.pagesCount < bookB.pagesCount
+  //           ? -1
+  //           : 1,
+  //     ],
+  //     [
+  //       'rating',
+  //       (bookA, bookB) =>
+  //         this.isDescending
+  //           ? this.compareRatings(bookB, bookA)
+  //           : this.compareRatings(bookA, bookB),
+  //     ],
+  //   ]);
 
   constructor(
     // private bookService: JettyBookService,
@@ -124,6 +125,7 @@ export class BooksListComponent implements OnInit {
   currentPage: number = 0;
 
   bookRatings: Map<number, number> = new Map();
+  bookAuthors: Map<number, string> = new Map();
 
   searchTerm: string = '';
   searchActive: boolean = false;
@@ -131,18 +133,19 @@ export class BooksListComponent implements OnInit {
   ngOnInit(): void {
     const pageSizeLoaded = new Subject<void>();
     pageSizeLoaded.subscribe(() => {
+      console.log('Page size loaded, proceeding to load books.');
       this.loadBooks();
     });
 
     this.authenticationService.user$.subscribe((user) => {
-      if (!!user) {
+      if (user) {
         console.log('Loading page size for user: ' + user.uid);
 
         this.userService
           .getUserById(user.uid)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
-            if (!!user!.settings) {
+            if (user!.settings) {
               this.pageSize = user!.settings.pageSize;
               console.log('Page size loaded: ' + this.pageSize);
             } else {
@@ -152,6 +155,7 @@ export class BooksListComponent implements OnInit {
                   '. Loading default page size.'
               );
             }
+            console.log('Page size: ' + this.pageSize);
             pageSizeLoaded.next();
           });
       } else {
@@ -159,7 +163,7 @@ export class BooksListComponent implements OnInit {
 
         pageSizeLoaded.next();
       }
-      pageSizeLoaded.complete();
+      // pageSizeLoaded.complete();
     });
 
     this.rerenderService.rerenderBooks.subscribe(() => {
@@ -167,7 +171,7 @@ export class BooksListComponent implements OnInit {
     });
   }
 
-  isLoggedIn() {
+  get isLoggedIn() {
     return this.authenticationService.isLoggedIn;
   }
 
@@ -186,7 +190,7 @@ export class BooksListComponent implements OnInit {
       });
 
     this.bookService
-      .getBooks(this.pageStart, this.pageSize)
+      .getBooks(this.pageStart, this.pageSize, this.sortBy)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books || []);
@@ -219,11 +223,11 @@ export class BooksListComponent implements OnInit {
   }
 
   restoreSorting() {
-    if (!!localStorage.getItem(this.SORT_BY_KEY)) {
+    if (localStorage.getItem(this.SORT_BY_KEY)) {
       this.sortBy = localStorage.getItem(this.SORT_BY_KEY)!;
     }
 
-    if (!!localStorage.getItem(this.IS_DESCENDING_KEY)) {
+    if (localStorage.getItem(this.IS_DESCENDING_KEY)) {
       this.isDescending =
         localStorage.getItem(this.IS_DESCENDING_KEY) === 'true';
     }
@@ -233,11 +237,11 @@ export class BooksListComponent implements OnInit {
     localStorage.setItem(this.SORT_BY_KEY, this.sortBy);
     localStorage.setItem(this.IS_DESCENDING_KEY, this.isDescending.toString());
 
-    this.books.set(
-      this.books().sort(this.comparatorFunctions.get(this.sortBy))
-    );
-    this.changeDetectorRef.detectChanges();
-    this.rerenderService.rerenderReviews.emit();
+    // this.books.set(
+    //   this.books().sort(this.comparatorFunctions.get(this.sortBy))
+    // );
+    // this.changeDetectorRef.detectChanges();
+    // this.rerenderService.rerenderReviews.emit();
   }
 
   compareDates(dateA: string, dateB: string) {

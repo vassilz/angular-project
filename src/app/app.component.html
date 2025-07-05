@@ -1,5 +1,10 @@
 <app-header />
-<div class="content"><router-outlet /></div>
+<div class="content">
+  <app-navigation-menu></app-navigation-menu>
+  <div class="content-body">
+    <router-outlet />
+  </div>
+</div>
 @for (toast of toastService.toasts; track $index) {
 <div class="toast" [@fade] (click)="removeToast($index)">{{ toast }}</div>
 

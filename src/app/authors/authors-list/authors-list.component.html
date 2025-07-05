@@ -1,0 +1,9 @@
+@if (isLoading()) {
+<app-loader />
+} @else { @if (isLoggedIn && isAdmin) {
+<button routerLink="/authors/add">Add author</button> <br />
+} @if (authors().length === 0) { No authors yet } @else { @for (author of
+authors(); track $index) {
+{{ author | json }}
+<button class="details-button" [routerLink]="'' + author.id">Details</button>
+} } }

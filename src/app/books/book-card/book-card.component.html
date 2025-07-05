@@ -1,7 +1,7 @@
 <div class="title-section">
   <div
     [innerHTML]="
-      book().name + ' by ' + book().author | highlightSearch : searchTerm()
+      book().name + ' by ' + authorName() | highlightSearch : searchTerm()
     "
   ></div>
   @if (isLoggedIn) { @if (isFavorite) {

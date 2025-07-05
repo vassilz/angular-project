@@ -10,6 +10,11 @@ import { ErrorMessageComponent } from './errors/error-message/error-message.comp
 import { EditBookComponent } from './books/edit-book/edit-book.component';
 import { AuthGuard } from './auth.guard';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { UsersListComponent } from './users/users-list/users-list.component';
+import { AdminGuard } from './admin.guard';
+import { AuthorsListComponent } from './authors/authors-list/authors-list.component';
+import { AddAuthorComponent } from './authors/add-author/add-author.component';
+import { AuthorDetailsComponent } from './authors/author-details/author-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -32,6 +37,26 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
     ],
+  },
+  {
+    path: 'authors',
+    children: [
+      { path: '', component: AuthorsListComponent },
+      {
+        path: 'add',
+        component: AddAuthorComponent,
+        canActivate: [AuthGuard, AdminGuard],
+      },
+      {
+        path: ':authorId',
+        component: AuthorDetailsComponent,
+      },
+    ],
+  },
+  {
+    path: 'users',
+    component: UsersListComponent,
+    canActivate: [AuthGuard, AdminGuard],
   },
   { path: 'error', component: ErrorMessageComponent },
   { path: '404', component: PageNotFoundComponent },

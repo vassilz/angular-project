@@ -3,6 +3,8 @@ import {
   Database,
   DataSnapshot,
   get,
+  orderByChild,
+  query,
   ref,
   remove,
   set,
@@ -19,24 +21,53 @@ import { BookService } from './book.service';
 export class FirebaseBookService implements BookService {
   constructor(private db: Database) {}
 
-  getBooks(start: number = 0, count: number = -1): Observable<Book[]> {
+  getBooks(
+    start: number = 0,
+    count: number = -1,
+    sortBy: string = 'name'
+  ): Observable<Book[]> {
     //TODO optimize this
     var result = new Subject<Book[]>();
-    const observable = from(get(ref(this.db, 'books')));
-
+    const observable = from(
+      get(query(ref(this.db, 'books'), orderByChild(sortBy)))
+    );
     const subscription = observable.subscribe((data) => {
-      var books: Book[] = data.val() || [];
+      var books: Book[] = [];
+      data.forEach((snapshot: DataSnapshot) => {
+        books.push(snapshot.val() as Book);
+      });
       books.forEach((book, index) => {
         book.id = index;
       });
       books = books.filter((book) => !!book);
-      books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
+      // books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
       const end =
         count === -1 ? books.length : Math.min(start + count, books.length);
 
       const foundBooks: Book[] = books.slice(start, end);
 
       result.next(foundBooks);
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
+  }
+
+  getBooksByAuthor(authorId: number) {
+    var result = new Subject<Book[]>();
+    const observable = from(get(query(ref(this.db, 'books'))));
+    const subscription = observable.subscribe((data) => {
+      var books: Book[] = [];
+      data.forEach((snapshot: DataSnapshot) => {
+        books.push(snapshot.val() as Book);
+      });
+      books.forEach((book, index) => {
+        book.id = index;
+      });
+      books = books.filter((book) => !!book);
+      books = books.filter((book) => book.authorId === authorId);
+
+      result.next(books);
       subscription.unsubscribe();
     });
 
@@ -114,10 +145,8 @@ export class FirebaseBookService implements BookService {
         book.id = index;
       });
       const filteredBooks: Book[] = books.filter(
-        (book) =>
-          !!book &&
-          (book.name.toLowerCase().includes(term.toLowerCase()) ||
-            book.author.toLowerCase().includes(term.toLowerCase()))
+        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
+        // book.authorId.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
       filteredBooks.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
@@ -148,10 +177,8 @@ export class FirebaseBookService implements BookService {
     const subscription = observable.subscribe((data) => {
       var books: Book[] = data.val() || [];
       const filteredBooks: Book[] = books.filter(
-        (book) =>
-          !!book &&
-          (book.name.toLowerCase().includes(term.toLowerCase()) ||
-            book.author.toLowerCase().includes(term.toLowerCase()))
+        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
+        // book.authorId.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
 
@@ -164,7 +191,7 @@ export class FirebaseBookService implements BookService {
 
   createBook(
     name: string,
-    author: string,
+    authorId: number,
     publishDate: string,
     pagesCount: number,
     synopsis?: string
@@ -180,7 +207,7 @@ export class FirebaseBookService implements BookService {
       from(
         set(ref(this.db, 'books/' + nextBookId), {
           name,
-          author,
+          authorId,
           publishDate,
           pagesCount,
           synopsis,
@@ -196,7 +223,7 @@ export class FirebaseBookService implements BookService {
   updateBook(
     bookId: number,
     name: string,
-    author: string,
+    authorId: string,
     publishDate: string,
     pagesCount: number,
     synopsis?: string
@@ -204,7 +231,7 @@ export class FirebaseBookService implements BookService {
     return from(
       update(ref(this.db, 'books/' + bookId), {
         name,
-        author,
+        authorId,
         publishDate,
         pagesCount,
         synopsis,
@@ -213,6 +240,7 @@ export class FirebaseBookService implements BookService {
   }
 
   deleteBook(bookId: number): Observable<void> {
+    console.log('Deleting book with ID:', bookId);
     return from(remove(ref(this.db, 'books/' + bookId)));
   }
 }

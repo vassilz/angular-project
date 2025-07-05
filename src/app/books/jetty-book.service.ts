@@ -11,7 +11,11 @@ import { BookService } from './book.service';
 export class JettyBookService implements BookService {
   constructor(private http: HttpClient) {}
 
-  getBooks(start: number = 0, count: number = -1): Observable<Book[]> {
+  getBooks(
+    start: number = 0,
+    count: number = -1,
+    sortBy: string = 'name'
+  ): Observable<Book[]> {
     var result = new Subject<Book[]>();
     const observable = this.http.get<Book[]>('/api/books');
 
@@ -31,6 +35,10 @@ export class JettyBookService implements BookService {
     });
 
     return result.asObservable();
+  }
+
+  getBooksByAuthor(authorId: number): Observable<Book[]> {
+    throw new Error('Method not implemented.');
   }
 
   getBooksCount(): Observable<number> {
@@ -93,10 +101,8 @@ export class JettyBookService implements BookService {
         book.id = index;
       });
       const filteredBooks: Book[] = books.filter(
-        (book) =>
-          !!book &&
-          (book.name.toLowerCase().includes(term.toLowerCase()) ||
-            book.author.toLowerCase().includes(term.toLowerCase()))
+        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
+        // book.authorId.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
       filteredBooks.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
@@ -127,10 +133,8 @@ export class JettyBookService implements BookService {
     const subscription = observable.subscribe((books) => {
       // var books: Book[] = books.val() || [];
       const filteredBooks: Book[] = books.filter(
-        (book) =>
-          !!book &&
-          (book.name.toLowerCase().includes(term.toLowerCase()) ||
-            book.author.toLowerCase().includes(term.toLowerCase()))
+        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
+        // book.authorId.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
 
@@ -143,7 +147,7 @@ export class JettyBookService implements BookService {
 
   createBook(
     name: string,
-    author: string,
+    authorId: number,
     publishDate: string,
     pagesCount: number,
     synopsis?: string
@@ -160,7 +164,7 @@ export class JettyBookService implements BookService {
         .post<Book>('/api/books', {
           nextBookId,
           name,
-          author,
+          authorId,
           publishDate,
           pagesCount,
           synopsis,

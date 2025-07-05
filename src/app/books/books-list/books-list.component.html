@@ -1,6 +1,6 @@
 @if (isLoading()) {
 <app-loader />
-} @else { @if (isLoggedIn()) {
+} @else { @if (isLoggedIn) {
 <div class="search-box">
   <input type="text" [(ngModel)]="searchTerm" (keyup)="keyUp($event)" />
   @if (searchActive) {
@@ -19,7 +19,7 @@
 } }
 <div class="books">
   <div class="books-list">
-    @if (isLoggedIn()) { Sort by:
+    @if (isLoggedIn) { Sort by:
     <select [(ngModel)]="sortBy" (change)="sortBooks()">
       @for (sortByOption of sortByOptions; track $index) {
       <option [value]="sortByOption">{{ sortByOption }}</option>

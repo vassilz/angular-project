@@ -11,8 +11,9 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
+  deleteUser,
 } from 'firebase/auth';
-import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -109,6 +110,23 @@ export class AuthenticationService {
         this.isLoggedIn = false;
       })
     );
+  }
+
+  deleteUser(): Observable<void> {
+    // const auth = getAuth();
+    // if (!this.user) {
+    //   return new Observable((observer) => {
+    //     observer.error(new Error('No user is currently logged in'));
+    //   });
+    // }
+    // return from(deleteUser(this.user)).pipe(
+    //   tap(() => {
+    //     console.info('User deleted successfully');
+    //     this.user$$.next(null);
+    //     this.isLoggedIn = false;
+    //   })
+    // );
+    return of();
   }
 
   // get isLoggedIn(): boolean {

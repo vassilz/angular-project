@@ -23,6 +23,7 @@ import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 import { ToastService } from '../../toast/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 
 @Component({
   selector: 'app-book-card',
@@ -42,6 +43,8 @@ export class BookCardComponent implements OnInit {
 
   reviews = signal<Review[]>([]);
 
+  authorName = signal<string>('');
+
   isFavorite: boolean = false;
 
   constructor(
@@ -53,6 +56,7 @@ export class BookCardComponent implements OnInit {
     private rerenderService: RerenderService,
     private bookService: FirebaseBookService,
     // private bookService: JettyBookService,
+    private authorService: FirebaseAuthorService,
     private errorHandlingService: ErrorHandlingService,
     private toastService: ToastService,
     private destroyRef: DestroyRef
@@ -61,6 +65,7 @@ export class BookCardComponent implements OnInit {
   ngOnInit(): void {
     // console.log('Book card component initialized for book: ' + this.book.id);
     // console.log(this.book);
+    this.loadAuthor();
 
     this.loadReviews();
     this.loadIsFavorite();
@@ -102,6 +107,15 @@ export class BookCardComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.authenticationService.user?.email === 'admin@gmail.com';
+  }
+
+  loadAuthor() {
+    this.authorService
+      .getAuthor(this.book().authorId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((author) => {
+        this.authorName.set(author?.name || 'Unknown Author');
+      });
   }
 
   loadReviews() {
@@ -164,7 +178,7 @@ export class BookCardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          console.log('Book ' + this.book.name + 'deleted successfully');
+          console.log('Book ' + this.book().name + 'deleted successfully');
           this.rerenderService.rerenderBooks.emit();
 
           this.confirmDeletionDialog().nativeElement.close();

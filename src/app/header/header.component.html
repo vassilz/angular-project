@@ -1,14 +1,14 @@
-@if (isLoggedIn()) {
 <div class="header">
+  @if (isLoggedIn()) {
   <h3 class="title">Vasil Zorev's Online Bookstore</h3>
   <div class="button-group">
     <button routerLink="/profile">Profile</button>
     <button (click)="logout()">Logout</button>
   </div>
+  } @else {
+  <div class="button-group">
+    <button routerLink="/login">Login</button>
+    <button routerLink="/register">Register</button>
+  </div>
+  }
 </div>
-} @else {
-<div class="header">
-  <button routerLink="/login">Login</button>
-  <button routerLink="/register">Register</button>
-</div>
-}

@@ -9,6 +9,7 @@ import { ToastService } from './toast/toast.service';
 
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -21,7 +22,13 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    FooterComponent,
+    NavigationMenuComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   animations: [

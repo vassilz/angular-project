@@ -4,7 +4,6 @@
     type="text"
     id="name"
     name="name"
-    placeholder="John"
     [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
     #inputName="ngModel"
     [ngModel]="book.name"
@@ -23,7 +22,6 @@
     type="text"
     id="author"
     name="author"
-    placeholder="Doe"
     #inputAuthor="ngModel"
     [ngModel]="authorName()"
     disabled
@@ -41,7 +39,6 @@
     type="date"
     id="publish_date"
     name="publish_date"
-    placeholder="Doe"
     #inputPublishDate="ngModel"
     [ngModel]="book.publishDate"
     required
@@ -59,7 +56,7 @@
     type="number"
     id="pages"
     name="pages"
-    placeholder="Doe"
+    min="1"
     #inputPages="ngModel"
     [ngModel]="book.pagesCount"
     required
@@ -68,6 +65,8 @@
   <div>
     @if (inputPages?.errors?.['required']) {
     <p class="error">Pages count is required.</p>
+    } @if (inputPages?.errors?.['min']) {
+    <p class="error">Pages count must be at least 1.</p>
     }
   </div>
   }
@@ -78,7 +77,7 @@
     type="text"
     id="synopsis"
     name="synopsis"
-    placeholder="Doe"
+    placeholder="Describe the book here..."
     #inputSynopsis="ngModel"
     rows="5"
     minlength="20"

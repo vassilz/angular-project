@@ -176,12 +176,18 @@ export class BookCardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.rerenderService.rerenderBooks.emit();
-          this.toastService.add(
-            `Book ${this.book().name} deleted successfully`
-          );
+          console.log('Cleaning up favorite book for users');
+          this.userService
+            .cleanupFavoriteBook(this.book().id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+              this.rerenderService.rerenderBooks.emit();
+              this.toastService.add(
+                `Book ${this.book().name} deleted successfully`
+              );
 
-          this.confirmDeletionDialog().nativeElement.close();
+              this.confirmDeletionDialog().nativeElement.close();
+            });
         },
         // TODO handle errors with an interceptor
         error: (err) => {

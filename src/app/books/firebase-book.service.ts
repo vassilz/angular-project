@@ -14,6 +14,7 @@ import { from, Observable, Subject } from 'rxjs';
 import { Book } from '../types/book';
 import moment from 'moment';
 import { BookService } from './book.service';
+import { FirebaseUserService } from '../users/firebase-user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +35,7 @@ export class FirebaseBookService implements BookService {
       console.log('Data from Firebase:', data.val());
       var books: Book[] = [];
 
-      for (const [key, value] of Object.entries(data.val())) {
+      for (const [key, value] of Object.entries(data.val() ?? {})) {
         const id = +key;
         const book: Book = value as Book;
         book.id = id;
@@ -103,11 +104,20 @@ export class FirebaseBookService implements BookService {
 
     //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
-      var books: Book[] = data.val() || [];
-      books.forEach((book, index) => {
-        book.id = index;
-      });
-      books = books.filter((book) => !!book);
+      var books: Book[] = [];
+
+      for (const [key, value] of Object.entries(data.val() ?? {})) {
+        const id = +key;
+        const book: Book = value as Book;
+        book.id = id;
+        books.push(book);
+      }
+
+      // var books: Book[] = data.val() || [];
+      // books.forEach((book, index) => {
+      //   book.id = index;
+      // });
+      // books = books.filter((book) => !!book);
       books.sort((bookA, bookB) =>
         this.compareDates(bookB.publishDate, bookA.publishDate)
       );
@@ -141,7 +151,8 @@ export class FirebaseBookService implements BookService {
   searchBooks(
     term: string,
     start: number = 0,
-    count: number = -1
+    count: number = -1,
+    sorter: ((a: Book, b: Book) => number) | undefined = undefined
   ): Observable<Book[]> {
     var result = new Subject<Book[]>();
     const observable = from(get(ref(this.db, 'books')));
@@ -157,7 +168,7 @@ export class FirebaseBookService implements BookService {
         // book.authorId.toLowerCase().includes(term.toLowerCase()))
         // book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
-      filteredBooks.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
+      filteredBooks.sort(sorter);
       const end =
         count === -1
           ? filteredBooks.length

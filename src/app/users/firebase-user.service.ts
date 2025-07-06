@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
 import {
   Database,
   DataSnapshot,
@@ -9,7 +9,7 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { from, Observable, Subject } from 'rxjs';
+import { forkJoin, from, Observable, Subject } from 'rxjs';
 import { User } from '../types/user';
 import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
@@ -17,6 +17,7 @@ import { FirebaseBookService } from '../books/firebase-book.service';
 import { Settings } from '../types/settings';
 import { JettyBookService } from '../books/jetty-book.service';
 import { UserService } from './user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,9 @@ import { UserService } from './user.service';
 export class FirebaseUserService implements UserService {
   constructor(
     private db: Database,
-    private bookService: FirebaseBookService
-  ) // private bookService: JettyBookService
-  {}
+    private bookService: FirebaseBookService,
+    private destroyRef: DestroyRef
+  ) {}
 
   createUser(
     uuid: string,
@@ -192,6 +193,51 @@ export class FirebaseUserService implements UserService {
 
           subject.next();
         });
+      }
+    });
+
+    return subject.asObservable();
+  }
+
+  cleanupFavoriteBook(bookId: number): Observable<void> {
+    const subject = new Subject<void>();
+    this.getUsers().subscribe((users) => {
+      const observables: Observable<void>[] = [];
+      users.forEach((user) => {
+        var favoriteBookIds = user.favoriteBookIds || [];
+        const index = favoriteBookIds.indexOf(bookId);
+        if (index > -1) {
+          // only splice array when item is found
+          favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
+
+          const userObservable = this.updateUser(
+            user.id,
+            user.username,
+            user.uuid,
+            user.email,
+            user.firstName,
+            user.lastName,
+            user.password,
+            favoriteBookIds
+          );
+          observables.push(userObservable);
+        }
+      });
+
+      if (observables.length === 0) {
+        console.log('No users to update for book cleanup');
+        subject.next();
+        subject.complete();
+      } else {
+        forkJoin(observables)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            console.log(
+              'All users have been updated to remove the book from favorites'
+            );
+            subject.next();
+            subject.complete();
+          });
       }
     });
 

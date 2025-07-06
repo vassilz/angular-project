@@ -28,6 +28,8 @@ export interface UserService {
 
   removeFavoriteBookForUser(userId: string, bookId: number): Observable<void>;
 
+  cleanupFavoriteBook(bookId: number): Observable<void>;
+
   updateUser(
     userId: number,
     username: string,

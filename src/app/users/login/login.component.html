@@ -5,7 +5,6 @@
     type="email"
     id="email"
     name="email"
-    placeholder="john.doe@gmail.com"
     [class]="inputEmail.touched && inputEmail.errors?.['required'] ? 'input-error' : ''"
     #inputEmail="ngModel"
     ngModel
@@ -24,7 +23,6 @@
     type="password"
     id="password"
     name="password"
-    placeholder="******"
     [class]="inputPassword.touched && inputPassword.errors?.['required'] ? 'input-error' : ''"
     #inputPassword="ngModel"
     ngModel

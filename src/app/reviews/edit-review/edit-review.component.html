@@ -5,6 +5,8 @@
     type="number"
     id="rating"
     name="rating"
+    min="1"
+    max="5"
     [class]="inputRating?.touched && inputRating?.errors?.['required'] ? 'input-error' : ''"
     #inputRating="ngModel"
     [(ngModel)]="rating"
@@ -14,6 +16,10 @@
   <div>
     @if (inputRating?.errors?.['required']) {
     <p class="error">Rating is required.</p>
+    } @if (inputRating?.errors?.['min']) {
+    <p class="error">Rating must be at least 1.</p>
+    } @if (inputRating?.errors?.['max']) {
+    <p class="error">Rating must be at most 5.</p>
     }
   </div>
   }

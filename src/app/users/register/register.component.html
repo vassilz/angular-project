@@ -4,7 +4,6 @@
     type="text"
     id="username"
     name="username"
-    placeholder="john.doe"
     [class]="form.get('username')?.touched && form.get('username')?.errors?.['required'] ? 'input-error' : ''"
     formControlName="username"
   />
@@ -21,7 +20,6 @@
     type="email"
     id="email"
     name="email"
-    placeholder="john.doe@gmail.com"
     [class]="form.get('email')?.touched && form.get('email')?.errors?.['required'] ? 'input-error' : ''"
     formControlName="email"
   />
@@ -57,7 +55,6 @@
       type="password"
       id="password"
       name="password"
-      placeholder="******"
       [class]="passGroup?.get('password')?.touched && passGroup?.get('password')?.errors?.['required'] ||
       passGroup?.get('password')?.touched && passGroup?.get('password')?.errors?.['minlength'] ? 'input-error' : ''"
       formControlName="password"
@@ -81,7 +78,6 @@
       type="password"
       id="repeatPassword"
       name="repeatPassword"
-      placeholder="******"
       [class]="passGroup?.get('repeatPassword')?.touched && passGroup?.get('repeatPassword')?.errors?.['required'] ||
       passGroup?.get('repeatPassword')?.touched && passGroup?.get('repeatPassword')?.errors?.['passwordsDoNotMatch'] ? 'input-error' : ''"
       formControlName="repeatPassword"

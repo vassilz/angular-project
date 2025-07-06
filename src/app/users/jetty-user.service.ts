@@ -17,6 +17,9 @@ export class JettyUserService implements UserService {
     // private bookService: JettyBookService
     private bookService: FirebaseBookService
   ) {}
+  cleanupFavoriteBook(bookId: number): Observable<void> {
+    throw new Error('Method not implemented.');
+  }
 
   createUser(
     uuid: string,

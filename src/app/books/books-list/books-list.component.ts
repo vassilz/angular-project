@@ -208,9 +208,9 @@ export class BooksListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books || []);
-        if (this.isDescending) {
-          this.books().reverse();
-        }
+        // if (this.isDescending) {
+        //   this.books().reverse();
+        // }
 
         this.currentPage = this.books().length;
 
@@ -255,7 +255,11 @@ export class BooksListComponent implements OnInit {
     localStorage.setItem(this.SORT_BY_KEY, this.sortBy);
     localStorage.setItem(this.IS_DESCENDING_KEY, this.isDescending.toString());
 
-    this.loadBooks();
+    if (this.searchActive) {
+      this.searchBooks();
+    } else {
+      this.loadBooks();
+    }
     this.rerenderService.rerenderReviews.emit();
     // this.books.set(
     //   this.books().sort(this.comparatorFunctions.get(this.sortBy))
@@ -292,7 +296,12 @@ export class BooksListComponent implements OnInit {
       });
 
     this.bookService
-      .searchBooks(this.searchTerm, this.pageStart, this.pageSize)
+      .searchBooks(
+        this.searchTerm,
+        this.pageStart,
+        this.pageSize,
+        this.comparatorFunctions.get(this.sortBy)
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((foundBooks) => {
         console.log('Found books by search term ' + this.searchTerm + ':');
@@ -301,7 +310,7 @@ export class BooksListComponent implements OnInit {
         this.books.set(foundBooks || []);
         this.currentPage = this.books().length;
 
-        this.sortBooks();
+        // this.sortBooks();
 
         this.changeDetectorRef.detectChanges();
         this.rerenderService.rerenderReviews.emit();

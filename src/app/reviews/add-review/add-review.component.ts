@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-review',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, JsonPipe],
   templateUrl: './add-review.component.html',
   styleUrl: './add-review.component.css',
 })

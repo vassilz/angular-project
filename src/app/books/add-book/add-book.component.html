@@ -4,7 +4,6 @@
     type="text"
     id="name"
     formControlName="name"
-    placeholder="John"
     [class]="form.get('name')?.touched && form.get('name')?.errors?.['required'] ? 'input-error' : ''"
     required
   />
@@ -35,7 +34,6 @@
     type="date"
     id="publish_date"
     formControlName="publish_date"
-    placeholder="Doe"
     required
   />
   @if (form.get('publish_date')?.touched) {
@@ -49,17 +47,13 @@
   }
   <br />
   <label for="pages">Pages:</label><br />
-  <input
-    type="number"
-    id="pages"
-    formControlName="pages"
-    placeholder="Doe"
-    required
-  />
+  <input type="number" id="pages" formControlName="pages" min="1" required />
   @if (form.get('pages')?.touched) {
   <div>
     @if (form.get('pages')?.errors?.['required']) {
     <p class="error">Pages count is required.</p>
+    } @if (form.get('pages')?.errors?.['min']) {
+    <p class="error">Pages count must be at least 1.</p>
     }
   </div>
   }
@@ -70,7 +64,7 @@
     type="text"
     id="synopsis"
     name="synopsis"
-    placeholder="Doe"
+    placeholder="Describe the book here..."
     rows="5"
     minlength="20"
     formControlName="synopsis"

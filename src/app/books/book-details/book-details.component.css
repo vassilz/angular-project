@@ -4,6 +4,22 @@
   /* text-align: center; */
 }
 
+.book-details {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.book-info {
+  min-width: 600px;
+}
+
+.book-info,
+.book-description {
+  flex-grow: 1;
+}
+
 .back-button {
   align-self: center;
 }

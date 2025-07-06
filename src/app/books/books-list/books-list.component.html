@@ -19,7 +19,7 @@
 } }
 <div class="books">
   <div class="books-list">
-    @if (isLoggedIn) { Sort by:
+    @if (isLoggedIn && books().length > 0) { Sort by:
     <select [(ngModel)]="sortBy" (change)="sortBooks()">
       @for (sortByOption of sortByOptions; track $index) {
       <option [value]="sortByOption">{{ sortByOption }}</option>

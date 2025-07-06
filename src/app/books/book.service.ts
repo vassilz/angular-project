@@ -20,7 +20,12 @@ export interface BookService {
 
   getBook(id: number): Observable<Book | null>;
 
-  searchBooks(term: string, start: number, count: number): Observable<Book[]>;
+  searchBooks(
+    term: string,
+    start: number,
+    count: number,
+    sorter: ((a: Book, b: Book) => number) | undefined
+  ): Observable<Book[]>;
 
   getSearchBooksCount(term: string): Observable<number>;
 

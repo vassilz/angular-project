@@ -1,6 +1,6 @@
 <div>{{ review().rating }}: {{ review().text }}</div>
 <br />
-by {{ user.firstName }} {{ user.lastName }}
+by {{ user().firstName }} {{ user().lastName }}
 {{ review().reviewDate | elapsedTime }}
 <br />
 <br />

@@ -72,7 +72,8 @@ export class AddBookComponent implements OnInit {
 
     console.log('Form value:', this.form.value);
 
-    const { name, author, publish_date, pages, synopsis } = this.form.value;
+    const { name, pages, publish_date, synopsis } = this.form.value;
+    const author = +this.form.value.author!; // need the value as a number
 
     this.bookService
       .createBook(name!, author!, publish_date!, pages!, synopsis)

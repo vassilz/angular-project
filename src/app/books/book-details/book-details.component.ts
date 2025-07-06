@@ -36,7 +36,7 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
   styleUrl: './book-details.component.css',
 })
 export class BookDetailsComponent implements OnInit {
-  book: Book = {} as Book;
+  book = signal<Book>({} as Book);
 
   bookId: number = 0;
 
@@ -63,7 +63,8 @@ export class BookDetailsComponent implements OnInit {
       .getBook(this.bookId)
       .pipe(takeUntilDestroyed())
       .subscribe((book) => {
-        this.book = book!;
+        console.log('Book details:', book);
+        this.book.set(book!);
         this.isLoading.set(false);
 
         this.loadAuthor();
@@ -86,9 +87,9 @@ export class BookDetailsComponent implements OnInit {
   }
 
   loadAuthor() {
-    console.log('Loading author :', this.book.authorId);
+    console.log('Loading author :', this.book().authorId);
     this.authorService
-      .getAuthor(this.book.authorId)
+      .getAuthor(this.book().authorId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((author) => {
         this.authorName.set(author?.name || 'Unknown Author');

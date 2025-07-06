@@ -2,7 +2,11 @@ import { Observable } from 'rxjs';
 import { Book } from '../types/book';
 
 export interface BookService {
-  getBooks(start: number, count: number, sortBy: string): Observable<Book[]>;
+  getBooks(
+    start: number,
+    count: number,
+    sorter: ((a: Book, b: Book) => number) | undefined
+  ): Observable<Book[]>;
 
   getBooksByAuthor(authorId: number): Observable<Book[]>;
 

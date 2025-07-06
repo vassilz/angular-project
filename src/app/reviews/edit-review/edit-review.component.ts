@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   input,
+  OnInit,
   signal,
 } from '@angular/core';
 import { Review } from '../../types/review';
@@ -20,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './edit-review.component.html',
   styleUrl: './edit-review.component.css',
 })
-export class EditReviewComponent {
+export class EditReviewComponent implements OnInit {
   isEditMode = signal<boolean>(false);
 
   bookId = input.required<number>();
@@ -36,13 +37,14 @@ export class EditReviewComponent {
     private changeDetection: ChangeDetectorRef,
     private rerenderService: RerenderService,
     private destroyRef: DestroyRef
-  ) {
+  ) {}
+  ngOnInit(): void {
     this.reviewService
       .getReviewByBookAndUser(
         this.bookId(),
         this.authenticationService.user!.uid
       )
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((review) => {
         this.review = review;
         this.rating = review!.rating;

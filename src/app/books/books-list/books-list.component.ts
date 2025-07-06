@@ -60,48 +60,59 @@ export class BooksListComponent implements OnInit {
   SORT_BY_KEY: string = 'sortBy';
   IS_DESCENDING_KEY: string = 'isDescending';
 
-  // private comparatorFunctions: Map<string, (a: Book, b: Book) => number> =
-  //   new Map([
-  //     [
-  //       'name',
-  //       (bookA, bookB) =>
-  //         this.isDescending
-  //           ? bookB.name.localeCompare(bookA.name)
-  //           : bookA.name.localeCompare(bookB.name),
-  //     ],
-  //     [
-  //       'author',
-  //       (bookA, bookB) =>
-  //         this.isDescending
-  //           ? bookB.authorId.localeCompare(bookA.authorId)
-  //           : bookA.authorId.localeCompare(bookB.authorId),
-  //     ],
-  //     [
-  //       'publishDate',
-  //       (bookA, bookB) =>
-  //         this.isDescending
-  //           ? this.compareDates(bookB.publishDate, bookA.publishDate)
-  //           : this.compareDates(bookA.publishDate, bookB.publishDate),
-  //     ],
-  //     [
-  //       'pages',
-  //       (bookA, bookB) =>
-  //         this.isDescending
-  //           ? bookB.pagesCount < bookA.pagesCount
-  //             ? -1
-  //             : 1
-  //           : bookA.pagesCount < bookB.pagesCount
-  //           ? -1
-  //           : 1,
-  //     ],
-  //     [
-  //       'rating',
-  //       (bookA, bookB) =>
-  //         this.isDescending
-  //           ? this.compareRatings(bookB, bookA)
-  //           : this.compareRatings(bookA, bookB),
-  //     ],
-  //   ]);
+  private comparatorFunctions: Map<string, (a: Book, b: Book) => number> =
+    new Map([
+      [
+        'name',
+        (bookA, bookB) =>
+          this.isDescending
+            ? bookB.name.localeCompare(bookA.name)
+            : bookA.name.localeCompare(bookB.name),
+      ],
+      // [
+      //   'author',
+      //   (bookA, bookB) =>
+      //     this.isDescending
+      //       ? bookB.authorId.localeCompare(bookA.authorId)
+      //       : bookA.authorId.localeCompare(bookB.authorId),
+      // ],
+      [
+        'author',
+        (bookA, bookB) =>
+          this.isDescending
+            ? bookB.authorId < bookA.authorId
+              ? -1
+              : 1
+            : bookA.authorId < bookB.authorId
+            ? -1
+            : 1,
+      ],
+      [
+        'publishDate',
+        (bookA, bookB) =>
+          this.isDescending
+            ? this.compareDates(bookB.publishDate, bookA.publishDate)
+            : this.compareDates(bookA.publishDate, bookB.publishDate),
+      ],
+      [
+        'pages',
+        (bookA, bookB) =>
+          this.isDescending
+            ? bookB.pagesCount < bookA.pagesCount
+              ? -1
+              : 1
+            : bookA.pagesCount < bookB.pagesCount
+            ? -1
+            : 1,
+      ],
+      [
+        'rating',
+        (bookA, bookB) =>
+          this.isDescending
+            ? this.compareRatings(bookB, bookA)
+            : this.compareRatings(bookA, bookB),
+      ],
+    ]);
 
   constructor(
     // private bookService: JettyBookService,
@@ -189,7 +200,11 @@ export class BooksListComponent implements OnInit {
       });
 
     this.bookService
-      .getBooks(this.pageStart, this.pageSize, this.sortBy)
+      .getBooks(
+        this.pageStart,
+        this.pageSize,
+        this.comparatorFunctions.get(this.sortBy)
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books || []);

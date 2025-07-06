@@ -24,23 +24,30 @@ export class FirebaseBookService implements BookService {
   getBooks(
     start: number = 0,
     count: number = -1,
-    sortBy: string = 'name'
+    sorter: ((a: Book, b: Book) => number) | undefined = undefined
   ): Observable<Book[]> {
     //TODO optimize this
     var result = new Subject<Book[]>();
-    const observable = from(
-      get(query(ref(this.db, 'books'), orderByChild(sortBy)))
-    );
+    const observable = from(get(query(ref(this.db, 'books'))));
     const subscription = observable.subscribe((data) => {
+      console.log('Fetching books from Firebase...');
+      console.log('Data from Firebase:', data.val());
       var books: Book[] = [];
-      data.forEach((snapshot: DataSnapshot) => {
-        books.push(snapshot.val() as Book);
-      });
-      books.forEach((book, index) => {
-        book.id = index;
-      });
-      books = books.filter((book) => !!book);
-      // books.sort((bookA, bookB) => (bookA.id < bookB.id ? -1 : 1));
+
+      for (const [key, value] of Object.entries(data.val())) {
+        const id = +key;
+        const book: Book = value as Book;
+        book.id = id;
+        books.push(book);
+      }
+
+      // books.forEach((book, index) => {
+      //   book.id = index;
+      // });
+      console.log('Books fetched:', books);
+      // books = books.filter((book) => !!book);
+      books.sort(sorter);
+
       const end =
         count === -1 ? books.length : Math.min(start + count, books.length);
 
@@ -200,9 +207,20 @@ export class FirebaseBookService implements BookService {
     var result = new Subject<void>();
     const observable = from(get(ref(this.db, 'books')));
 
+    console.log(
+      'Creating book with name:',
+      name,
+      ' and publish date:',
+      publishDate
+    );
+
     const subscription = observable.subscribe((data) => {
       const books: Book[] = data.val() || [];
-      const nextBookId = books.length;
+      console.log('Books fetched for creation:', books);
+      const firstFreeIndex = books.findIndex((book) => book === undefined);
+      console.log('First free index:', firstFreeIndex);
+      const nextBookId = firstFreeIndex === -1 ? books.length : firstFreeIndex;
+      console.log('Next book ID:', nextBookId);
       subscription.unsubscribe();
 
       from(

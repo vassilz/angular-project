@@ -14,7 +14,7 @@ export class JettyBookService implements BookService {
   getBooks(
     start: number = 0,
     count: number = -1,
-    sortBy: string = 'name'
+    sorter: ((a: Book, b: Book) => number) | undefined = undefined
   ): Observable<Book[]> {
     var result = new Subject<Book[]>();
     const observable = this.http.get<Book[]>('/api/books');

@@ -1,6 +1,3 @@
-@for (author of authors(); track author.id) {
-<p>{{ author.name }}</p>
-}
 <form [formGroup]="form" (ngSubmit)="addBook()">
   <label for="name">Name:</label><br />
   <input
@@ -53,7 +50,7 @@
   <br />
   <label for="pages">Pages:</label><br />
   <input
-    type="text"
+    type="number"
     id="pages"
     formControlName="pages"
     placeholder="Doe"

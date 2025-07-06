@@ -25,7 +25,7 @@ export class ReviewCardComponent implements OnInit {
   likesCount = signal<number>(0);
   isLikedByCurrentUser: boolean = false;
 
-  user: User = {} as User;
+  user = signal<User>({} as User);
 
   constructor(
     private userService: FirebaseUserService,
@@ -33,16 +33,16 @@ export class ReviewCardComponent implements OnInit {
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
     private destroyRef: DestroyRef
-  ) {
-    this.userService
-      .getUserById(this.review().userid)
-      .pipe(takeUntilDestroyed())
-      .subscribe((user) => {
-        this.user = user!;
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.userService
+      .getUserById(this.review().userid)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        this.user.set(user!);
+      });
+
     this.reviewService
       .getLikesCountForReview(this.bookId(), this.review().id)
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -145,12 +145,11 @@ export class BookCardComponent implements OnInit {
           this.authenticationService.user!.uid,
           this.book().id
         )
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
-          console.info(`Book ${this.book.name} removed from favorites`);
           this.isFavorite = false;
           this.toastService.add(
-            `Book ${this.book.name} removed from favorites`
+            `Book ${this.book().name} removed from favorites`
           );
         });
     } else {
@@ -161,9 +160,8 @@ export class BookCardComponent implements OnInit {
         )
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
-          console.info(`Book ${this.book.name} added to favorites`);
           this.isFavorite = true;
-          this.toastService.add(`Book ${this.book.name} added to favorites`);
+          this.toastService.add(`Book ${this.book().name} added to favorites`);
         });
     }
   }
@@ -178,8 +176,10 @@ export class BookCardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          console.log('Book ' + this.book().name + 'deleted successfully');
           this.rerenderService.rerenderBooks.emit();
+          this.toastService.add(
+            `Book ${this.book().name} deleted successfully`
+          );
 
           this.confirmDeletionDialog().nativeElement.close();
         },

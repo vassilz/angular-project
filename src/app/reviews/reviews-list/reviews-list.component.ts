@@ -43,6 +43,7 @@ export class ReviewsListComponent implements OnInit {
     this.rerenderService.rerenderReviews
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        console.log(`Rerendering reviews list for book ${this.bookId}...`);
         this.loadReviews(this.bookId);
 
         this.changeDetection.detectChanges();
@@ -54,6 +55,7 @@ export class ReviewsListComponent implements OnInit {
       .getReviews(bookId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((reviews) => {
+        console.log(`Reviews for book ${bookId}:`, reviews);
         this.reviews.set(reviews);
         // this.reviews.forEach((review, index) => {
         //   review.id = index;

@@ -6,7 +6,7 @@ by {{ user().firstName }} {{ user().lastName }}
 <br />
 {{ likesCount() }} people found this helpful
 <br />
-@if (isLoggedIn) { Was this review helpful?
+@if (isLoggedIn && review().userid !== user().uuid) { Was this review helpful?
 <button
   (click)="isLikedByCurrentUser ? dislikeReview() : likeReview()"
   [style]="{ backgroundColor: isLikedByCurrentUser ? '#234465' : '' }"

@@ -57,6 +57,8 @@
 <div>Your review: {{ rating }}</div>
 <br />
 <div>{{ text }}</div>
-<button (click)="toggleEditMode()">Edit</button>
-<button (click)="deleteReview()">Delete</button>
+<div class="actions">
+  <button (click)="toggleEditMode()">Edit</button>
+  <button (click)="deleteReview()">Delete</button>
+</div>
 }

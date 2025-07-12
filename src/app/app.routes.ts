@@ -8,25 +8,37 @@ import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { ErrorMessageComponent } from './errors/error-message/error-message.component';
 import { EditBookComponent } from './books/edit-book/edit-book.component';
-import { AuthGuard } from './auth.guard';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UsersListComponent } from './users/users-list/users-list.component';
 import { AdminGuard } from './admin.guard';
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { AuthorsListComponent } from './authors/authors-list/authors-list.component';
 import { AddAuthorComponent } from './authors/add-author/add-author.component';
 import { AuthorDetailsComponent } from './authors/author-details/author-details.component';
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+  },
   {
     path: 'books',
     children: [
       { path: '', component: BooksListComponent },
-      { path: 'add', component: AddBookComponent, canActivate: [AuthGuard] },
+      {
+        path: 'add',
+        component: AddBookComponent,
+        canActivate: [AuthGuard],
+        data: { authGuardPipe: redirectUnauthorizedToLogin },
+      },
       {
         path: ':bookId',
         component: BookDetailsComponent,
@@ -35,6 +47,7 @@ export const routes: Routes = [
         path: ':bookId/edit',
         component: EditBookComponent,
         canActivate: [AuthGuard],
+        data: { authGuardPipe: redirectUnauthorizedToLogin },
       },
     ],
   },
@@ -46,6 +59,7 @@ export const routes: Routes = [
         path: 'add',
         component: AddAuthorComponent,
         canActivate: [AuthGuard, AdminGuard],
+        data: { authGuardPipe: redirectUnauthorizedToLogin },
       },
       {
         path: ':authorId',
@@ -57,6 +71,7 @@ export const routes: Routes = [
     path: 'users',
     component: UsersListComponent,
     canActivate: [AuthGuard, AdminGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
   { path: 'error', component: ErrorMessageComponent },
   { path: '404', component: PageNotFoundComponent },

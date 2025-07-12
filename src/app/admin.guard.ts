@@ -6,6 +6,9 @@ import {
 } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthenticationService } from './authentication.service';
+import { ToastService } from './toast/toast.service';
+import { Auth, authState } from '@angular/fire/auth';
+import { map } from 'rxjs';
 
 export const AdminGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -14,15 +17,20 @@ export const AdminGuard: CanActivateFn = (
   const authenticationService: AuthenticationService = inject(
     AuthenticationService
   );
+  const toastService: ToastService = inject(ToastService);
   const router: Router = inject(Router);
 
-  if (
-    authenticationService.user &&
-    authenticationService.user.email === 'admin@gmail.com'
-  ) {
-    return true;
-  }
+  const auth = inject(Auth);
 
-  router.navigate(['/home']);
-  return false;
+  return authState(auth).pipe(
+    map((user) => {
+      if (user && user.email === 'admin@gmail.com') {
+        return true;
+      }
+
+      router.navigate(['/home']);
+      toastService.add(`You are not authorized to access this page!`);
+      return false;
+    })
+  );
 };

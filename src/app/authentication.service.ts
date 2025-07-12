@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Auth, user } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -12,6 +12,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   deleteUser,
+  getAuth,
 } from 'firebase/auth';
 import { BehaviorSubject, from, Observable, of, tap } from 'rxjs';
 
@@ -20,14 +21,17 @@ import { BehaviorSubject, from, Observable, of, tap } from 'rxjs';
 })
 export class AuthenticationService {
   private user$$ = new BehaviorSubject<User | null>(null);
-  user$ = this.user$$.asObservable();
+  // user$ = this.user$$.asObservable();
+  user$: Observable<User | null>;
 
   user: User | null = null;
 
   isLoggedIn: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private firebaseAuth: Auth) {
+    this.user$ = user(this.firebaseAuth);
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+      console.log('AuthenticationService: User state changed', user);
       this.user = user;
     });
   }
@@ -35,6 +39,7 @@ export class AuthenticationService {
   registerAuthChangeCallback() {
     console.log('Authentication service initialized');
     const auth = getAuth();
+    this.user$$.next(auth.currentUser);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -44,6 +49,7 @@ export class AuthenticationService {
         this.user$$.next(user);
         this.isLoggedIn = true;
         console.log('User session is restored');
+        console.log('Current user:', auth.currentUser);
       } else {
         // User is signed out
         // ...

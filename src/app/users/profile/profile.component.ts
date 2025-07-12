@@ -44,22 +44,23 @@ export class ProfileComponent {
     this.userService
       .getFavoriteBooksForUser(uuid)
       .pipe(takeUntilDestroyed())
-      .subscribe((book) => {
-        this.favoriteBooks.push(book);
-      });
+      .subscribe({
+        next: (book) => {
+          this.favoriteBooks.push(book);
+        },
+        complete: () => {
+          const authorObservables = this.favoriteBooks.map((book) =>
+            this.authorService.getAuthor(book.authorId).pipe(
+              map((author) => {
+                this.bookAuthors.set(book.id, author!.name);
+              })
+            )
+          );
 
-    const authorObservables = this.favoriteBooks.map((book) =>
-      this.authorService.getAuthor(book.authorId).pipe(
-        map((author) => {
-          this.bookAuthors.set(book.id, author!.name);
-        })
-      )
-    );
-
-    forkJoin(authorObservables)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        console.log('All authors have been processed.');
+          forkJoin(authorObservables)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {});
+        },
       });
   }
 

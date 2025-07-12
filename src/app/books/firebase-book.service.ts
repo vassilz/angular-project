@@ -144,6 +144,7 @@ export class FirebaseBookService implements BookService {
       } else {
         result.next(null);
       }
+      result.complete();
     });
     return result.asObservable();
   }

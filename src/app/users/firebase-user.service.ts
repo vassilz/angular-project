@@ -120,13 +120,22 @@ export class FirebaseUserService implements UserService {
     this.getUserById(userId).subscribe((user) => {
       // TODO : Check if user is null
       const bookIds: number[] = user!.favoriteBookIds || [];
+      const observables: Observable<Book | null>[] = [];
       bookIds.forEach((id) => {
-        this.bookService.getBook(id).subscribe((book) => {
-          // const book = book.val();
-          if (!!book) {
-            favoriteBooks.next(book);
-          }
-        });
+        const book$ = this.bookService.getBook(id);
+        observables.push(book$);
+      });
+      forkJoin(observables).subscribe({
+        next: (books) => {
+          books.forEach((book) => {
+            if (!!book) {
+              favoriteBooks.next(book);
+            }
+          });
+        },
+        complete: () => {
+          favoriteBooks.complete();
+        },
       });
     });
 

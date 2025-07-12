@@ -12,13 +12,13 @@
 }
 
 .books-list {
-  min-width: 600px;
+  /* min-width: 600px; */
   flex-grow: 1;
 }
 
 .recent-books-list {
   margin-left: auto;
-  min-width: 300px;
+  /* min-width: 300px; */
 }
 
 .paging-previous-button,

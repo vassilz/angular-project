@@ -42,6 +42,8 @@ export class FirebaseUserService implements UserService {
     var result = new Subject<void>();
     const observable = from(get(ref(this.db, 'users')));
 
+    console.log('Creating user with username:', username);
+
     const subscription = observable.subscribe((data) => {
       const users: User[] = data.val() || [];
       const nextUserId = users.length;
@@ -291,6 +293,36 @@ export class FirebaseUserService implements UserService {
 
   deleteUser(userId: number): Observable<void> {
     return from(remove(ref(this.db, 'users/' + userId)));
+  }
+
+  existsUser(username: string): Observable<boolean> {
+    const observable = from(get(ref(this.db, 'users')));
+
+    var userExists = new Subject<boolean>();
+    const subscription = observable.subscribe((data) => {
+      const users: User[] = data.val() || [];
+      const exists = users.some((user) => user.username === username);
+      userExists.next(exists);
+      userExists.complete();
+      subscription.unsubscribe();
+    });
+
+    return userExists.asObservable();
+  }
+
+  existsUserWithEmail(email: string): Observable<boolean> {
+    const observable = from(get(ref(this.db, 'users')));
+
+    var userExists = new Subject<boolean>();
+    const subscription = observable.subscribe((data) => {
+      const users: User[] = data.val() || [];
+      const exists = users.some((user) => user.email === email);
+      userExists.next(exists);
+      userExists.complete();
+      subscription.unsubscribe();
+    });
+
+    return userExists.asObservable();
   }
 
   doStuff() {

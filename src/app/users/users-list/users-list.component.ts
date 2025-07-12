@@ -26,12 +26,15 @@ export class UsersListComponent {
       });
   }
 
-  deleteUser(id: number) {
+  deleteUser(user: User) {
     this.userService
-      .deleteUser(id)
+      .deleteUser(user.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.toastService.add(`User ${id} deleted successfully`);
+        this.toastService.add(`User ${user.username} deleted successfully`);
+        this.users.update((currentUsers) =>
+          currentUsers.filter((u) => u.id !== user.id)
+        );
       });
   }
 }

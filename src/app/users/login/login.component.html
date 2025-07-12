@@ -1,4 +1,4 @@
-<form #form="ngForm" (ngSubmit)="loginWithEmailAndPassword(form)">
+<form #form="ngForm" (ngSubmit)="onSubmit(form, $event.submitter.id)">
   <!-- <form #form="ngForm" (ngSubmit)="loginWithGoogle(form)"> -->
   <label for="email">Email:</label><br />
   <input
@@ -41,7 +41,10 @@
   <button
     [disabled]="form.invalid"
     [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+    id="login"
+    type="submit"
   >
     Login
   </button>
+  <button type="submit" id="google">Login with Google</button>
 </form>

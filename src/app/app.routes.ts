@@ -15,13 +15,20 @@ import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { AuthorsListComponent } from './authors/authors-list/authors-list.component';
 import { AddAuthorComponent } from './authors/add-author/add-author.component';
 import { AuthorDetailsComponent } from './authors/author-details/author-details.component';
+import { UnauthenticatedGuard } from './unauthenticated.guard';
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
   { path: 'login', component: LoginComponent },
   {
     path: 'profile',

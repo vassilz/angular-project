@@ -7,6 +7,7 @@ import { User } from 'firebase/auth';
 import { FirebaseUserService } from '../firebase-user.service';
 import { JettyUserService } from '../jetty-user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,16 @@ export class LoginComponent {
     private userService: FirebaseUserService,
     private destroyRef: DestroyRef // private userService: JettyUserService
   ) {}
+
+  onSubmit(form: NgForm, submitter: any) {
+    console.log('Form submitted with submitter:', submitter);
+    console.log('Form value:', form.value);
+    if (submitter === 'login') {
+      this.loginWithEmailAndPassword(form);
+    } else if (submitter === 'google') {
+      this.loginWithGoogle(form);
+    }
+  }
 
   loginWithEmailAndPassword(form: NgForm) {
     if (form.invalid) {
@@ -69,6 +80,20 @@ export class LoginComponent {
           const defaultUserSettings = {
             pageSize: 5,
           };
+
+          const userByUsername = userService.existsUser(username);
+          const userByEmail = userService.existsUserWithEmail(user.email!);
+
+          forkJoin([userByUsername, userByEmail]).subscribe(
+            ([existsByUsername, existsByEmail]) => {
+              if (existsByUsername || existsByEmail) {
+                console.log('User already exists, navigating to books');
+                router.navigate(['/books']);
+                return;
+              }
+            }
+          );
+
           userService
             .createUser(
               uuid,

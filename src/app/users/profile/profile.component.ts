@@ -9,6 +9,7 @@ import { JettyUserService } from '../jetty-user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { forkJoin, map } from 'rxjs';
+import { ToastService } from '../../toast/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,8 @@ export class ProfileComponent {
     private router: Router,
     private authenticationService: AuthenticationService,
     private authorService: FirebaseAuthorService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private toastService: ToastService
   ) {
     const uuid = this.authenticationService.user!.uid;
 
@@ -94,6 +96,9 @@ export class ProfileComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         console.info('User updated successfully');
+        this.toastService.add(
+          `User profile updated successfully for user: ${this.user!.username}`
+        );
         this.router.navigate(['/home']);
       });
   }

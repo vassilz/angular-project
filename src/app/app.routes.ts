@@ -19,8 +19,6 @@ import { UnauthenticatedGuard } from './unauthenticated.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
-
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },

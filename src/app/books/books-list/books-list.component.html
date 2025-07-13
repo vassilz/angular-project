@@ -28,8 +28,9 @@
     Descending:
     <input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
     <br /><br />
-    } @if (books().length === 0) { No books yet } @else { @for (book of books();
-    track $index) {
+    } @if (books().length === 0) { @if (searchActive) { No books found for "{{
+      searchTerm
+    }}" } @else { No books yet }} @else { @for (book of books(); track $index) {
     <!-- {{ book | json }} -->
     <app-book-card [book]="book" [searchTerm]="searchTerm" />
     }

@@ -90,25 +90,30 @@ export class LoginComponent {
                 console.log('User already exists, navigating to books');
                 router.navigate(['/books']);
                 return;
+              } else {
+                console.log(
+                  'User does not exist, creating new user with Google login:'
+                );
+                console.log('UUID:', uuid);
               }
+
+              userService
+                .createUser(
+                  uuid,
+                  username,
+                  user.email!,
+                  firstName,
+                  lastName,
+                  '',
+                  [],
+                  defaultUserSettings
+                )
+                .subscribe((data) => {
+                  console.log(data);
+                  router.navigate(['/books']);
+                });
             }
           );
-
-          userService
-            .createUser(
-              uuid,
-              username,
-              user.email!,
-              firstName,
-              lastName,
-              '',
-              [],
-              defaultUserSettings
-            )
-            .subscribe((data) => {
-              console.log(data);
-              router.navigate(['/books']);
-            });
         },
         // TODO handle errors with an interceptor
         error(err) {

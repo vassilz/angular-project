@@ -165,12 +165,14 @@ export class FirebaseUserService implements UserService {
           user.firstName,
           user.lastName,
           user.password,
-          favoriteBookIds
+          favoriteBookIds,
+          user.settings
         ).subscribe((data) => {
           console.info('User updated successfully');
           // this.router.navigate(['/home']);
 
           subject.next();
+          subject.complete();
         });
       }
     });
@@ -198,11 +200,13 @@ export class FirebaseUserService implements UserService {
           user.firstName,
           user.lastName,
           user.password,
-          favoriteBookIds
+          favoriteBookIds,
+          user.settings
         ).subscribe((data) => {
           // this.router.navigate(['/home']);
 
           subject.next();
+          subject.complete();
         });
       }
     });
@@ -229,7 +233,8 @@ export class FirebaseUserService implements UserService {
             user.firstName,
             user.lastName,
             user.password,
-            favoriteBookIds
+            favoriteBookIds,
+            user.settings
           );
           observables.push(userObservable);
         }

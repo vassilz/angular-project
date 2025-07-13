@@ -13,6 +13,7 @@ export class ErrorHandlingService {
 
   handleError(err: any) {
     console.error('Error has occurred' + err);
+    console.log(err);
 
     this.errorMessageService.setError(err);
     this.router.navigate(['/error']);

@@ -6,6 +6,8 @@ import { Book } from '../../types/book';
 import { JettyBookService } from '../jetty-book.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
+import { Author } from '../../types/author';
+import { ToastService } from '../../toast/toast.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -17,14 +19,16 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 export class EditBookComponent {
   book: Book = {} as Book;
 
-  authorName = signal<string>('');
+  // authorName = signal<string>('');
+  author = signal<Author | null>(null);
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
     private authorService: FirebaseAuthorService,
-    private destroyRef: DestroyRef // private bookService: JettyBookService
+    private destroyRef: DestroyRef,
+    private toastService: ToastService // private bookService: JettyBookService
   ) {
     const id = this.route.snapshot.params['bookId'];
 
@@ -42,7 +46,7 @@ export class EditBookComponent {
       .getAuthor(this.book.authorId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((author) => {
-        this.authorName.set(author?.name || 'Unknown Author');
+        this.author.set(author || null);
       });
   }
 
@@ -51,12 +55,20 @@ export class EditBookComponent {
       return;
     }
 
-    const { name, author, publish_date, pages, synopsis } = form.value;
+    const { name, publish_date, pages, synopsis } = form.value;
 
     this.bookService
-      .updateBook(this.book.id, name, author, publish_date, pages, synopsis)
+      .updateBook(
+        this.book.id,
+        name,
+        this.author()!.id,
+        publish_date,
+        pages,
+        synopsis
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        this.toastService.add(`Book ${this.book.name} updated successfully`);
         this.router.navigate(['/books']);
       });
   }

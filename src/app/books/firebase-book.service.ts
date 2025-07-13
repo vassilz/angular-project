@@ -254,7 +254,7 @@ export class FirebaseBookService implements BookService {
   updateBook(
     bookId: number,
     name: string,
-    authorId: string,
+    authorId: number,
     publishDate: string,
     pagesCount: number,
     synopsis?: string

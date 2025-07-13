@@ -93,6 +93,9 @@ export class AuthenticationService {
   loginWithGoogle() {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
     return from(signInWithPopup(auth, provider)).pipe(
       tap((userCredential) => {
         // Signed in

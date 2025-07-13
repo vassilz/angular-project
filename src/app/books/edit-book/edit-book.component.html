@@ -23,7 +23,7 @@
     id="author"
     name="author"
     #inputAuthor="ngModel"
-    [ngModel]="authorName()"
+    [ngModel]="author()?.name"
     disabled
   />
   @if (inputAuthor?.touched) {

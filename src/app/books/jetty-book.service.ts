@@ -181,7 +181,7 @@ export class JettyBookService implements BookService {
   updateBook(
     bookId: number,
     name: string,
-    author: string,
+    authorId: number,
     publishDate: string,
     pagesCount: number,
     synopsis?: string
@@ -191,7 +191,7 @@ export class JettyBookService implements BookService {
       .put<Book>(`/api/books`, {
         bookId,
         name,
-        author,
+        authorId,
         publishDate,
         pagesCount,
         synopsis,

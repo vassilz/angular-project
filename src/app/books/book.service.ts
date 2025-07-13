@@ -40,7 +40,7 @@ export interface BookService {
   updateBook(
     bookId: number,
     name: string,
-    author: string,
+    authorId: number,
     publishDate: string,
     pagesCount: number,
     synopsis?: string

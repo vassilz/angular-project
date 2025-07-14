@@ -4,6 +4,7 @@ import { FirebaseAuthorService } from '../firebase-author.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../toast/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-add-author',
@@ -17,7 +18,8 @@ export class AddAuthorComponent {
     private authorService: FirebaseAuthorService,
     private router: Router,
     private toastService: ToastService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   addAuthor(form: NgForm) {
@@ -30,9 +32,14 @@ export class AddAuthorComponent {
     this.authorService
       .createAuthor(name, birth_date, country)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.toastService.add(`Author ${name} created successfully`);
-        this.router.navigate(['/authors']);
+      .subscribe({
+        next: () => {
+          this.toastService.add(`Author ${name} created successfully`);
+          this.router.navigate(['/authors']);
+        },
+        error: (err) => {
+          this.errorHandlingService.handleError(err);
+        },
       });
   }
 

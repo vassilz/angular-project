@@ -66,8 +66,14 @@ export class FirebaseAuthorService implements AuthorService {
           birthDate,
           country,
         })
-      ).subscribe(() => {
-        result.next();
+      ).subscribe({
+        next: () => {
+          result.next();
+        },
+        error: (err) => {
+          console.error('Error creating author:', err);
+          result.error(err);
+        },
       });
     });
 

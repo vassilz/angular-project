@@ -108,9 +108,14 @@ export class LoginComponent {
                   [],
                   defaultUserSettings
                 )
-                .subscribe((data) => {
-                  console.log(data);
-                  router.navigate(['/books']);
+                .subscribe({
+                  next: (data) => {
+                    console.log(data);
+                    router.navigate(['/books']);
+                  },
+                  error: (err) => {
+                    errorHandlingService.handleError(err);
+                  },
                 });
             }
           );

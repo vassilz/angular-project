@@ -3,6 +3,7 @@ import { FirebaseUserService } from '../firebase-user.service';
 import { User } from '../../types/user';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../toast/toast.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-users-list',
@@ -16,7 +17,8 @@ export class UsersListComponent {
   constructor(
     private userService: FirebaseUserService,
     private toastService: ToastService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private errorHandlingService: ErrorHandlingService
   ) {
     userService
       .getUsers()
@@ -30,11 +32,16 @@ export class UsersListComponent {
     this.userService
       .deleteUser(user.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.toastService.add(`User ${user.username} deleted successfully`);
-        this.users.update((currentUsers) =>
-          currentUsers.filter((u) => u.id !== user.id)
-        );
+      .subscribe({
+        next: () => {
+          this.toastService.add(`User ${user.username} deleted successfully`);
+          this.users.update((currentUsers) =>
+            currentUsers.filter((u) => u.id !== user.id)
+          );
+        },
+        error: (err) => {
+          this.errorHandlingService.handleError(err);
+        },
       });
   }
 }

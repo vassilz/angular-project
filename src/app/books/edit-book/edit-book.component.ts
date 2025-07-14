@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { Author } from '../../types/author';
 import { ToastService } from '../../toast/toast.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -28,7 +29,8 @@ export class EditBookComponent {
     private bookService: FirebaseBookService,
     private authorService: FirebaseAuthorService,
     private destroyRef: DestroyRef,
-    private toastService: ToastService // private bookService: JettyBookService
+    private toastService: ToastService,
+    private errorHandlingService: ErrorHandlingService // private bookService: JettyBookService
   ) {
     const id = this.route.snapshot.params['bookId'];
 
@@ -67,9 +69,14 @@ export class EditBookComponent {
         synopsis
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.toastService.add(`Book ${this.book.name} updated successfully`);
-        this.router.navigate(['/books']);
+      .subscribe({
+        next: () => {
+          this.toastService.add(`Book ${this.book.name} updated successfully`);
+          this.router.navigate(['/books']);
+        },
+        error: (err) => {
+          this.errorHandlingService.handleError(err);
+        },
       });
   }
 

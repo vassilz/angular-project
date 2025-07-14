@@ -147,26 +147,31 @@ export class BooksListComponent implements OnInit {
       this.loadBooks();
     });
 
-    this.authenticationService.user$.subscribe((user) => {
-      if (user) {
-        console.log('Loading page size for user: ' + user.uid);
+    this.authenticationService.user$.subscribe((firebaseUser) => {
+      if (firebaseUser) {
+        console.log('Loading page size for user: ' + firebaseUser.uid);
 
         this.userService
-          .getUserById(user.uid)
+          .getUserById(firebaseUser.uid)
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            if (user!.settings) {
-              this.pageSize = user!.settings.pageSize;
-              console.log('Page size loaded: ' + this.pageSize);
-            } else {
-              console.log(
-                'No settings found for user: ' +
-                  user!.uuid +
-                  '. Loading default page size.'
-              );
-            }
-            console.log('Page size: ' + this.pageSize);
-            pageSizeLoaded.next();
+          .subscribe({
+            next: (user) => {
+              if (user?.settings) {
+                this.pageSize = user!.settings.pageSize;
+                console.log('Page size loaded: ' + this.pageSize);
+              } else {
+                console.log(
+                  'No settings found for user: ' +
+                    firebaseUser.uid +
+                    '. Loading default page size.'
+                );
+              }
+              console.log('Page size: ' + this.pageSize);
+              pageSizeLoaded.next();
+            },
+            error: (err) => {
+              console.error('Error loading user settings:', err);
+            },
           });
       } else {
         console.log('Loading default page size');
@@ -195,8 +200,14 @@ export class BooksListComponent implements OnInit {
     this.bookService
       .getBooksCount()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((count) => {
-        this.allBooksCount = count;
+      .subscribe({
+        next: (count) => {
+          this.allBooksCount = count;
+        },
+        error: (err) => {
+          console.error('Error loading books count:', err);
+          this.isLoading.set(false);
+        },
       });
 
     this.bookService

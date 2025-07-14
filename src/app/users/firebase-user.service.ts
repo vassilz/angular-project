@@ -60,8 +60,14 @@ export class FirebaseUserService implements UserService {
           favoriteBookIds,
           settings,
         })
-      ).subscribe(() => {
-        result.next();
+      ).subscribe({
+        next: () => {
+          result.next();
+        },
+        error: (err) => {
+          console.error('Error creating user:', err);
+          result.error(err);
+        },
       });
     });
 
@@ -91,16 +97,22 @@ export class FirebaseUserService implements UserService {
   getUserById(userId: string): Observable<User | null> {
     const observable = from(get(ref(this.db, 'users')));
 
-    var foundUser = new Subject<User>();
-    observable.subscribe((data) => {
-      const users: User[] = data.val();
+    var foundUser = new Subject<User | null>();
+    observable.subscribe({
+      next: (data) => {
+        const users: User[] = data.val();
 
-      users.forEach((user, index) => {
-        user.id = index;
-      });
-      const user = users.filter((user) => user.uuid === userId)[0];
+        users.forEach((user, index) => {
+          user.id = index;
+        });
+        const user = users.filter((user) => user.uuid === userId)[0];
 
-      foundUser.next(user);
+        foundUser.next(user);
+      },
+      error: (err) => {
+        console.error('Error loading user by ID:', err);
+        foundUser.next(null);
+      },
     });
 
     return foundUser.asObservable();

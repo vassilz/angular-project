@@ -243,8 +243,14 @@ export class FirebaseBookService implements BookService {
           pagesCount,
           synopsis,
         })
-      ).subscribe(() => {
-        result.next();
+      ).subscribe({
+        next: () => {
+          result.next();
+        },
+        error: (err) => {
+          result.error(err);
+          console.error('Error creating book:', err);
+        },
       });
     });
 

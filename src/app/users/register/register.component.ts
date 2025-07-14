@@ -92,11 +92,15 @@ export class RegisterComponent {
               [],
               defaultUserSettings
             )
-            .subscribe((data) => {
-              console.log(data);
+            .subscribe({
+              next: (data) => {
+                console.log(data);
+                router.navigate(['/books']);
+              },
+              error: (err) => {
+                errorHandlingService.handleError(err);
+              },
             });
-
-          router.navigate(['/books']);
         },
         // TODO handle errors with an interceptor
         error(err) {

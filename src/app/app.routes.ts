@@ -27,7 +27,11 @@ export const routes: Routes = [
     component: RegisterComponent,
     canActivate: [UnauthenticatedGuard],
   },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
   {
     path: 'profile',
     component: ProfileComponent,
@@ -41,7 +45,7 @@ export const routes: Routes = [
       {
         path: 'add',
         component: AddBookComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, AdminGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },
       },
       {
@@ -51,7 +55,7 @@ export const routes: Routes = [
       {
         path: ':bookId/edit',
         component: EditBookComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, AdminGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },
       },
     ],

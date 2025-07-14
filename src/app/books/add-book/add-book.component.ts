@@ -78,9 +78,14 @@ export class AddBookComponent implements OnInit {
     this.bookService
       .createBook(name!, author!, publish_date!, pages!, synopsis)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.toastService.add(`Book ${name} created successfully`);
-        this.router.navigate(['/books']);
+      .subscribe({
+        next: () => {
+          this.toastService.add(`Book ${name} created successfully`);
+          this.router.navigate(['/books']);
+        },
+        error: (err) => {
+          this.errorHandlingService.handleError(err);
+        },
       });
   }
 

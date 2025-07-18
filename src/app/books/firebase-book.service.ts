@@ -102,7 +102,6 @@ export class FirebaseBookService implements BookService {
     var recentBooks = new Subject<Book[]>();
     const observable = from(get(ref(this.db, 'books')));
 
-    //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
       var books: Book[] = [];
 
@@ -158,7 +157,6 @@ export class FirebaseBookService implements BookService {
     var result = new Subject<Book[]>();
     const observable = from(get(ref(this.db, 'books')));
 
-    //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((data) => {
       var books: Book[] = data.val() || [];
       books.forEach((book, index) => {

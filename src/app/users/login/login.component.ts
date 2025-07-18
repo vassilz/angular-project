@@ -53,7 +53,6 @@ export class LoginComponent {
         next(userCredential) {
           router.navigate(['/books']);
         },
-        // TODO handle errors with an interceptor
         error(err) {
           errorHandlingService.handleError(err);
         },
@@ -64,6 +63,7 @@ export class LoginComponent {
     const router = this.router;
     const errorHandlingService = this.errorHandlingService;
     const userService = this.userService;
+    const authenticationService = this.authenticationService;
 
     this.authenticationService
       .loginWithGoogle()
@@ -115,12 +115,16 @@ export class LoginComponent {
                   },
                   error: (err) => {
                     errorHandlingService.handleError(err);
+                    authenticationService.deleteUser().subscribe({
+                      next: () => {
+                        console.log('User deleted after failed creation');
+                      },
+                    });
                   },
                 });
             }
           );
         },
-        // TODO handle errors with an interceptor
         error(err) {
           errorHandlingService.handleError(err);
         },

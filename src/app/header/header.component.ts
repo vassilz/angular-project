@@ -37,7 +37,6 @@ export class HeaderComponent {
           // Logout successful
           router.navigate(['/home']);
         },
-        // TODO handle errors with an interceptor
         error(err) {
           console.error('Logout error' + err);
 

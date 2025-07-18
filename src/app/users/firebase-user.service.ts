@@ -9,7 +9,7 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { forkJoin, from, Observable, Subject } from 'rxjs';
+import { forkJoin, from, Observable, Subject, throwError } from 'rxjs';
 import { User } from '../types/user';
 import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
@@ -121,9 +121,12 @@ export class FirebaseUserService implements UserService {
   getFavoriteBookIdsForUser(userId: string): Observable<number[]> {
     var favoriteBookIds = new Subject<number[]>();
     this.getUserById(userId).subscribe((user) => {
-      // TODO : Check if user is null
-      const bookIds: number[] = user!.favoriteBookIds || [];
-      favoriteBookIds.next(bookIds);
+      if (!user) {
+        favoriteBookIds.error(new Error('User not found for ID: ' + userId));
+      } else {
+        const bookIds: number[] = user!.favoriteBookIds || [];
+        favoriteBookIds.next(bookIds);
+      }
     });
 
     return favoriteBookIds.asObservable();
@@ -132,25 +135,28 @@ export class FirebaseUserService implements UserService {
   getFavoriteBooksForUser(userId: string): Observable<Book> {
     var favoriteBooks = new Subject<Book>();
     this.getUserById(userId).subscribe((user) => {
-      // TODO : Check if user is null
-      const bookIds: number[] = user!.favoriteBookIds || [];
-      const observables: Observable<Book | null>[] = [];
-      bookIds.forEach((id) => {
-        const book$ = this.bookService.getBook(id);
-        observables.push(book$);
-      });
-      forkJoin(observables).subscribe({
-        next: (books) => {
-          books.forEach((book) => {
-            if (!!book) {
-              favoriteBooks.next(book);
-            }
-          });
-        },
-        complete: () => {
-          favoriteBooks.complete();
-        },
-      });
+      if (user == undefined) {
+        favoriteBooks.error(new Error('User not found for ID: ' + userId));
+      } else {
+        const bookIds: number[] = user!.favoriteBookIds || [];
+        const observables: Observable<Book | null>[] = [];
+        bookIds.forEach((id) => {
+          const book$ = this.bookService.getBook(id);
+          observables.push(book$);
+        });
+        forkJoin(observables).subscribe({
+          next: (books) => {
+            books.forEach((book) => {
+              if (!!book) {
+                favoriteBooks.next(book);
+              }
+            });
+          },
+          complete: () => {
+            favoriteBooks.complete();
+          },
+        });
+      }
     });
 
     return favoriteBooks.asObservable();

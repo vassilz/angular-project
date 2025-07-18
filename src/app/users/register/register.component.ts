@@ -70,6 +70,7 @@ export class RegisterComponent {
     const router = this.router;
     const errorHandlingService = this.errorHandlingService;
     const userService = this.userService;
+    const authenticationService = this.authenticationService;
 
     this.authenticationService
       .register(email!, password!)
@@ -99,10 +100,14 @@ export class RegisterComponent {
               },
               error: (err) => {
                 errorHandlingService.handleError(err);
+                authenticationService.deleteUser().subscribe({
+                  next: () => {
+                    console.log('User deleted after failed creation');
+                  },
+                });
               },
             });
         },
-        // TODO handle errors with an interceptor
         error(err) {
           errorHandlingService.handleError(err);
         },

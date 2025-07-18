@@ -50,6 +50,9 @@ export class ProfileComponent {
         next: (book) => {
           this.favoriteBooks.push(book);
         },
+        error: (err) => {
+          console.error('Error fetching favorite books:', err);
+        },
         complete: () => {
           const authorObservables = this.favoriteBooks.map((book) =>
             this.authorService.getAuthor(book.authorId).pipe(

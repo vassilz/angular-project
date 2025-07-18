@@ -4,6 +4,7 @@ import {
   DestroyRef,
   OnInit,
   signal,
+  viewChild,
   WritableSignal,
 } from '@angular/core';
 import { FirebaseBookService } from '../firebase-book.service';
@@ -11,7 +12,7 @@ import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
-import { forkJoin, map, Subject } from 'rxjs';
+import { combineLatest, forkJoin, map, Subject, take } from 'rxjs';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
@@ -36,9 +37,7 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
     BookCardComponent,
     LoaderComponent,
     FormsModule,
-    JsonPipe,
     RecentBooksListComponent,
-    BooksPagingComponent,
   ],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
@@ -140,6 +139,8 @@ export class BooksListComponent implements OnInit {
   searchTerm: string = '';
   searchActive: boolean = false;
 
+  recentBooksList = viewChild(RecentBooksListComponent);
+
   ngOnInit(): void {
     const pageSizeLoaded = new Subject<void>();
     pageSizeLoaded.subscribe(() => {
@@ -210,6 +211,7 @@ export class BooksListComponent implements OnInit {
         },
       });
 
+    this.restoreSorting();
     this.bookService
       .getBooks(
         this.pageStart,
@@ -226,7 +228,7 @@ export class BooksListComponent implements OnInit {
         this.currentPage = this.books().length;
 
         // TODO - fix completion of forkJoin below
-        this.isLoading.set(false);
+        // this.isLoading.set(false);
 
         const reviewObservables = this.books().map((book) =>
           this.reviewService.getReviews(book.id).pipe(
@@ -237,17 +239,34 @@ export class BooksListComponent implements OnInit {
           )
         );
 
-        forkJoin(reviewObservables)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            console.log('All reviews have been processed.');
+        console.log('Loading reviews for books:', this.books());
+        combineLatest(reviewObservables)
+          .pipe(take(1))
+          .subscribe({
+            complete: () => {
+              console.log('All reviews have been processed.');
 
-            // Initial sort
-            this.restoreSorting();
-            this.sortBooks();
-
-            // this.isLoading = false;
+              this.isLoading.set(false);
+              this.changeDetectorRef.detectChanges();
+            },
           });
+        // forkJoin(reviewObservables)
+        //   .pipe(takeUntilDestroyed(this.destroyRef))
+        //   .subscribe({
+        //     next: () => {
+        //       console.log('All reviews have been processed.');
+
+        //       // Initial sort
+        //       this.restoreSorting();
+        //       this.sortBooks();
+
+        //       this.isLoading.set(false);
+        //     },
+        //     complete: () => {
+        //       console.log('ForkJoin completed for book reviews.');
+        //       this.changeDetectorRef.detectChanges();
+        //     },
+        //   });
       });
   }
 

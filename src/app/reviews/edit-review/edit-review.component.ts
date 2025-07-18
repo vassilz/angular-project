@@ -85,7 +85,6 @@ export class EditReviewComponent implements OnInit {
 
           this.rerenderService.rerenderReviews.emit();
         },
-        // TODO handle errors with an interceptor
         error: (err) => {
           errorHandlingService.handleError(err);
         },
@@ -117,7 +116,6 @@ export class EditReviewComponent implements OnInit {
           this.rerenderService.rerenderReviews.emit();
           // this.toggleEditMode();
         },
-        // TODO handle errors with an interceptor
         error: (err) => {
           errorHandlingService.handleError(err);
         },

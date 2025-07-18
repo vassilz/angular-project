@@ -60,7 +60,6 @@ export class JettyBookService implements BookService {
     var recentBooks = new Subject<Book[]>();
     const observable = this.http.get<Book[]>('/api/books');
 
-    //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((books) => {
       // var books: Book[] = books.val() || [];
       books.forEach((book, index) => {
@@ -95,7 +94,6 @@ export class JettyBookService implements BookService {
     var result = new Subject<Book[]>();
     const observable = this.http.get<Book[]>('/api/books');
 
-    //TODO: Cleanup subscriptions!
     const subscription = observable.subscribe((books) => {
       // var books: Book[] = books.val() || [];
       books.forEach((book, index) => {

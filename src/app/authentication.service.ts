@@ -122,20 +122,20 @@ export class AuthenticationService {
   }
 
   deleteUser(): Observable<void> {
-    // const auth = getAuth();
-    // if (!this.user) {
-    //   return new Observable((observer) => {
-    //     observer.error(new Error('No user is currently logged in'));
-    //   });
-    // }
-    // return from(deleteUser(this.user)).pipe(
-    //   tap(() => {
-    //     console.info('User deleted successfully');
-    //     this.user$$.next(null);
-    //     this.isLoggedIn = false;
-    //   })
-    // );
-    return of();
+    const auth = getAuth();
+    if (!this.user) {
+      return new Observable((observer) => {
+        observer.error(new Error('No user is currently logged in'));
+      });
+    }
+    return from(deleteUser(this.user)).pipe(
+      tap(() => {
+        console.info('User deleted successfully');
+        this.user$$.next(null);
+        this.isLoggedIn = false;
+      })
+    );
+    // return of();
   }
 
   // get isLoggedIn(): boolean {

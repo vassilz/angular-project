@@ -1,4 +1,11 @@
-import { Component, DestroyRef, input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Review } from '../../types/review';
 import { RouterLink } from '@angular/router';
 import { User } from '../../types/user';
@@ -31,9 +38,15 @@ export class ReviewCardComponent implements OnInit {
     private userService: FirebaseUserService,
     // private userService: JettyUserService,
     private reviewService: FirebaseReviewService,
-    private authenticationService: AuthenticationService,
+    protected authenticationService: AuthenticationService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    effect(() => {
+      console.log('Logged in: ', this.authenticationService.isLoggedIn);
+      console.log('Logged in user:', this.authenticationService.user?.uid);
+      console.log('Review user:', this.review().userid);
+    });
+  }
 
   ngOnInit(): void {
     this.userService

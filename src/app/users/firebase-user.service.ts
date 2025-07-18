@@ -84,6 +84,9 @@ export class FirebaseUserService implements UserService {
       users = users.filter((user) => !!user);
       users.forEach((user, index) => {
         user.id = index;
+        if (user.favoriteBookIds === undefined) {
+          user.favoriteBookIds = [];
+        }
       });
 
       result.next(users);
@@ -106,6 +109,9 @@ export class FirebaseUserService implements UserService {
           user.id = index;
         });
         const user = users.filter((user) => user.uuid === userId)[0];
+        if (user.favoriteBookIds === undefined) {
+          user.favoriteBookIds = [];
+        }
 
         foundUser.next(user);
       },
@@ -297,7 +303,7 @@ export class FirebaseUserService implements UserService {
     firstName: string,
     lastName: string,
     password: string,
-    favoriteBookIds: number[] = [],
+    favoriteBookIds: number[],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     return from(

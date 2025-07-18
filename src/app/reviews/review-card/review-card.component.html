@@ -1,12 +1,14 @@
 <div>{{ review().rating }}: {{ review().text }}</div>
 <br />
-by {{ user().firstName }} {{ user().lastName }}
+by <i>{{ user().firstName }} {{ user().lastName }}</i>
 {{ review().reviewDate | elapsedTime }}
 <br />
 <br />
-{{ likesCount() }} people found this helpful
+{{ likesCount() }} {{ likesCount() === 1 ? "person" : "people" }} found this
+helpful
 <br />
-@if (isLoggedIn && review().userid !== user().uuid) { Was this review helpful?
+@if (isLoggedIn && review().userid !== this.authenticationService.user!.uid) {
+Was this review helpful?
 <button
   (click)="isLikedByCurrentUser ? dislikeReview() : likeReview()"
   [style]="{ backgroundColor: isLikedByCurrentUser ? '#234465' : '' }"

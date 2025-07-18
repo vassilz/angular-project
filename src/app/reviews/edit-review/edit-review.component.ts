@@ -63,6 +63,7 @@ export class EditReviewComponent implements OnInit {
 
     const errorHandlingService = this.errorHandlingService;
 
+    console.log('liked by:', this.review!.likedBy);
     this.reviewService
       .updateReview(
         this.bookId(),

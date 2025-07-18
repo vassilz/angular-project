@@ -9,7 +9,7 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { from, Observable, Subject } from 'rxjs';
+import { from, map, Observable, Subject } from 'rxjs';
 import { Review } from '../types/review';
 import { ReviewService } from './review.service';
 
@@ -27,12 +27,31 @@ export class FirebaseReviewService implements ReviewService {
 
       reviews.forEach((review, index) => {
         review.id = index;
+
+        // Firebase does not store properties with empty arrays, so need to initialize it
+        if (review.likedBy === undefined) {
+          review.likedBy = [];
+        }
       });
 
       foundReviews.next(reviews);
     });
 
     return foundReviews.asObservable();
+  }
+
+  getReviewsWithText(bookId: number): Observable<Review[]> {
+    return this.getReviews(bookId).pipe(
+      map((reviews: Review[]) =>
+        reviews.filter((review: Review) => review.text.trim() !== '')
+      )
+    );
+  }
+
+  getReviewCount(bookId: number): Observable<number> {
+    return this.getReviews(bookId).pipe(
+      map((reviews: Review[]) => reviews.length)
+    );
   }
 
   getReviewById(bookId: number, reviewId: number): Observable<Review | null> {
@@ -45,6 +64,9 @@ export class FirebaseReviewService implements ReviewService {
       const review: Review = data.val();
       if (!!review) {
         review.id = reviewId;
+        if (review.likedBy === undefined) {
+          review.likedBy = [];
+        }
       }
 
       foundReview.next(review);
@@ -69,6 +91,9 @@ export class FirebaseReviewService implements ReviewService {
         });
 
         const review = reviews.filter((review) => review.userid === userId)[0];
+        if (review.likedBy === undefined) {
+          review.likedBy = [];
+        }
 
         foundReview.next(review);
       } else {
@@ -105,7 +130,7 @@ export class FirebaseReviewService implements ReviewService {
     rating: number,
     text: string,
     reviewDate: string,
-    likedBy: string[]
+    likedBy: string[] = []
   ): Observable<void> {
     return from(
       update(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {

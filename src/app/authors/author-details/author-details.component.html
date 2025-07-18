@@ -7,7 +7,7 @@ Books: @for (book of books(); track book.id) {
   <a [routerLink]="['/books', book.id]">
     <h4>{{ book.name }}</h4>
   </a>
-  <p>Published at: {{ book.publishDate }}</p>
+  <p>Published at: {{ book.publishDate | date }}</p>
   <p>Pages: {{ book.pagesCount }}</p>
 </div>
 }

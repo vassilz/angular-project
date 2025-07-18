@@ -6,11 +6,12 @@ import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-add-review',
   standalone: true,
-  imports: [FormsModule, JsonPipe],
+  imports: [FormsModule],
   templateUrl: './add-review.component.html',
   styleUrl: './add-review.component.css',
 })
@@ -22,13 +23,16 @@ export class AddReviewComponent {
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
     private rerenderService: RerenderService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   addReview(form: NgForm) {
     if (form.invalid) {
       return;
     }
+
+    const errorHandlingService = this.errorHandlingService;
 
     this.reviewService
       .getReviews(this.bookId())
@@ -49,9 +53,14 @@ export class AddReviewComponent {
             now
           )
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            // this.router.navigate(['/books']);
-            this.rerenderService.rerenderReviews.emit();
+          .subscribe({
+            next: () => {
+              // this.router.navigate(['/books']);
+              this.rerenderService.rerenderReviews.emit();
+            },
+            error: (error) => {
+              this.errorHandlingService.handleError(error);
+            },
           });
       });
   }

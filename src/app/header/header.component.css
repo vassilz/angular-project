@@ -21,3 +21,18 @@ button + button {
 :host {
   background-color: lightblue;
 }
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -5,12 +5,12 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class HighlightSearchPipe implements PipeTransform {
-  transform(value: string, ...args: any): unknown {
-    if (!args) {
+  transform(value: string, ...args: string[]): string {
+    if (!args || args.length === 0) {
       return value;
     }
 
-    const regex = new RegExp(args, 'gi');
+    const regex = new RegExp(args[0], 'gi');
     const match = value.match(regex);
 
     if (!match) {

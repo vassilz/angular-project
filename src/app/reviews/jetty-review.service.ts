@@ -26,6 +26,14 @@ export class JettyReviewService implements ReviewService {
     return foundReviews.asObservable();
   }
 
+  getReviewsWithText(bookId: number): Observable<Review[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  getReviewCount(bookId: number): Observable<number> {
+    throw new Error('Method not implemented.');
+  }
+
   getReviewById(bookId: number, reviewId: number): Observable<Review | null> {
     const observable = this.http.get<Review>(
       `/api/books/${bookId}/reviews/${reviewId}`
@@ -174,7 +182,7 @@ export class JettyReviewService implements ReviewService {
     const result = new Subject<void>();
 
     this.getReviewById(bookId, reviewId).subscribe((review) => {
-      if (review.likedBy.includes(userId)) {
+      if (review?.likedBy.includes(userId)) {
         // Nothing to do
         result.next();
       } else {
@@ -198,7 +206,7 @@ export class JettyReviewService implements ReviewService {
   ): Observable<void> {
     const result = new Subject<void>();
     this.getReviewById(bookId, reviewId).subscribe((review) => {
-      if (!review.likedBy.includes(userId)) {
+      if (!review?.likedBy.includes(userId)) {
         // Nothing to do
         result.next();
       } else {

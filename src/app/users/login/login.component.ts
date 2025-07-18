@@ -25,7 +25,7 @@ export class LoginComponent {
     private destroyRef: DestroyRef // private userService: JettyUserService
   ) {}
 
-  onSubmit(form: NgForm, submitter: any) {
+  onSubmit(form: NgForm, submitter: string) {
     console.log('Form submitted with submitter:', submitter);
     console.log('Form value:', form.value);
     if (submitter === 'login') {

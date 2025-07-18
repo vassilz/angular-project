@@ -9,7 +9,7 @@ import { UtilsService } from '../shared/utils.service';
 export class AverageRatingPipe implements PipeTransform {
   constructor(private utilsService: UtilsService) {}
 
-  transform(reviews: Review[], ...args: unknown[]): unknown {
+  transform(reviews: Review[]): number {
     return this.utilsService.calculateAverageRating(reviews);
   }
 }

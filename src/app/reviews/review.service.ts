@@ -4,6 +4,10 @@ import { Review } from '../types/review';
 export interface ReviewService {
   getReviews(bookId: number): Observable<Review[]>;
 
+  getReviewsWithText(bookId: number): Observable<Review[]>;
+
+  getReviewCount(bookId: number): Observable<number>;
+
   getReviewById(bookId: number, reviewId: number): Observable<Review | null>;
 
   getReviewByBookAndUser(

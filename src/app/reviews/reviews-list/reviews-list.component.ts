@@ -26,6 +26,8 @@ export class ReviewsListComponent implements OnInit {
 
   bookId: number = 0;
 
+  allReviewsCount = signal<number>(0);
+
   constructor(
     private route: ActivatedRoute,
     private reviewService: FirebaseReviewService,
@@ -52,7 +54,14 @@ export class ReviewsListComponent implements OnInit {
 
   loadReviews(bookId: number): void {
     this.reviewService
-      .getReviews(bookId)
+      .getReviewCount(bookId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((count) => {
+        this.allReviewsCount.set(count);
+      });
+
+    this.reviewService
+      .getReviewsWithText(bookId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((reviews) => {
         console.log(`Reviews for book ${bookId}:`, reviews);

@@ -30,6 +30,7 @@
   vertical-align: middle;
 }
 
-/* .highlight {
+:host ::ng-deep .highlight {
   background-color: orange;
-} */
+  font-weight: bold;
+}

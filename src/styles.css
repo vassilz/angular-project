@@ -1,8 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-.highlight {
-  background-color: orange;
-  font-weight: bold;
-}
 
 input.ng-touched.ng-invalid,
 textarea.ng-touched.ng-invalid {
@@ -11,4 +7,9 @@ textarea.ng-touched.ng-invalid {
 
 .input-error {
   color: #e52424;
+}
+
+:root {
+  --button-disabled-color: grey;
+  --button-active-color: #234465;
 }

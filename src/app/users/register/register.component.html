@@ -79,7 +79,11 @@
   <button class="cancel" routerLink="/home">Cancel</button>
   <button
     [disabled]="form.invalid"
-    [style]="{ backgroundColor: form.invalid ? 'grey' : '#234465' }"
+    [style]="{
+      backgroundColor: form.invalid
+        ? 'var(--button-disabled-color)'
+        : 'var(--button-active-color)'
+    }"
   >
     Add
   </button>

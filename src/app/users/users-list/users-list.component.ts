@@ -1,9 +1,9 @@
-import { Component, DestroyRef, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FirebaseUserService } from '../firebase-user.service';
 import { User } from '../../types/user';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-users-list',
@@ -17,12 +17,11 @@ export class UsersListComponent {
   constructor(
     private userService: FirebaseUserService,
     private toastService: ToastService,
-    private destroyRef: DestroyRef,
     private errorHandlingService: ErrorHandlingService
   ) {
     userService
       .getUsers()
-      .pipe(takeUntilDestroyed())
+      .pipe(take(1))
       .subscribe((users) => {
         this.users.set(users);
       });
@@ -31,7 +30,7 @@ export class UsersListComponent {
   deleteUser(user: User) {
     this.userService
       .deleteUser(user.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: () => {
           this.toastService.add(`User ${user.username} deleted successfully`);

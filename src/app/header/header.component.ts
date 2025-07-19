@@ -1,8 +1,8 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorMessageService } from '../errors/error-message/error-message.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +17,7 @@ export class HeaderComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private errorMessageService: ErrorMessageService,
-    private destroyRef: DestroyRef
+    private errorMessageService: ErrorMessageService
   ) {
     this.authenticationService.user$.subscribe((loggedInUser) => {
       this.uuid = loggedInUser?.uid || null;
@@ -31,7 +30,7 @@ export class HeaderComponent {
 
     this.authenticationService
       .logout()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next(value) {
           // Logout successful

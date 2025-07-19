@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   input,
   OnInit,
   signal,
@@ -12,7 +11,7 @@ import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { RerenderService } from '../../rerender.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-edit-review',
@@ -35,8 +34,7 @@ export class EditReviewComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private errorHandlingService: ErrorHandlingService,
     private changeDetection: ChangeDetectorRef,
-    private rerenderService: RerenderService,
-    private destroyRef: DestroyRef
+    private rerenderService: RerenderService
   ) {}
   ngOnInit(): void {
     this.reviewService
@@ -44,7 +42,7 @@ export class EditReviewComponent implements OnInit {
         this.bookId(),
         this.authenticationService.user!.uid
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((review) => {
         this.review = review;
         this.rating = review!.rating;
@@ -74,7 +72,7 @@ export class EditReviewComponent implements OnInit {
         now,
         this.review!.likedBy
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: (value) => {
           // router.navigate(['/books']);
@@ -105,7 +103,7 @@ export class EditReviewComponent implements OnInit {
     const errorHandlingService = this.errorHandlingService;
     this.reviewService
       .deleteReview(this.bookId(), this.review!.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: (value) => {
           // router.navigate(['/books']);

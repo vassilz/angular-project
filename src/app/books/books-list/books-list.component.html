@@ -31,7 +31,8 @@
     <br /><br />
     } @if (books().length === 0) { @if (searchActive) { No books found for "{{
       searchTerm
-    }}" } @else { No books yet }} @else { @for (book of books(); track $index) {
+    }}" } @else { No books yet }} @else { @for (book of books(); track book.id)
+    {
     <!-- {{ book | json }} -->
     <app-book-card [book]="book" [searchTerm]="searchTerm" />
     }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
@@ -6,8 +6,7 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { User } from 'firebase/auth';
 import { FirebaseUserService } from '../firebase-user.service';
 import { JettyUserService } from '../jetty-user.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,9 +20,9 @@ export class LoginComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    private userService: FirebaseUserService,
-    private destroyRef: DestroyRef // private userService: JettyUserService
-  ) {}
+    private userService: FirebaseUserService
+  ) // private userService: JettyUserService
+  {}
 
   onSubmit(form: NgForm, submitter: string) {
     console.log('Form submitted with submitter:', submitter);
@@ -48,7 +47,7 @@ export class LoginComponent {
 
     this.authenticationService
       .loginWithEmailAndPassword(email, password)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next(userCredential) {
           router.navigate(['/books']);
@@ -67,7 +66,7 @@ export class LoginComponent {
 
     this.authenticationService
       .loginWithGoogle()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next(userCredential) {
           const user: User = userCredential.user;

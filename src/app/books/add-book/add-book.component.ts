@@ -1,20 +1,14 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  NgForm,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Router } from '@angular/router';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyBookService } from '../jetty-book.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../toast/toast.service';
 import { Author } from '../../types/author';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { isPastValidator } from './is-past.validator';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-add-book',
@@ -45,7 +39,6 @@ export class AddBookComponent implements OnInit {
     private authorService: FirebaseAuthorService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    private destroyRef: DestroyRef,
     private toastService: ToastService
   ) {}
 
@@ -58,7 +51,7 @@ export class AddBookComponent implements OnInit {
 
     this.authorService
       .getAuthors()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((authors) => {
         this.authors.set(authors || []);
         this.isLoading.set(false);
@@ -77,7 +70,7 @@ export class AddBookComponent implements OnInit {
 
     this.bookService
       .createBook(name!, author!, publish_date!, pages!, synopsis)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: () => {
           this.toastService.add(`Book ${name} created successfully`);

@@ -8,7 +8,7 @@ import { AuthenticationService } from '../../authentication.service';
 import { JettyUserService } from '../jetty-user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
-import { forkJoin, map } from 'rxjs';
+import { forkJoin, map, take } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
 
 @Component({
@@ -35,7 +35,7 @@ export class ProfileComponent {
 
     this.userService
       .getUserById(uuid)
-      .pipe(takeUntilDestroyed())
+      .pipe(take(1))
       .subscribe((user) => {
         this.user = user;
         this.firstName = user!.firstName;
@@ -45,7 +45,7 @@ export class ProfileComponent {
 
     this.userService
       .getFavoriteBooksForUser(uuid)
-      .pipe(takeUntilDestroyed())
+      .pipe(take(1))
       .subscribe({
         next: (book) => {
           this.favoriteBooks.push(book);
@@ -96,7 +96,7 @@ export class ProfileComponent {
         this.user!.favoriteBookIds,
         { pageSize }
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((data) => {
         console.info('User updated successfully');
         this.toastService.add(

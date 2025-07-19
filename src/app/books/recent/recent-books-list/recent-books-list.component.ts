@@ -4,7 +4,7 @@ import { RecentBookCardComponent } from '../recent-book-card/recent-book-card.co
 import { FirebaseBookService } from '../../firebase-book.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { JettyBookService } from '../../jetty-book.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-recent-books-list',
@@ -27,7 +27,7 @@ export class RecentBooksListComponent {
 
     this.bookService
       .getRecentBooks(count)
-      .pipe(takeUntilDestroyed())
+      .pipe(take(1))
       .subscribe((books) => {
         this.recentBooks.set(books || []);
         this.recentBooks().forEach((book, index) => {

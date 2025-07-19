@@ -13,6 +13,7 @@ import { ReviewCardComponent } from '../review-card/review-card.component';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-reviews-list',
@@ -55,14 +56,14 @@ export class ReviewsListComponent implements OnInit {
   loadReviews(bookId: number): void {
     this.reviewService
       .getReviewCount(bookId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((count) => {
         this.allReviewsCount.set(count);
       });
 
     this.reviewService
       .getReviewsWithText(bookId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((reviews) => {
         console.log(`Reviews for book ${bookId}:`, reviews);
         this.reviews.set(reviews);

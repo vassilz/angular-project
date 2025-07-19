@@ -26,4 +26,9 @@
   margin: auto;
   background-color: black;
   color: white;
+
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 }

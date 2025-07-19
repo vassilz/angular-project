@@ -1,8 +1,8 @@
-import { Component, DestroyRef, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 import { Book } from '../../../types/book';
 import { ElapsedTimePipe } from '../../../shared/pipes/elapsed-time.pipe';
 import { FirebaseAuthorService } from '../../../authors/firebase-author.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-recent-book-card',
@@ -16,10 +16,7 @@ export class RecentBookCardComponent implements OnInit {
 
   authorName = signal<string>('');
 
-  constructor(
-    private authorService: FirebaseAuthorService,
-    private destroyRef: DestroyRef
-  ) {}
+  constructor(private authorService: FirebaseAuthorService) {}
 
   ngOnInit(): void {
     this.loadAuthor();
@@ -28,7 +25,7 @@ export class RecentBookCardComponent implements OnInit {
   loadAuthor() {
     this.authorService
       .getAuthor(this.book().authorId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((author) => {
         this.authorName.set(author?.name || 'Unknown Author');
       });

@@ -125,6 +125,7 @@ export class FirebaseUserService implements UserService {
   }
 
   getFavoriteBookIdsForUser(userId: string): Observable<number[]> {
+    console.log('Getting favorite book IDs for user:', userId);
     var favoriteBookIds = new Subject<number[]>();
     this.getUserById(userId).subscribe((user) => {
       if (!user) {

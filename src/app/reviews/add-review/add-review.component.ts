@@ -1,12 +1,10 @@
-import { Component, DestroyRef, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
-import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { JsonPipe } from '@angular/common';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-add-review',
@@ -19,11 +17,9 @@ export class AddReviewComponent {
   bookId = input.required<number>();
 
   constructor(
-    private route: ActivatedRoute,
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
     private rerenderService: RerenderService,
-    private destroyRef: DestroyRef,
     private errorHandlingService: ErrorHandlingService
   ) {}
 
@@ -36,7 +32,7 @@ export class AddReviewComponent {
 
     this.reviewService
       .getReviews(this.bookId())
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((reviews) => {
         let reviewCount = reviews.length;
 
@@ -52,7 +48,7 @@ export class AddReviewComponent {
             text,
             now
           )
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(take(1))
           .subscribe({
             next: () => {
               // this.router.navigate(['/books']);

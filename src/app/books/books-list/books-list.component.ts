@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   OnInit,
   signal,
   viewChild,
@@ -12,22 +11,18 @@ import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
-import { combineLatest, forkJoin, map, Subject, take } from 'rxjs';
+import { combineLatest, map, Subject, take } from 'rxjs';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
 import { UtilsService } from '../../shared/utils.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import moment from 'moment';
 import { RerenderService } from '../../rerender.service';
-import { JsonPipe } from '@angular/common';
 import { RecentBooksListComponent } from '../recent/recent-books-list/recent-books-list.component';
-import { BooksPagingComponent } from '../books-paging/books-paging.component';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
-import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 
 @Component({
   selector: 'app-books-list',
@@ -121,8 +116,7 @@ export class BooksListComponent implements OnInit {
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    private userService: FirebaseUserService,
-    private destroyRef: DestroyRef // private userService: JettyUserService
+    private userService: FirebaseUserService // private userService: JettyUserService
   ) {}
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
@@ -154,7 +148,7 @@ export class BooksListComponent implements OnInit {
 
         this.userService
           .getUserById(firebaseUser.uid)
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(take(1))
           .subscribe({
             next: (user) => {
               if (user?.settings) {
@@ -200,7 +194,7 @@ export class BooksListComponent implements OnInit {
 
     this.bookService
       .getBooksCount()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: (count) => {
           this.allBooksCount = count;
@@ -218,7 +212,7 @@ export class BooksListComponent implements OnInit {
         this.pageSize,
         this.comparatorFunctions.get(this.sortBy)
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((books) => {
         this.books.set(books || []);
         // if (this.isDescending) {
@@ -315,12 +309,13 @@ export class BooksListComponent implements OnInit {
   }
 
   searchBooks() {
+    console.log('Searching books with term:', this.searchTerm);
     if (this.searchTerm == null || this.searchTerm === '') {
       return;
     }
     this.bookService
       .getSearchBooksCount(this.searchTerm)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((count) => {
         this.allBooksCount = count;
       });
@@ -332,7 +327,7 @@ export class BooksListComponent implements OnInit {
         this.pageSize,
         this.comparatorFunctions.get(this.sortBy)
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((foundBooks) => {
         console.log('Found books by search term ' + this.searchTerm + ':');
         console.log(foundBooks);
@@ -343,7 +338,7 @@ export class BooksListComponent implements OnInit {
         // this.sortBooks();
 
         this.changeDetectorRef.detectChanges();
-        this.rerenderService.rerenderReviews.emit();
+        // this.rerenderService.rerenderReviews.emit();
 
         this.searchActive = true;
       });

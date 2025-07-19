@@ -1,14 +1,14 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseBookService } from '../firebase-book.service';
 import { Book } from '../../types/book';
 import { JettyBookService } from '../jetty-book.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { Author } from '../../types/author';
 import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-edit-book',
@@ -26,7 +26,6 @@ export class EditBookComponent {
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
     private authorService: FirebaseAuthorService,
-    private destroyRef: DestroyRef,
     private toastService: ToastService,
     private errorHandlingService: ErrorHandlingService // private bookService: JettyBookService
   ) {
@@ -34,20 +33,12 @@ export class EditBookComponent {
     this.book.set(this.route.snapshot.data['book'] as Book);
 
     this.loadAuthor();
-
-    // this.bookService
-    //   .getBook(id)
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe((book) => {
-    //     this.book = book!;
-    //     this.loadAuthor();
-    //   });
   }
 
   loadAuthor() {
     this.authorService
       .getAuthor(this.book().authorId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((author) => {
         this.author.set(author || null);
       });
@@ -69,7 +60,7 @@ export class EditBookComponent {
         pages,
         synopsis
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: () => {
           this.toastService.add(`Book ${this.book.name} updated successfully`);

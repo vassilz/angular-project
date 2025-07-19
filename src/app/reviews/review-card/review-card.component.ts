@@ -1,21 +1,13 @@
-import {
-  Component,
-  DestroyRef,
-  effect,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { Review } from '../../types/review';
 import { RouterLink } from '@angular/router';
 import { User } from '../../types/user';
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { ElapsedTimePipe } from '../../shared/pipes/elapsed-time.pipe';
-import { Subject } from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
 import { JettyUserService } from '../../users/jetty-user.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-review-card',
@@ -38,8 +30,7 @@ export class ReviewCardComponent implements OnInit {
     private userService: FirebaseUserService,
     // private userService: JettyUserService,
     private reviewService: FirebaseReviewService,
-    protected authenticationService: AuthenticationService,
-    private destroyRef: DestroyRef
+    protected authenticationService: AuthenticationService
   ) {
     effect(() => {
       console.log('Logged in: ', this.authenticationService.isLoggedIn);
@@ -51,14 +42,14 @@ export class ReviewCardComponent implements OnInit {
   ngOnInit(): void {
     this.userService
       .getUserById(this.review().userid)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((user) => {
         this.user.set(user!);
       });
 
     this.reviewService
       .getLikesCountForReview(this.bookId(), this.review().id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((count) => {
         this.likesCount.set(count);
       });
@@ -70,7 +61,7 @@ export class ReviewCardComponent implements OnInit {
       if (!!user) {
         this.reviewService
           .isReviewLikedByUser(this.bookId(), this.review().id, user.uid)
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(take(1))
           .subscribe((isLiked) => {
             this.isLikedByCurrentUser = isLiked;
             isLikedLoaded.next();
@@ -92,7 +83,7 @@ export class ReviewCardComponent implements OnInit {
         this.review().id,
         this.authenticationService.user!.uid
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe(() => {
         this.isLikedByCurrentUser = true;
         this.likesCount.set(this.likesCount() + 1);
@@ -106,7 +97,7 @@ export class ReviewCardComponent implements OnInit {
         this.review().id,
         this.authenticationService.user!.uid
       )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe(() => {
         this.isLikedByCurrentUser = false;
         this.likesCount.set(this.likesCount() - 1);

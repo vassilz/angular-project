@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../authentication.service';
 import { User } from 'firebase/auth';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyUserService } from '../jetty-user.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -46,8 +46,7 @@ export class RegisterComponent {
     // private userService: JettyUserService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private errorHandlingService: ErrorHandlingService,
-    private destroyRef: DestroyRef
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   get passGroup() {
@@ -75,7 +74,7 @@ export class RegisterComponent {
 
     this.authenticationService
       .register(email!, password!)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next(userCredential) {
           const user: User = userCredential.user;

@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   ElementRef,
   input,
   OnInit,
@@ -22,8 +21,8 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 import { ToastService } from '../../toast/toast.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-book-card',
@@ -58,8 +57,7 @@ export class BookCardComponent implements OnInit {
     // private bookService: JettyBookService,
     private authorService: FirebaseAuthorService,
     private errorHandlingService: ErrorHandlingService,
-    private toastService: ToastService,
-    private destroyRef: DestroyRef
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -79,27 +77,8 @@ export class BookCardComponent implements OnInit {
       this.loadReviews();
       this.loadIsFavorite();
       this.changeDetectorRef.detectChanges();
-
-      // TODO: implement highlighting properly
-      // this.highlightSearchTerms();
     });
   }
-
-  // TODO: Reset highlighting when search term changes
-  // highlightSearchTerms() {
-  //   var detailsDiv = this.domElement.nativeElement;
-  //   var innerHTML = detailsDiv.innerHTML;
-  //   var index = innerHTML.indexOf(this.searchTerm);
-  //   if (index >= 0) {
-  //     innerHTML =
-  //       innerHTML.substring(0, index) +
-  //       "<span style='background-color: orange' class='highlight'>" +
-  //       innerHTML.substring(index, index + this.searchTerm.length) +
-  //       '</span>' +
-  //       innerHTML.substring(index + this.searchTerm.length);
-  //     detailsDiv.innerHTML = innerHTML;
-  //   }
-  // }
 
   get isLoggedIn() {
     return this.authenticationService.isLoggedIn;
@@ -112,7 +91,7 @@ export class BookCardComponent implements OnInit {
   loadAuthor() {
     this.authorService
       .getAuthor(this.book().authorId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((author) => {
         this.authorName.set(author?.name || 'Unknown Author');
       });
@@ -121,7 +100,7 @@ export class BookCardComponent implements OnInit {
   loadReviews() {
     this.reviewService
       .getReviews(this.book().id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((reviews) => {
         this.reviews.set(reviews);
       });
@@ -130,7 +109,7 @@ export class BookCardComponent implements OnInit {
   loadIsFavorite() {
     this.userService
       .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((bookIds) => {
         const favoriteBookIds = bookIds || [];
         this.isFavorite = favoriteBookIds.includes(this.book().id);
@@ -145,7 +124,7 @@ export class BookCardComponent implements OnInit {
           this.authenticationService.user!.uid,
           this.book().id
         )
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(take(1))
         .subscribe(() => {
           this.isFavorite = false;
           this.toastService.add(
@@ -158,7 +137,7 @@ export class BookCardComponent implements OnInit {
           this.authenticationService.user!.uid,
           this.book().id
         )
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(take(1))
         .subscribe(() => {
           this.isFavorite = true;
           this.toastService.add(`Book ${this.book().name} added to favorites`);
@@ -173,13 +152,13 @@ export class BookCardComponent implements OnInit {
   deleteBook() {
     this.bookService
       .deleteBook(this.book().id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe({
         next: () => {
           console.log('Cleaning up favorite book for users');
           this.userService
             .cleanupFavoriteBook(this.book().id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(take(1))
             .subscribe(() => {
               this.rerenderService.rerenderBooks.emit();
               this.toastService.add(

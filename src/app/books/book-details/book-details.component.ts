@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Book } from '../../types/book';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FirebaseBookService } from '../firebase-book.service';
 import { AddReviewComponent } from '../../reviews/add-review/add-review.component';
 import { ReviewsListComponent } from '../../reviews/reviews-list/reviews-list.component';
 import { AuthenticationService } from '../../authentication.service';
@@ -17,9 +16,9 @@ import { EditReviewComponent } from '../../reviews/edit-review/edit-review.compo
 import { DatePipe } from '@angular/common';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { RerenderService } from '../../rerender.service';
-import { JettyBookService } from '../jetty-book.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-book-details',
@@ -48,8 +47,6 @@ export class BookDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private bookService: FirebaseBookService,
-    // private bookService: JettyBookService,
     private authenticationService: AuthenticationService,
     private reviewService: FirebaseReviewService,
     private authorService: FirebaseAuthorService,
@@ -61,17 +58,6 @@ export class BookDetailsComponent implements OnInit {
     this.book.set(this.route.snapshot.data['book'] as Book);
 
     this.loadAuthor();
-
-    // this.bookService
-    //   .getBook(this.bookId)
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe((book) => {
-    //     console.log('Book details:', book);
-    //     // this.book.set(book!);
-    //     this.isLoading.set(false);
-
-    //     this.loadAuthor();
-    //   });
   }
 
   ngOnInit(): void {
@@ -93,7 +79,7 @@ export class BookDetailsComponent implements OnInit {
     console.log('Loading author :', this.book().authorId);
     this.authorService
       .getAuthor(this.book().authorId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe((author) => {
         this.authorName.set(author?.name || 'Unknown Author');
         this.isLoading.set(false);
@@ -111,6 +97,7 @@ export class BookDetailsComponent implements OnInit {
         if (!!authenticatedUser) {
           this.reviewService
             .getReviewByBookAndUser(bookId, authenticatedUser.uid)
+            .pipe(take(1))
             .subscribe((review) => {
               this.hasUserReviewedBook.set(!!review);
             });

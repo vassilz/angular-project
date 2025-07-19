@@ -6,11 +6,13 @@ import { Author } from '../../types/author';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { Book } from '../../types/book';
 import { FirebaseBookService } from '../../books/firebase-book.service';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-author-details',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, LoaderComponent],
   templateUrl: './author-details.component.html',
   styleUrl: './author-details.component.css',
 })
@@ -26,17 +28,25 @@ export class AuthorDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private authorService: FirebaseAuthorService,
     private bookService: FirebaseBookService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private errorHandlingService: ErrorHandlingService
   ) {
     this.authorId = parseInt(this.route.snapshot.params['authorId']);
+    this.author.set(this.route.snapshot.data['author'] as Author);
 
-    this.authorService
-      .getAuthor(this.authorId)
-      .pipe(takeUntilDestroyed())
-      .subscribe((author) => {
-        this.author.set(author!);
-        this.isLoading.set(false);
-      });
+    // this.authorService
+    //   .getAuthor(this.authorId)
+    //   .pipe(takeUntilDestroyed())
+    //   .subscribe((author) => {
+    //     if (!!author) {
+    //       this.author.set(author);
+    //       this.isLoading.set(false);
+    //     } else {
+    //       this.errorHandlingService.handleError({
+    //         message: `Author ${this.authorId} not found`,
+    //       });
+    //     }
+    //   });
   }
 
   ngOnInit(): void {
@@ -45,6 +55,7 @@ export class AuthorDetailsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((books) => {
         this.books.set(books);
+        this.isLoading.set(false);
       });
   }
 }

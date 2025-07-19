@@ -1,16 +1,10 @@
 <form [formGroup]="form" (ngSubmit)="addBook()">
   <label for="name">Name:</label><br />
-  <input
-    type="text"
-    id="name"
-    formControlName="name"
-    [class]="form.get('name')?.touched && form.get('name')?.errors?.['required'] ? 'input-error' : ''"
-    required
-  />
+  <input type="text" id="name" formControlName="name" required />
   @if (form.get('name')?.touched) {
   <div>
     @if (form.get('name')?.errors?.['required']) {
-    <p class="error">Book name is required.</p>
+    <p class="input-error">Book name is required.</p>
     }
   </div>
   }
@@ -24,7 +18,7 @@
   @if (form.get('author')?.touched) {
   <div>
     @if (form.get('author')?.errors?.['required']) {
-    <p class="error">Author is required.</p>
+    <p class="input-error">Author is required.</p>
     }
   </div>
   }
@@ -39,9 +33,9 @@
   @if (form.get('publish_date')?.touched) {
   <div>
     @if (form.get('publish_date')?.errors?.['required']) {
-    <p class="error">Publish date is required.</p>
+    <p class="input-error">Publish date is required.</p>
     } @if (form.get('publish_date')?.errors?.['notInPast']) {
-    <p class="error">Publish date must be in the past.</p>
+    <p class="input-error">Publish date must be in the past.</p>
     }
   </div>
   }
@@ -51,16 +45,15 @@
   @if (form.get('pages')?.touched) {
   <div>
     @if (form.get('pages')?.errors?.['required']) {
-    <p class="error">Pages count is required.</p>
+    <p class="input-error">Pages count is required.</p>
     } @if (form.get('pages')?.errors?.['min']) {
-    <p class="error">Pages count must be at least 1.</p>
+    <p class="input-error">Pages count must be at least 1.</p>
     }
   </div>
   }
   <br />
   <label for="synopsis">Synopsis:</label><br />
   <textarea
-    [class]="form.get('synopsis')?.touched && form.get('synopsis')?.errors?.['minlength'] ? 'input-error' : ''"
     type="text"
     id="synopsis"
     name="synopsis"
@@ -72,7 +65,7 @@
   @if (form.get('synopsis')?.touched) {
   <div>
     @if (form.get('synopsis')?.errors?.['minlength']) {
-    <p class="error">Synopsis must be at least 20 characters long.</p>
+    <p class="input-error">Synopsis must be at least 20 characters long.</p>
     }
   </div>
   }

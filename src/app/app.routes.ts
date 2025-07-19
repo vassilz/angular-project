@@ -16,6 +16,8 @@ import { AuthorsListComponent } from './authors/authors-list/authors-list.compon
 import { AddAuthorComponent } from './authors/add-author/add-author.component';
 import { AuthorDetailsComponent } from './authors/author-details/author-details.component';
 import { UnauthenticatedGuard } from './unauthenticated.guard';
+import { bookResolver } from './books/book.resolver';
+import { authorResolver } from './authors/author.resolver';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
@@ -51,12 +53,14 @@ export const routes: Routes = [
       {
         path: ':bookId',
         component: BookDetailsComponent,
+        resolve: { book: bookResolver },
       },
       {
         path: ':bookId/edit',
         component: EditBookComponent,
         canActivate: [AuthGuard, AdminGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },
+        resolve: { book: bookResolver },
       },
     ],
   },
@@ -73,6 +77,7 @@ export const routes: Routes = [
       {
         path: ':authorId',
         component: AuthorDetailsComponent,
+        resolve: { author: authorResolver },
       },
     ],
   },

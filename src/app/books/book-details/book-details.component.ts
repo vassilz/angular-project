@@ -58,17 +58,20 @@ export class BookDetailsComponent implements OnInit {
     private destroyRef: DestroyRef
   ) {
     this.bookId = this.route.snapshot.params['bookId'];
+    this.book.set(this.route.snapshot.data['book'] as Book);
 
-    this.bookService
-      .getBook(this.bookId)
-      .pipe(takeUntilDestroyed())
-      .subscribe((book) => {
-        console.log('Book details:', book);
-        this.book.set(book!);
-        this.isLoading.set(false);
+    this.loadAuthor();
 
-        this.loadAuthor();
-      });
+    // this.bookService
+    //   .getBook(this.bookId)
+    //   .pipe(takeUntilDestroyed())
+    //   .subscribe((book) => {
+    //     console.log('Book details:', book);
+    //     // this.book.set(book!);
+    //     this.isLoading.set(false);
+
+    //     this.loadAuthor();
+    //   });
   }
 
   ngOnInit(): void {
@@ -93,6 +96,7 @@ export class BookDetailsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((author) => {
         this.authorName.set(author?.name || 'Unknown Author');
+        this.isLoading.set(false);
       });
   }
 

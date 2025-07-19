@@ -2,14 +2,6 @@
   width: fit-content;
 }
 
-.error {
-  color: #e52424;
-}
-
-input.ng-touched.ng-invalid {
-  border: 1px solid #e52424;
-}
-
 .actions {
   display: flex;
   flex-direction: row;

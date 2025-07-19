@@ -7,7 +7,6 @@
     name="rating"
     min="1"
     max="5"
-    [class]="inputRating?.touched && inputRating?.errors?.['required'] ? 'input-error' : ''"
     #inputRating="ngModel"
     [(ngModel)]="rating"
     required
@@ -15,18 +14,17 @@
   @if (inputRating?.touched) {
   <div>
     @if (inputRating?.errors?.['required']) {
-    <p class="error">Rating is required.</p>
+    <p class="input-error">Rating is required.</p>
     } @if (inputRating?.errors?.['min']) {
-    <p class="error">Rating must be at least 1.</p>
+    <p class="input-error">Rating must be at least 1.</p>
     } @if (inputRating?.errors?.['max']) {
-    <p class="error">Rating must be at most 5.</p>
+    <p class="input-error">Rating must be at most 5.</p>
     }
   </div>
   }
   <br />
   <label for="text">Text:</label><br />
   <textarea
-    [class]="inputText?.touched && inputText?.errors?.['minlength'] ? 'input-error' : ''"
     #inputText="ngModel"
     [(ngModel)]="text"
     type="text"
@@ -35,13 +33,13 @@
     rows="5"
     minlength="20"
   ></textarea>
-  <!-- @if (inputText?.touched) {
+  @if (inputText?.touched) {
   <div>
     @if (inputText?.errors?.['minlength']) {
-    <p class="error">Review text must be at least 20 characters long.</p>
+    <p class="input-error">Review text must be at least 20 characters long.</p>
     }
   </div>
-  } -->
+  }
   <br /><br />
 
   <button (click)="onCancel($event)">Cancel</button>

@@ -18,9 +18,7 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
   styleUrl: './edit-book.component.css',
 })
 export class EditBookComponent {
-  book: Book = {} as Book;
-
-  // authorName = signal<string>('');
+  book = signal<Book>({} as Book);
   author = signal<Author | null>(null);
 
   constructor(
@@ -33,19 +31,22 @@ export class EditBookComponent {
     private errorHandlingService: ErrorHandlingService // private bookService: JettyBookService
   ) {
     const id = this.route.snapshot.params['bookId'];
+    this.book.set(this.route.snapshot.data['book'] as Book);
 
-    this.bookService
-      .getBook(id)
-      .pipe(takeUntilDestroyed())
-      .subscribe((book) => {
-        this.book = book!;
-        this.loadAuthor();
-      });
+    this.loadAuthor();
+
+    // this.bookService
+    //   .getBook(id)
+    //   .pipe(takeUntilDestroyed())
+    //   .subscribe((book) => {
+    //     this.book = book!;
+    //     this.loadAuthor();
+    //   });
   }
 
   loadAuthor() {
     this.authorService
-      .getAuthor(this.book.authorId)
+      .getAuthor(this.book().authorId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((author) => {
         this.author.set(author || null);
@@ -61,7 +62,7 @@ export class EditBookComponent {
 
     this.bookService
       .updateBook(
-        this.book.id,
+        this.book().id,
         name,
         this.author()!.id,
         publish_date,

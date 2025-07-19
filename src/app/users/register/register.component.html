@@ -1,32 +1,20 @@
 <form [formGroup]="form" (ngSubmit)="register()">
   <label for="username">Username:</label><br />
-  <input
-    type="text"
-    id="username"
-    name="username"
-    [class]="form.get('username')?.touched && form.get('username')?.errors?.['required'] ? 'input-error' : ''"
-    formControlName="username"
-  />
+  <input type="text" id="username" name="username" formControlName="username" />
   @if (form.get('username')?.touched) {
   <div>
     @if (form.get('username')?.errors?.['required']) {
-    <p class="error">Username is required.</p>
+    <p class="input-error">Username is required.</p>
     }
   </div>
   }
   <br />
   <label for="email">Email:</label><br />
-  <input
-    type="email"
-    id="email"
-    name="email"
-    [class]="form.get('email')?.touched && form.get('email')?.errors?.['required'] ? 'input-error' : ''"
-    formControlName="email"
-  />
+  <input type="email" id="email" name="email" formControlName="email" />
   @if (form.get('email')?.touched) {
   <div>
     @if (form.get('email')?.errors?.['required']) {
-    <p class="error">Email is required.</p>
+    <p class="input-error">Email is required.</p>
     }
   </div>
   }
@@ -55,20 +43,18 @@
       type="password"
       id="password"
       name="password"
-      [class]="passGroup?.get('password')?.touched && passGroup?.get('password')?.errors?.['required'] ||
-      passGroup?.get('password')?.touched && passGroup?.get('password')?.errors?.['minlength'] ? 'input-error' : ''"
       formControlName="password"
     />
     @if (passGroup?.get('password')?.touched) {
     <div>
       @if (passGroup?.get('password')?.errors?.['required']) {
-      <p class="error">Password is required.</p>
+      <p class="input-error">Password is required.</p>
       }
     </div>
     } @if (passGroup?.get('password')?.touched) {
     <div>
       @if (passGroup?.get('password')?.errors?.['minlength']) {
-      <p class="error">Password must be at least 6 characters long.</p>
+      <p class="input-error">Password must be at least 6 characters long.</p>
       }
     </div>
     }
@@ -78,14 +64,12 @@
       type="password"
       id="repeatPassword"
       name="repeatPassword"
-      [class]="passGroup?.get('repeatPassword')?.touched && passGroup?.get('repeatPassword')?.errors?.['required'] ||
-      passGroup?.get('repeatPassword')?.touched && passGroup?.get('repeatPassword')?.errors?.['passwordsDoNotMatch'] ? 'input-error' : ''"
       formControlName="repeatPassword"
     />
     @if (passGroup?.get('repeatPassword')?.touched) {
     <div>
       @if (passGroup?.errors?.['passwordsDoNotMatch']) {
-      <p class="error">Passwords do not match.</p>
+      <p class="input-error">Passwords do not match.</p>
       }
     </div>
     }

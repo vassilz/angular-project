@@ -1,4 +1,4 @@
-Name: {{ author()?.name }}
+@if (isLoading()) { <app-loader /> } @else { Name: {{ author()?.name }}
 <p>Country: {{ author()?.country }}</p>
 <p>Born: {{ author()?.birthDate | date }}</p>
 
@@ -13,3 +13,4 @@ Books: @for (book of books(); track book.id) {
 }
 
 <button class="back-button" routerLink="/authors">Back to overview</button>
+}

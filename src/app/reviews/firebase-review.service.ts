@@ -61,7 +61,7 @@ export class FirebaseReviewService implements ReviewService {
 
     var foundReview = new Subject<Review | null>();
     observable.subscribe((data) => {
-      const review: Review = data.val();
+      const review: Review | null = data.val();
       if (!!review) {
         review.id = reviewId;
         if (review.likedBy === undefined) {

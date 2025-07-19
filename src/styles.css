@@ -3,3 +3,12 @@
   background-color: orange;
   font-weight: bold;
 }
+
+input.ng-touched.ng-invalid,
+textarea.ng-touched.ng-invalid {
+  border: 1px solid #e52424;
+}
+
+.input-error {
+  color: #e52424;
+}

@@ -5,7 +5,6 @@
     id="name"
     name="name"
     placeholder="John Doe"
-    [class]="inputName?.touched && inputName?.errors?.['required'] ? 'input-error' : ''"
     #inputName="ngModel"
     ngModel
     required
@@ -13,7 +12,7 @@
   @if (inputName?.touched) {
   <div>
     @if (inputName?.errors?.['required']) {
-    <p class="error">Author name is required.</p>
+    <p class="input-error">Author name is required.</p>
     }
   </div>
   }
@@ -30,7 +29,7 @@
   @if (inputBirthDate?.touched) {
   <div>
     @if (inputBirthDate?.errors?.['required']) {
-    <p class="error">Birth date is required.</p>
+    <p class="input-error">Birth date is required.</p>
     }
   </div>
   }
@@ -48,7 +47,7 @@
   @if (inputCountry?.touched) {
   <div>
     @if (inputCountry?.errors?.['required']) {
-    <p class="error">Country is required.</p>
+    <p class="input-error">Country is required.</p>
     }
   </div>
   }

@@ -1,5 +1,14 @@
 :host {
   display: flex;
+  flex-direction: column;
+
+  &:has(.synopsis-section:not(:empty)) {
+    margin-bottom: 20px;
+  }
+}
+
+.main-section {
+  display: flex;
   flex-direction: row;
   width: fit-content;
   margin: 5px;
@@ -14,6 +23,12 @@
   flex-direction: row;
   align-items: end;
   white-space: pre;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.1em;
+  line-height: 1.1em;
 }
 
 .rating {
@@ -33,4 +48,19 @@
 :host ::ng-deep .highlight {
   background-color: orange;
   font-weight: bold;
+}
+
+.synopsis-section {
+  &:not(:empty) {
+    margin-top: 10px;
+  }
+  font-style: italic;
+  max-width: 600px;
+
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
 }

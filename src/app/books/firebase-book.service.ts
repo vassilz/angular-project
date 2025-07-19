@@ -163,9 +163,11 @@ export class FirebaseBookService implements BookService {
         book.id = index;
       });
       const filteredBooks: Book[] = books.filter(
-        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
-        // book.authorId.toLowerCase().includes(term.toLowerCase()))
-        // book.synopsis?.toLowerCase().includes(term.toLowerCase())
+        (book) =>
+          !!book &&
+          (book.name.toLowerCase().includes(term.toLowerCase()) ||
+            // book.authorId.toLowerCase().includes(term.toLowerCase()))
+            book.synopsis?.toLowerCase().includes(term.toLowerCase()))
       );
       filteredBooks.sort(sorter);
       const end =
@@ -195,9 +197,10 @@ export class FirebaseBookService implements BookService {
     const subscription = observable.subscribe((data) => {
       var books: Book[] = data.val() || [];
       const filteredBooks: Book[] = books.filter(
-        (book) => !!book && book.name.toLowerCase().includes(term.toLowerCase())
-        // book.authorId.toLowerCase().includes(term.toLowerCase()))
-        // book.synopsis?.toLowerCase().includes(term.toLowerCase())
+        (book) =>
+          (!!book && book.name.toLowerCase().includes(term.toLowerCase())) ||
+          // book.authorId.toLowerCase().includes(term.toLowerCase()))
+          book.synopsis?.toLowerCase().includes(term.toLowerCase())
       );
 
       result.next(filteredBooks.length);

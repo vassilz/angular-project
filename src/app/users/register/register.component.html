@@ -76,8 +76,9 @@
   </div>
   <br /><br />
 
-  <button class="cancel" routerLink="/home">Cancel</button>
+  <button class="cancel" type="button" routerLink="/home">Cancel</button>
   <button
+    type="submit"
     [disabled]="form.invalid"
     [style]="{
       backgroundColor: form.invalid

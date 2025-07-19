@@ -28,8 +28,13 @@
   <br />
   <br />
   <div class="actions">
-    <button class="cancel" (click)="onCancel($event)">Cancel</button>
-    <button [style]="{ backgroundColor: 'var(--button-active-color)' }">
+    <button class="cancel" type="button" (click)="onCancel($event)">
+      Cancel
+    </button>
+    <button
+      [style]="{ backgroundColor: 'var(--button-active-color)' }"
+      type="submit"
+    >
       Save
     </button>
   </div>

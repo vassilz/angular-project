@@ -55,6 +55,7 @@ export class RegisterComponent {
   }
 
   register() {
+    console.log('Registering user with form value:', this.form.value);
     if (this.form.invalid) {
       return;
     }

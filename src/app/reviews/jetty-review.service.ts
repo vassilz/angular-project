@@ -4,6 +4,7 @@ import { Review } from '../types/review';
 import { HttpClient } from '@angular/common/http';
 import { ReviewService } from './review.service';
 
+//TODO implement fully
 @Injectable({
   providedIn: 'root',
 })

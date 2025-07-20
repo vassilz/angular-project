@@ -36,6 +36,8 @@ export class BookCardComponent implements OnInit {
 
   searchTerm = input<string>('');
 
+  favoriteBookIds = input.required<number[]>();
+
   confirmDeletionDialog = viewChild.required('confirmDeletionDialog', {
     read: ElementRef,
   });
@@ -75,7 +77,7 @@ export class BookCardComponent implements OnInit {
       // console.log(this.book);
 
       this.loadReviews();
-      this.loadIsFavorite();
+      // this.loadIsFavorite();
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -107,14 +109,16 @@ export class BookCardComponent implements OnInit {
   }
 
   loadIsFavorite() {
-    this.userService
-      .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
-      .pipe(take(1))
-      .subscribe((bookIds) => {
-        const favoriteBookIds = bookIds || [];
-        this.isFavorite = favoriteBookIds.includes(this.book().id);
-        // console.log('Favorite book ids: ' + favoriteBookIds);
-      });
+    // this.userService
+    //   .getFavoriteBookIdsForUser(this.authenticationService.user?.uid || '')
+    //   .pipe(take(1))
+    //   .subscribe((bookIds) => {
+    //     const favoriteBookIds = bookIds || [];
+    //     this.isFavorite = favoriteBookIds.includes(this.book().id);
+    //     // console.log('Favorite book ids: ' + favoriteBookIds);
+    //   });
+
+    this.isFavorite = this.favoriteBookIds().includes(this.book().id);
   }
 
   toggleFavorite() {

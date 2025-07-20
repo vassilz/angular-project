@@ -90,8 +90,9 @@ export class EditReviewComponent implements OnInit {
       });
   }
 
-  onCancel(event: MouseEvent) {
+  onCancel(event: MouseEvent, form: NgForm) {
     event.preventDefault();
+    form.resetForm({ rating: this.review?.rating, text: this.review?.text });
     this.toggleEditMode();
   }
 

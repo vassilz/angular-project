@@ -36,6 +36,7 @@ export class AuthorDetailsComponent implements OnInit {
       .pipe(take(1))
       .subscribe((books) => {
         this.books.set(books);
+        this.isLoading.set(false);
       });
   }
 }

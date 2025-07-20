@@ -109,7 +109,7 @@ export class FirebaseUserService implements UserService {
           user.id = index;
         });
         const user = users.filter((user) => user.uuid === userId)[0];
-        if (user.favoriteBookIds === undefined) {
+        if (user && user.favoriteBookIds === undefined) {
           user.favoriteBookIds = [];
         }
 

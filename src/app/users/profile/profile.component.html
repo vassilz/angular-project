@@ -46,6 +46,6 @@
 Favorite books:
 <br />
 @if (favoriteBooks.length === 0) { No favorite books yet } @else {@for (book of
-favoriteBooks; track $index) { {{ book.name }} by
+favoriteBooks; track book.id) { {{ book.name }} by
 {{ bookAuthors.get(book.id) }} <br />
 } }

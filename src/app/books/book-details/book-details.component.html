@@ -3,7 +3,10 @@
 } @else {
 <div class="book-details">
   <div class="book-info">
-    <img src="not-found.png" onerror="this.src='no-image-available.png';" />
+    <img
+      src="{{ book().imageUrl }}"
+      onerror="this.src='no-image-available.png';"
+    />
     <h3>{{ book().name }}</h3>
     by <a [routerLink]="['/authors', book().authorId]">{{ authorName() }}</a>
     <p></p>

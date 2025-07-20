@@ -34,7 +34,11 @@
     }}" } @else { No books yet }} @else { @for (book of books(); track book.id)
     {
     <!-- {{ book | json }} -->
-    <app-book-card [book]="book" [searchTerm]="searchTerm" />
+    <app-book-card
+      [book]="book"
+      [favoriteBookIds]="favoriteBookIds()"
+      [searchTerm]="searchTerm"
+    />
     }
 
     <!-- TODO: extract as a separate component  -->

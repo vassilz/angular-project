@@ -45,7 +45,7 @@ export class ProfileComponent {
 
     this.userService
       .getFavoriteBooksForUser(uuid)
-      .pipe(take(1))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (book) => {
           this.favoriteBooks.push(book);

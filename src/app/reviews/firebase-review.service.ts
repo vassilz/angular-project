@@ -91,7 +91,7 @@ export class FirebaseReviewService implements ReviewService {
         });
 
         const review = reviews.filter((review) => review.userid === userId)[0];
-        if (review.likedBy === undefined) {
+        if (review && review.likedBy === undefined) {
           review.likedBy = [];
         }
 
@@ -112,15 +112,41 @@ export class FirebaseReviewService implements ReviewService {
     text: string,
     reviewDate: string
   ): Observable<void> {
-    return from(
-      set(ref(this.db, `books/${bookId}/reviews/${reviewId}`), {
-        rating,
-        text,
-        userid,
-        reviewDate,
-        likedBy: [],
-      })
-    );
+    var result = new Subject<void>();
+    const observable = from(get(ref(this.db, `books/${bookId}/reviews`)));
+
+    const subscription = observable.subscribe((data) => {
+      const reviews: Review[] = data.val() || [];
+      console.log('Reviews fetched for creation:', reviews);
+      const firstFreeIndex = reviews.findIndex(
+        (review) => review === undefined
+      );
+      console.log('First free index:', firstFreeIndex);
+      const nextReviewId =
+        firstFreeIndex === -1 ? reviews.length : firstFreeIndex;
+      console.log('Next review ID:', nextReviewId);
+      subscription.unsubscribe();
+
+      from(
+        set(ref(this.db, `books/${bookId}/reviews/${nextReviewId}`), {
+          rating,
+          text,
+          userid,
+          reviewDate,
+          likedBy: [],
+        })
+      ).subscribe({
+        next: () => {
+          result.next();
+        },
+        error: (err) => {
+          result.error(err);
+          console.error('Error creating review:', err);
+        },
+      });
+    });
+
+    return result.asObservable();
   }
 
   updateReview(

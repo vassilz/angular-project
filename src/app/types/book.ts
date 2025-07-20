@@ -6,4 +6,5 @@ export interface Book {
   publishDate: string;
   pagesCount: number;
   synopsis?: string;
+  imageUrl?: string;
 }

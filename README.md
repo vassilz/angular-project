@@ -12,6 +12,11 @@ In order to run the application, you first need to install all needed npm packag
 
 A potential future enhancement would be to support also a Jetty Java backend.
 
+## Admin access
+
+Login with user 'admin@gmail.com' and password 'admin1' for administrative access.
+With that you will be able to see user data, add authors, add/edit/delete books.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

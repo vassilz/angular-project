@@ -31,12 +31,12 @@
     id="text"
     name="text"
     rows="5"
-    minlength="20"
+    minlength="5"
   ></textarea>
   @if (inputText?.touched) {
   <div>
     @if (inputText?.errors?.['minlength']) {
-    <p class="input-error">Review text must be at least 20 characters long.</p>
+    <p class="input-error">Review text must be at least 5 characters long.</p>
     }
   </div>
   }

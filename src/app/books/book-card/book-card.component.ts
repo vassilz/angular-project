@@ -95,7 +95,7 @@ export class BookCardComponent implements OnInit {
       .getAuthor(this.book().authorId)
       .pipe(take(1))
       .subscribe((author) => {
-        this.authorName.set(author?.name || 'Unknown Author');
+        this.authorName.set(author?.name || $localize`Unknown Author`);
       });
   }
 
@@ -132,7 +132,7 @@ export class BookCardComponent implements OnInit {
         .subscribe(() => {
           this.isFavorite = false;
           this.toastService.add(
-            `Book ${this.book().name} removed from favorites`
+            $localize`Book ${this.book().name} removed from favorites`
           );
         });
     } else {
@@ -144,7 +144,9 @@ export class BookCardComponent implements OnInit {
         .pipe(take(1))
         .subscribe(() => {
           this.isFavorite = true;
-          this.toastService.add(`Book ${this.book().name} added to favorites`);
+          this.toastService.add(
+            $localize`Book ${this.book().name} added to favorites`
+          );
         });
     }
   }
@@ -166,7 +168,7 @@ export class BookCardComponent implements OnInit {
             .subscribe(() => {
               this.rerenderService.rerenderBooks.emit();
               this.toastService.add(
-                `Book ${this.book().name} deleted successfully`
+                $localize`Book ${this.book().name} deleted successfully`
               );
 
               this.confirmDeletionDialog().nativeElement.close();

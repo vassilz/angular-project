@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ErrorMessageService } from './error-message.service';
 import { Location } from '@angular/common';
+import { Error } from '../error-handling.service';
 
 @Component({
   selector: 'app-error-message',
@@ -16,8 +17,10 @@ export class ErrorMessageComponent {
     private errorMessageService: ErrorMessageService,
     private location: Location
   ) {
-    this.errorMessageService.apiError$.subscribe((err: any) => {
-      this.errorMessage.set(err?.message);
+    this.errorMessageService.apiError$.subscribe((err: Error | null) => {
+      if (err) {
+        this.errorMessage.set(err.message);
+      }
     });
   }
 

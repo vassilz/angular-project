@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
+  <file id="ngi18n" original="ng.template">
+    <unit id="1106270449169597744">
+      <segment>
+        <source>No authors yet</source>
+      </segment>
+    </unit>
+    <unit id="1218302359178184742">
+      <segment>
+        <source>Sort by:</source>
+      </segment>
+    </unit>
+    <unit id="1247904015861277296">
+      <segment>
+        <source>Text:</source>
+      </segment>
+    </unit>
+    <unit id="1269341385361401614">
+      <segment>
+        <source> Yes </source>
+      </segment>
+    </unit>
+    <unit id="140822705245800362">
+      <segment>
+        <source>Username:</source>
+      </segment>
+    </unit>
+    <unit id="1489170579229131278">
+      <segment>
+        <source>No books yet</source>
+      </segment>
+    </unit>
+    <unit id="1543538730036692975">
+      <segment>
+        <source>Passwords do not match.</source>
+      </segment>
+    </unit>
+    <unit id="1548093208317817755">
+      <segment>
+        <source>Pages count is required.</source>
+      </segment>
+    </unit>
+    <unit id="1591379336757067235">
+      <segment>
+        <source>No favorite books yet</source>
+      </segment>
+    </unit>
+    <unit id="1719091699885493218">
+      <segment>
+        <source>by</source>
+      </segment>
+    </unit>
+    <unit id="1785012351193519963">
+      <segment>
+        <source>No reviews yet</source>
+      </segment>
+    </unit>
+    <unit id="1839186591621749773">
+      <segment>
+        <source>Publish Date</source>
+      </segment>
+    </unit>
+    <unit id="1908285951500318953">
+      <segment>
+        <source> Login </source>
+      </segment>
+    </unit>
+    <unit id="1970387948592763067">
+      <segment>
+        <source>Published at: </source>
+      </segment>
+    </unit>
+    <unit id="2006595865621017520">
+      <segment>
+        <source>Synopsis:</source>
+      </segment>
+    </unit>
+    <unit id="2159130950882492111">
+      <segment>
+        <source>Cancel</source>
+      </segment>
+    </unit>
+    <unit id="2330577642930707695">
+      <segment>
+        <source> Cancel </source>
+      </segment>
+    </unit>
+    <unit id="2385175792597197250">
+      <segment>
+        <source>Latest books:</source>
+      </segment>
+    </unit>
+    <unit id="2454050363478003966">
+      <segment>
+        <source>Login</source>
+      </segment>
+    </unit>
+    <unit id="2459395928468832560">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> deleted successfully</source>
+      </segment>
+    </unit>
+    <unit id="2836854179267941399">
+      <segment>
+        <source>First name:</source>
+      </segment>
+    </unit>
+    <unit id="3021254221752607634">
+      <segment>
+        <source>Was this review helpful?</source>
+      </segment>
+    </unit>
+    <unit id="305142716106924307">
+      <segment>
+        <source>Author:</source>
+      </segment>
+    </unit>
+    <unit id="3193976279273491157">
+      <segment>
+        <source>Actions</source>
+      </segment>
+    </unit>
+    <unit id="3215752050163286830">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> removed from favorites</source>
+      </segment>
+    </unit>
+    <unit id="3301086086650990787">
+      <segment>
+        <source>Register</source>
+      </segment>
+    </unit>
+    <unit id="3328305876568439292">
+      <segment>
+        <source> by </source>
+      </segment>
+    </unit>
+    <unit id="3390173005830533679">
+      <segment>
+        <source>No books found for</source>
+      </segment>
+    </unit>
+    <unit id="3414988242774569868">
+      <segment>
+        <source>Book name is required.</source>
+      </segment>
+    </unit>
+    <unit id="3527166547629863858">
+      <segment>
+        <source>Favorite books:</source>
+      </segment>
+    </unit>
+    <unit id="3577237269587081090">
+      <segment>
+        <source>Password is required.</source>
+      </segment>
+    </unit>
+    <unit id="359999491547033336">
+      <segment>
+        <source>Online Bookstore</source>
+      </segment>
+    </unit>
+    <unit id="3620188369327429839">
+      <segment>
+        <source> Save </source>
+      </segment>
+    </unit>
+    <unit id="3678984843947838693">
+      <segment>
+        <source>Publish date:</source>
+      </segment>
+    </unit>
+    <unit id="3706222784708785028">
+      <segment>
+        <source>Rating</source>
+      </segment>
+    </unit>
+    <unit id="3797778920049399855">
+      <segment>
+        <source>Logout</source>
+      </segment>
+    </unit>
+    <unit id="3817498941817715969">
+      <segment>
+        <source>Pages</source>
+      </segment>
+    </unit>
+    <unit id="3868123820758341861">
+      <segment>
+        <source>Username is required.</source>
+      </segment>
+    </unit>
+    <unit id="402785015655073812">
+      <segment>
+        <source>Name: </source>
+      </segment>
+    </unit>
+    <unit id="4100306273406016007">
+      <segment>
+        <source>votes</source>
+      </segment>
+    </unit>
+    <unit id="4407559560004943843">
+      <segment>
+        <source>Last Name</source>
+      </segment>
+    </unit>
+    <unit id="4423253549935469768">
+      <segment>
+        <source> Details </source>
+      </segment>
+    </unit>
+    <unit id="4494131238204136753">
+      <segment>
+        <source>Birth date is required.</source>
+      </segment>
+    </unit>
+    <unit id="4504133561735691560">
+      <segment>
+        <source>Publish date is required.</source>
+      </segment>
+    </unit>
+    <unit id="4555457172864212828">
+      <segment>
+        <source>Users</source>
+      </segment>
+    </unit>
+    <unit id="4768749765465246664">
+      <segment>
+        <source>Email</source>
+      </segment>
+    </unit>
+    <unit id="4816101510803859870">
+      <segment>
+        <source>Publish date must be in the past.</source>
+      </segment>
+    </unit>
+    <unit id="4839682406703705780">
+      <segment>
+        <source>Delete User</source>
+      </segment>
+    </unit>
+    <unit id="4863373404095396982">
+      <segment>
+        <source>Country:</source>
+      </segment>
+    </unit>
+    <unit id="4915431133669985304">
+      <segment>
+        <source>Profile</source>
+      </segment>
+    </unit>
+    <unit id="4988274743817806438">
+      <segment>
+        <source>Rating must be at least 1.</source>
+      </segment>
+    </unit>
+    <unit id="5082696930337587734">
+      <segment>
+        <source>Page size:</source>
+      </segment>
+    </unit>
+    <unit id="5087122090521808199">
+      <segment>
+        <source>Rating:</source>
+      </segment>
+    </unit>
+    <unit id="5224604665222373201">
+      <segment>
+        <source>Books</source>
+      </segment>
+    </unit>
+    <unit id="5248717555542428023">
+      <segment>
+        <source>Username</source>
+      </segment>
+    </unit>
+    <unit id="5324941988352416675">
+      <segment>
+        <source>Number of pages:</source>
+      </segment>
+    </unit>
+    <unit id="5377078063439833222">
+      <segment>
+        <source> Edit </source>
+      </segment>
+    </unit>
+    <unit id="5469701700166152270">
+      <segment>
+        <source>Rating must be at most 5.</source>
+      </segment>
+    </unit>
+    <unit id="5505637243815082364">
+      <segment>
+        <source>Authors</source>
+      </segment>
+    </unit>
+    <unit id="5536162196438013100">
+      <segment>
+        <source>Add author</source>
+      </segment>
+    </unit>
+    <unit id="5611684448811547942">
+      <segment>
+        <source>Birth date:</source>
+      </segment>
+    </unit>
+    <unit id="5713688101384442809">
+      <segment>
+        <source> Synopsis must be at least 20 characters long. </source>
+      </segment>
+    </unit>
+    <unit id="5759985852212057755">
+      <segment>
+        <source>Last name:</source>
+      </segment>
+    </unit>
+    <unit id="577038887888857351">
+      <segment>
+        <source> Add </source>
+      </segment>
+    </unit>
+    <unit id="5881876145178332550">
+      <segment>
+        <source>of</source>
+      </segment>
+    </unit>
+    <unit id="5964559006546778696">
+      <segment>
+        <source>Reviews:</source>
+      </segment>
+    </unit>
+    <unit id="6028371114637047813">
+      <segment>
+        <source>First Name</source>
+      </segment>
+    </unit>
+    <unit id="634150728411508756">
+      <segment>
+        <source>Pages: </source>
+      </segment>
+    </unit>
+    <unit id="6362573147438745010">
+      <segment>
+        <source>Synopsis</source>
+      </segment>
+    </unit>
+    <unit id="6451950624229105674">
+      <segment>
+        <source>Author is required.</source>
+      </segment>
+    </unit>
+    <unit id="6541945325473590508">
+      <segment>
+        <source>Unknown Author</source>
+      </segment>
+    </unit>
+    <unit id="6557825851113578624">
+      <segment>
+        <source>Add book</source>
+      </segment>
+    </unit>
+    <unit id="6631334172623029500">
+      <segment>
+        <source>Email:</source>
+      </segment>
+    </unit>
+    <unit id="678857165420560136">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="name"/> created successfully</source>
+      </segment>
+    </unit>
+    <unit id="6801535761978393212">
+      <segment>
+        <source>Back to home</source>
+      </segment>
+    </unit>
+    <unit id="6865009229971482891">
+      <segment>
+        <source>Password:</source>
+      </segment>
+    </unit>
+    <unit id="6948913338134720135">
+      <segment>
+        <source>User <ph id="0" equiv="PH" disp="user.username"/> deleted successfully</source>
+      </segment>
+    </unit>
+    <unit id="7022070615528435141">
+      <segment>
+        <source>Delete</source>
+      </segment>
+    </unit>
+    <unit id="702817871087785411">
+      <segment>
+        <source>Pages:</source>
+      </segment>
+    </unit>
+    <unit id="7071470734400948493">
+      <segment>
+        <source>Author</source>
+      </segment>
+    </unit>
+    <unit id="7101448287632504006">
+      <segment>
+        <source> Password must be at least 6 characters long. </source>
+      </segment>
+    </unit>
+    <unit id="7136563350929128087">
+      <segment>
+        <source>Author <ph id="0" equiv="PH" disp="name"/> created successfully</source>
+      </segment>
+    </unit>
+    <unit id="7250451568701303346">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> added to favorites</source>
+      </segment>
+    </unit>
+    <unit id="7388651711003064897">
+      <segment>
+        <source>published</source>
+      </segment>
+    </unit>
+    <unit id="7409824196610864291">
+      <segment>
+        <source>The requested page could not be found!</source>
+      </segment>
+    </unit>
+    <unit id="7418591811669852959">
+      <segment>
+        <source>Rating is required.</source>
+      </segment>
+    </unit>
+    <unit id="7501340698502319262">
+      <segment>
+        <source>Are you sure you want to delete this book?</source>
+      </segment>
+    </unit>
+    <unit id="7585826646011739428">
+      <segment>
+        <source>Edit</source>
+      </segment>
+    </unit>
+    <unit id="7639127665991326705">
+      <segment>
+        <source>Books:</source>
+      </segment>
+    </unit>
+    <unit id="7658402240953727096">
+      <segment>
+        <source>Name:</source>
+      </segment>
+    </unit>
+    <unit id="768763729993966116">
+      <segment>
+        <source>Country is required.</source>
+      </segment>
+    </unit>
+    <unit id="7720454415318992813">
+      <segment>
+        <source>Welcome to Online Bookstore</source>
+      </segment>
+    </unit>
+    <unit id="7776787699631989785">
+      <segment>
+        <source>found this helpful</source>
+      </segment>
+    </unit>
+    <unit id="7802153207202399895">
+      <segment>
+        <source>Author name is required.</source>
+      </segment>
+    </unit>
+    <unit id="7864193007659849769">
+      <segment>
+        <source>Repeat password:</source>
+      </segment>
+    </unit>
+    <unit id="7949529201488904319">
+      <segment>
+        <source>Back to overview</source>
+      </segment>
+    </unit>
+    <unit id="807956815675048522">
+      <segment>
+        <source>Country: </source>
+      </segment>
+    </unit>
+    <unit id="8149613038797621397">
+      <segment>
+        <source>Pages count must be at least 1.</source>
+      </segment>
+    </unit>
+    <unit id="8333503953697126822">
+      <segment>
+        <source>Descending:</source>
+      </segment>
+    </unit>
+    <unit id="8347467823386280995">
+      <segment>
+        <source> Review text must be at least 5 characters long. </source>
+      </segment>
+    </unit>
+    <unit id="8559127446024156624">
+      <segment>
+        <source>Born: </source>
+      </segment>
+    </unit>
+    <unit id="8566422374066756277">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book.name"/> updated successfully</source>
+      </segment>
+    </unit>
+    <unit id="8602814243662345124">
+      <segment>
+        <source>Email is required.</source>
+      </segment>
+    </unit>
+    <unit id="8721574832075559998">
+      <segment>
+        <source>Some rights reserved</source>
+      </segment>
+    </unit>
+    <unit id="8843909375724508983">
+      <segment>
+        <source>User profile updated successfully for user: <ph id="0" equiv="PH" disp="this.user!.username"/></source>
+      </segment>
+    </unit>
+    <unit id="8953033926734869941">
+      <segment>
+        <source>Name</source>
+      </segment>
+    </unit>
+    <unit id="8998179362936748717">
+      <segment>
+        <source>OK</source>
+      </segment>
+    </unit>
+    <unit id="8999284073934392732">
+      <segment>
+        <source>Login with Google</source>
+      </segment>
+    </unit>
+    <unit id="9133668335754347944">
+      <segment>
+        <source>Your review:</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

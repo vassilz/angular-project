@@ -12,11 +12,14 @@
 
 .button-group {
   margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
-button + button {
+/* button + button {
   margin-left: 10px;
-}
+} */
 
 :host {
   background-color: lightblue;

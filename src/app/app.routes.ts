@@ -7,13 +7,10 @@ import { RegisterComponent } from './users/register/register.component';
 import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { ErrorMessageComponent } from './errors/error-message/error-message.component';
-import { EditBookComponent } from './books/edit-book/edit-book.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { UsersListComponent } from './users/users-list/users-list.component';
 import { AdminGuard } from './admin.guard';
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { AuthorsListComponent } from './authors/authors-list/authors-list.component';
-import { AddAuthorComponent } from './authors/add-author/add-author.component';
 import { AuthorDetailsComponent } from './authors/author-details/author-details.component';
 import { UnauthenticatedGuard } from './unauthenticated.guard';
 import { bookResolver } from './books/book.resolver';
@@ -57,7 +54,10 @@ export const routes: Routes = [
       },
       {
         path: ':bookId/edit',
-        component: EditBookComponent,
+        loadComponent: () =>
+          import('./books/edit-book/edit-book.component').then(
+            (m) => m.EditBookComponent
+          ),
         canActivate: [AuthGuard, AdminGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },
         resolve: { book: bookResolver },
@@ -70,7 +70,10 @@ export const routes: Routes = [
       { path: '', component: AuthorsListComponent },
       {
         path: 'add',
-        component: AddAuthorComponent,
+        loadComponent: () =>
+          import('./authors/add-author/add-author.component').then(
+            (m) => m.AddAuthorComponent
+          ),
         canActivate: [AuthGuard, AdminGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },
       },
@@ -83,7 +86,10 @@ export const routes: Routes = [
   },
   {
     path: 'users',
-    component: UsersListComponent,
+    loadComponent: () =>
+      import('./users/users-list/users-list.component').then(
+        (m) => m.UsersListComponent
+      ),
     canActivate: [AuthGuard, AdminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   },

@@ -100,7 +100,9 @@ export class ProfileComponent {
       .subscribe((data) => {
         console.info('User updated successfully');
         this.toastService.add(
-          `User profile updated successfully for user: ${this.user!.username}`
+          $localize`User profile updated successfully for user: ${
+            this.user!.username
+          }`
         );
         this.router.navigate(['/home']);
       });

@@ -1,5 +1,5 @@
 <form #form="ngForm" (ngSubmit)="editProfile(form)">
-  <label for="firstName">First name:</label><br />
+  <label i18n for="firstName">First name:</label><br />
   <input
     type="text"
     id="firstName"
@@ -8,7 +8,7 @@
     [(ngModel)]="firstName"
   />
   <br />
-  <label for="lastName">Last name:</label><br />
+  <label i18n for="lastName">Last name:</label><br />
   <input
     type="text"
     id="lastName"
@@ -17,7 +17,7 @@
     [(ngModel)]="lastName"
   />
   <br />
-  <label for="pageSize">Page size:</label><br />
+  <label i18n for="pageSize">Page size:</label><br />
   <input
     type="number"
     id="pageSize"
@@ -28,10 +28,11 @@
   <br />
   <br />
   <div class="actions">
-    <button class="cancel" type="button" (click)="onCancel($event)">
+    <button i18n class="cancel" type="button" (click)="onCancel($event)">
       Cancel
     </button>
     <button
+      i18n
       [style]="{ backgroundColor: 'var(--button-active-color)' }"
       type="submit"
     >
@@ -43,9 +44,9 @@
 <br />
 <br />
 
-Favorite books:
+<span i18n>Favorite books:</span>
 <br />
-@if (favoriteBooks.length === 0) { No favorite books yet } @else {@for (book of
-favoriteBooks; track book.id) { {{ book.name }} by
+@if (favoriteBooks.length === 0) { <span i18n>No favorite books yet</span> }
+@else {@for (book of favoriteBooks; track book.id) { {{ book.name }} by
 {{ bookAuthors.get(book.id) }} <br />
 } }

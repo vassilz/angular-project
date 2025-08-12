@@ -11,11 +11,15 @@ export class ErrorHandlingService {
     private router: Router
   ) {}
 
-  handleError(err: any) {
+  handleError(err: Error) {
     console.error('Error has occurred' + err);
     console.log(err);
 
     this.errorMessageService.setError(err);
     this.router.navigate(['/error']);
   }
+}
+
+export interface Error {
+  message: string;
 }

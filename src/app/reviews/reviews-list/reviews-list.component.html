@@ -1,9 +1,9 @@
 @if (allReviewsCount() === 0) {
-<div>No reviews yet</div>
+<div i18n>No reviews yet</div>
 } @else { @if (isLoading()) {
 <app-loader />
 } @else { @if (reviews().length > 0) {
-<div>Reviews:</div>
+<div i18n>Reviews:</div>
 @for (review of reviews(); track $index) {
 <app-review-card [review]="review" [bookId]="bookId" />
 <br />

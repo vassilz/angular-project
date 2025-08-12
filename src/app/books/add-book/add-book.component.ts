@@ -73,7 +73,7 @@ export class AddBookComponent implements OnInit {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add(`Book ${name} created successfully`);
+          this.toastService.add($localize`Book ${name} created successfully`);
           this.router.navigate(['/books']);
         },
         error: (err) => {

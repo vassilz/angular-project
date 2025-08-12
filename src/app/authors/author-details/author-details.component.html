@@ -1,16 +1,17 @@
-@if (isLoading()) { <app-loader /> } @else { Name: {{ author()?.name }}
-<p>Country: {{ author()?.country }}</p>
-<p>Born: {{ author()?.birthDate | date }}</p>
+@if (isLoading()) { <app-loader /> } @else { <span i18n>Name: </span
+>{{ author()?.name }}
+<p><span i18n>Country: </span> {{ author()?.country }}</p>
+<p><span i18n>Born: </span> {{ author()?.birthDate | date }}</p>
 
-Books: @for (book of books(); track book.id) {
+<span i18n>Books:</span> @for (book of books(); track book.id) {
 <div>
   <a [routerLink]="['/books', book.id]">
     <h4>{{ book.name }}</h4>
   </a>
-  <p>Published at: {{ book.publishDate | date }}</p>
-  <p>Pages: {{ book.pagesCount }}</p>
+  <p><span i18n>Published at: </span>{{ book.publishDate | date }}</p>
+  <p><span i18n>Pages: </span>{{ book.pagesCount }}</p>
 </div>
 }
 
-<button class="back-button" routerLink="/authors">Back to overview</button>
+<button i18n class="back-button" routerLink="/authors">Back to overview</button>
 }

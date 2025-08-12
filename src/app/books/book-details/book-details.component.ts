@@ -81,7 +81,7 @@ export class BookDetailsComponent implements OnInit {
       .getAuthor(this.book().authorId)
       .pipe(take(1))
       .subscribe((author) => {
-        this.authorName.set(author?.name || 'Unknown Author');
+        this.authorName.set(author?.name || $localize`Unknown Author`);
         this.isLoading.set(false);
       });
   }

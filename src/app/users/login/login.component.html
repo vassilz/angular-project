@@ -1,6 +1,6 @@
 <form #form="ngForm" (ngSubmit)="onSubmit(form, $event.submitter.id)">
   <!-- <form #form="ngForm" (ngSubmit)="loginWithGoogle(form)"> -->
-  <label for="email">Email:</label><br />
+  <label i18n for="email">Email:</label><br />
   <input
     type="email"
     id="email"
@@ -12,12 +12,12 @@
   @if (inputEmail.touched) {
   <div>
     @if (inputEmail.errors?.['required']) {
-    <p class="input-error">Email is required.</p>
+    <p i18n class="input-error">Email is required.</p>
     }
   </div>
   }
   <br />
-  <label for="password">Password:</label><br />
+  <label i18n for="password">Password:</label><br />
   <input
     type="password"
     id="password"
@@ -29,7 +29,7 @@
   @if (inputPassword.touched) {
   <div>
     @if (inputPassword.errors?.['required']) {
-    <p class="input-error">Password is required.</p>
+    <p i18n class="input-error">Password is required.</p>
     }
   </div>
   }
@@ -37,6 +37,7 @@
 
   <!-- <button class="cancel" routerLink="/home">Cancel</button> -->
   <button
+    i18n
     [disabled]="form.invalid"
     [style]="{
       backgroundColor: form.invalid
@@ -48,5 +49,5 @@
   >
     Login
   </button>
-  <button type="submit" id="google">Login with Google</button>
+  <button i18n type="submit" id="google">Login with Google</button>
 </form>

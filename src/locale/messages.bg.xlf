@@ -1,0 +1,658 @@
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en-US" trgLang="bg">
+  <file id="ngi18n" original="ng.template">
+    <unit id="7658402240953727096">
+      <segment state="initial">
+        <source>Name:</source>
+        <target>Име:</target>
+      </segment>
+    </unit>
+    <unit id="7802153207202399895">
+      <segment state="initial">
+        <source>Author name is required.</source>
+        <target>Името на автора е задължително.</target>
+      </segment>
+    </unit>
+    <unit id="5611684448811547942">
+      <segment state="initial">
+        <source>Birth date:</source>
+        <target>Дата на раждане:</target>
+      </segment>
+    </unit>
+    <unit id="4494131238204136753">
+      <segment state="initial">
+        <source>Birth date is required.</source>
+        <target>Датата на раждане е задължителна.</target>
+      </segment>
+    </unit>
+    <unit id="4863373404095396982">
+      <segment state="initial">
+        <source>Country:</source>
+        <target>Държава:</target>
+      </segment>
+    </unit>
+    <unit id="768763729993966116">
+      <segment state="initial">
+        <source>Country is required.</source>
+        <target>Държавата е задължителна.</target>
+      </segment>
+    </unit>
+    <unit id="2330577642930707695">
+      <segment state="initial">
+        <source> Cancel </source>
+        <target> Отказ </target>
+      </segment>
+    </unit>
+    <unit id="577038887888857351">
+      <segment state="initial">
+        <source> Add </source>
+        <target> Добави </target>
+      </segment>
+    </unit>
+    <unit id="7136563350929128087">
+      <segment state="initial">
+        <source>Author <ph id="0" equiv="PH" disp="name"/> created successfully</source>
+        <target>Авторът <ph id="0" equiv="PH" disp="name"/> е създаден успешно</target>
+      </segment>
+    </unit>
+    <unit id="402785015655073812">
+      <segment state="initial">
+        <source>Name: </source>
+        <target>Име: </target>
+      </segment>
+    </unit>
+    <unit id="807956815675048522">
+      <segment state="initial">
+        <source>Country: </source>
+        <target>Държава: </target>
+      </segment>
+    </unit>
+    <unit id="8559127446024156624">
+      <segment state="initial">
+        <source>Born: </source>
+        <target>Дата на раждане: </target>
+      </segment>
+    </unit>
+    <unit id="7639127665991326705">
+      <segment state="initial">
+        <source>Books:</source>
+        <target>Книги:</target>
+      </segment>
+    </unit>
+    <unit id="1970387948592763067">
+      <segment state="initial">
+        <source>Published at: </source>
+        <target>Публикувано на: </target>
+      </segment>
+    </unit>
+    <unit id="634150728411508756">
+      <segment state="initial">
+        <source>Pages: </source>
+        <target>Брой страници: </target>
+      </segment>
+    </unit>
+    <unit id="7949529201488904319">
+      <segment state="initial">
+        <source>Back to overview</source>
+        <target>Назад към прегледа</target>
+      </segment>
+    </unit>
+    <unit id="5536162196438013100">
+      <segment state="initial">
+        <source>Add author</source>
+        <target>Добави автор</target>
+      </segment>
+    </unit>
+    <unit id="1106270449169597744">
+      <segment state="initial">
+        <source>No authors yet</source>
+        <target>Все още няма автори</target>
+      </segment>
+    </unit>
+    <unit id="4423253549935469768">
+      <segment state="initial">
+        <source> Details </source>
+        <target> Подробности </target>
+      </segment>
+    </unit>
+    <unit id="3414988242774569868">
+      <segment state="initial">
+        <source>Book name is required.</source>
+        <target>Името на книгата е задължително.</target>
+      </segment>
+    </unit>
+    <unit id="305142716106924307">
+      <segment state="initial">
+        <source>Author:</source>
+        <target>Автор:</target>
+      </segment>
+    </unit>
+    <unit id="6451950624229105674">
+      <segment state="initial">
+        <source>Author is required.</source>
+        <target>Авторът е задължителен.</target>
+      </segment>
+    </unit>
+    <unit id="3678984843947838693">
+      <segment state="initial">
+        <source>Publish date:</source>
+        <target>Дата на публикуване:</target>
+      </segment>
+    </unit>
+    <unit id="4504133561735691560">
+      <segment state="initial">
+        <source>Publish date is required.</source>
+        <target>Датата на публикуване е задължителна.</target>
+      </segment>
+    </unit>
+    <unit id="4816101510803859870">
+      <segment state="initial">
+        <source>Publish date must be in the past.</source>
+        <target>Датата на публикуване трябва да бъде в миналото.</target>
+      </segment>
+    </unit>
+    <unit id="702817871087785411">
+      <segment state="initial">
+        <source>Pages:</source>
+        <target>Брой страници:</target>
+      </segment>
+    </unit>
+    <unit id="1548093208317817755">
+      <segment state="initial">
+        <source>Pages count is required.</source>
+        <target>Броят на страниците е задължителен.</target>
+      </segment>
+    </unit>
+    <unit id="8149613038797621397">
+      <segment state="initial">
+        <source>Pages count must be at least 1.</source>
+        <target>Броят на страниците трябва да бъде поне 1.</target>
+      </segment>
+    </unit>
+    <unit id="2006595865621017520">
+      <segment state="initial">
+        <source>Synopsis:</source>
+        <target>Резюме:</target>
+      </segment>
+    </unit>
+    <unit id="5713688101384442809">
+      <segment state="initial">
+        <source> Synopsis must be at least 20 characters long. </source>
+        <target> Резюмето трябва да бъде поне 20 знака. </target>
+      </segment>
+    </unit>
+    <unit id="678857165420560136">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="name"/> created successfully</source>
+        <target>Книгата <ph id="0" equiv="PH" disp="name"/> беше създадена успешно</target>
+      </segment>
+    </unit>
+    <unit id="3328305876568439292">
+      <segment state="initial">
+        <source> by </source>
+        <target> от </target>
+      </segment>
+    </unit>
+    <unit id="1785012351193519963">
+      <segment state="initial">
+        <source>No reviews yet</source>
+        <target>Все още няма рецензии</target>
+      </segment>
+    </unit>
+    <unit id="5881876145178332550">
+      <segment state="initial">
+        <source>of</source>
+        <target>от</target>
+      </segment>
+    </unit>
+    <unit id="4100306273406016007">
+      <segment state="initial">
+        <source>votes</source>
+        <target>гласове</target>
+      </segment>
+    </unit>
+    <unit id="5377078063439833222">
+      <segment state="initial">
+        <source> Edit </source>
+        <target> Редактиране </target>
+      </segment>
+    </unit>
+    <unit id="7501340698502319262">
+      <segment state="initial">
+        <source>Are you sure you want to delete this book?</source>
+        <target>Сигурни ли сте, че искате да изтриете тази книга?</target>
+      </segment>
+    </unit>
+    <unit id="8998179362936748717">
+      <segment state="initial">
+        <source>OK</source>
+        <target>Добре</target>
+      </segment>
+    </unit>
+    <unit id="2159130950882492111">
+      <segment state="initial">
+        <source>Cancel</source>
+        <target>Отказ</target>
+      </segment>
+    </unit>
+    <unit id="7022070615528435141">
+      <segment state="initial">
+        <source>Delete</source>
+        <target>Изтриване</target>
+      </segment>
+    </unit>
+    <unit id="6541945325473590508">
+      <segment state="initial">
+        <source>Unknown Author</source>
+        <target>Неизвестен автор</target>
+      </segment>
+    </unit>
+    <unit id="3215752050163286830">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> removed from favorites</source>
+        <target>Книгата <ph id="0" equiv="PH" disp="this.book().name"/> беше премахната от любими</target>
+      </segment>
+    </unit>
+    <unit id="7250451568701303346">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> added to favorites</source>
+        <target>Книгата <ph id="0" equiv="PH" disp="this.book().name"/> беше добавена към любими</target>
+      </segment>
+    </unit>
+    <unit id="2459395928468832560">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> deleted successfully</source>
+        <target>Книгата <ph id="0" equiv="PH" disp="this.book().name"/> беше изтрита успешно</target>
+      </segment>
+    </unit>
+    <unit id="1719091699885493218">
+      <segment state="initial">
+        <source>by</source>
+        <target>от</target>
+      </segment>
+    </unit>
+    <unit id="5324941988352416675">
+      <segment state="initial">
+        <source>Number of pages:</source>
+        <target>Брой страници:</target>
+      </segment>
+    </unit>
+    <unit id="6362573147438745010">
+      <segment state="initial">
+        <source>Synopsis</source>
+        <target>Резюме</target>
+      </segment>
+    </unit>
+    <unit id="6557825851113578624">
+      <segment state="initial">
+        <source>Add book</source>
+        <target>Добавяне на книга</target>
+      </segment>
+    </unit>
+    <unit id="1218302359178184742">
+      <segment state="initial">
+        <source>Sort by:</source>
+        <target>Сортиране по:</target>
+      </segment>
+    </unit>
+    <unit id="8333503953697126822">
+      <segment state="initial">
+        <source>Descending:</source>
+        <target>Намаляващо:</target>
+      </segment>
+    </unit>
+    <unit id="3390173005830533679">
+      <segment state="initial">
+        <source>No books found for</source>
+        <target>Не са намерени книги за</target>
+      </segment>
+    </unit>
+    <unit id="1489170579229131278">
+      <segment state="initial">
+        <source>No books yet</source>
+        <target>Все още няма книги</target>
+      </segment>
+    </unit>
+    <unit id="8953033926734869941">
+      <segment state="initial">
+        <source>Name</source>
+        <target>Име</target>
+      </segment>
+    </unit>
+    <unit id="7071470734400948493">
+      <segment state="initial">
+        <source>Author</source>
+        <target>Автор</target>
+      </segment>
+    </unit>
+    <unit id="1839186591621749773">
+      <segment state="initial">
+        <source>Publish Date</source>
+        <target>Дата на публикуване</target>
+      </segment>
+    </unit>
+    <unit id="3817498941817715969">
+      <segment state="initial">
+        <source>Pages</source>
+        <target>Брой страници</target>
+      </segment>
+    </unit>
+    <unit id="3706222784708785028">
+      <segment state="initial">
+        <source>Rating</source>
+        <target>Оценка</target>
+      </segment>
+    </unit>
+    <unit id="3620188369327429839">
+      <segment state="initial">
+        <source> Save </source>
+        <target> Запази </target>
+      </segment>
+    </unit>
+    <unit id="8566422374066756277">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book.name"/> updated successfully</source>
+        <target>Книгата <ph id="0" equiv="PH" disp="this.book.name"/> беше актуализирана успешно</target>
+      </segment>
+    </unit>
+    <unit id="7388651711003064897">
+      <segment state="initial">
+        <source>published</source>
+        <target>публикувано</target>
+      </segment>
+    </unit>
+    <unit id="2385175792597197250">
+      <segment state="initial">
+        <source>Latest books:</source>
+        <target>Най-нови книги:</target>
+      </segment>
+    </unit>
+    <unit id="8721574832075559998">
+      <segment state="initial">
+        <source>Some rights reserved</source>
+        <target>Някои права запазени</target>
+      </segment>
+    </unit>
+    <unit id="359999491547033336">
+      <segment state="initial">
+        <source>Online Bookstore</source>
+        <target>Онлайн книжарница</target>
+      </segment>
+    </unit>
+    <unit id="4915431133669985304">
+      <segment state="initial">
+        <source>Profile</source>
+        <target>Профил</target>
+      </segment>
+    </unit>
+    <unit id="3797778920049399855">
+      <segment state="initial">
+        <source>Logout</source>
+        <target>Изход</target>
+      </segment>
+    </unit>
+    <unit id="2454050363478003966">
+      <segment state="initial">
+        <source>Login</source>
+        <target>Вход</target>
+      </segment>
+    </unit>
+    <unit id="3301086086650990787">
+      <segment state="initial">
+        <source>Register</source>
+        <target>Регистрация</target>
+      </segment>
+    </unit>
+    <unit id="7720454415318992813">
+      <segment state="initial">
+        <source>Welcome to Online Bookstore</source>
+        <target>Добре дошли в онлайн книжарницата</target>
+      </segment>
+    </unit>
+    <unit id="5224604665222373201">
+      <segment state="initial">
+        <source>Books</source>
+        <target>Книги</target>
+      </segment>
+    </unit>
+    <unit id="5505637243815082364">
+      <segment state="initial">
+        <source>Authors</source>
+        <target>Автори</target>
+      </segment>
+    </unit>
+    <unit id="4555457172864212828">
+      <segment state="initial">
+        <source>Users</source>
+        <target>Потребители</target>
+      </segment>
+    </unit>
+    <unit id="7409824196610864291">
+      <segment state="initial">
+        <source>The requested page could not be found!</source>
+        <target>Заявената страница не можа да бъде намерена!</target>
+      </segment>
+    </unit>
+    <unit id="6801535761978393212">
+      <segment state="initial">
+        <source>Back to home</source>
+        <target>Назад към началната страница</target>
+      </segment>
+    </unit>
+    <unit id="5087122090521808199">
+      <segment state="initial">
+        <source>Rating:</source>
+        <target>Оценка:</target>
+      </segment>
+    </unit>
+    <unit id="7418591811669852959">
+      <segment state="initial">
+        <source>Rating is required.</source>
+        <target>Оценката е задължителна.</target>
+      </segment>
+    </unit>
+    <unit id="4988274743817806438">
+      <segment state="initial">
+        <source>Rating must be at least 1.</source>
+        <target>Оценката трябва да бъде поне 1.</target>
+      </segment>
+    </unit>
+    <unit id="5469701700166152270">
+      <segment state="initial">
+        <source>Rating must be at most 5.</source>
+        <target>Оценката трябва да бъде най-много 5.</target>
+      </segment>
+    </unit>
+    <unit id="1247904015861277296">
+      <segment state="initial">
+        <source>Text:</source>
+        <target>Текст:</target>
+      </segment>
+    </unit>
+    <unit id="8347467823386280995">
+      <segment state="initial">
+        <source> Review text must be at least 5 characters long. </source>
+        <target> Текстът на рецензията трябва да бъде поне 5 символа. </target>
+      </segment>
+    </unit>
+    <unit id="9133668335754347944">
+      <segment state="initial">
+        <source>Your review:</source>
+        <target>Вашата рецензия:</target>
+      </segment>
+    </unit>
+    <unit id="7585826646011739428">
+      <segment state="initial">
+        <source>Edit</source>
+        <target>Редактиране</target>
+      </segment>
+    </unit>
+    <unit id="7776787699631989785">
+      <segment state="initial">
+        <source>found this helpful</source>
+        <target>намери/ха това за полезно</target>
+      </segment>
+    </unit>
+    <unit id="3021254221752607634">
+      <segment state="initial">
+        <source>Was this review helpful?</source>
+        <target>Беше ли тази рецензия полезна?</target>
+      </segment>
+    </unit>
+    <unit id="1269341385361401614">
+      <segment state="initial">
+        <source> Yes </source>
+        <target> Да </target>
+      </segment>
+    </unit>
+    <unit id="5964559006546778696">
+      <segment state="initial">
+        <source>Reviews:</source>
+        <target>Рецензии:</target>
+      </segment>
+    </unit>
+    <unit id="6631334172623029500">
+      <segment state="initial">
+        <source>Email:</source>
+        <target>Имейл:</target>
+      </segment>
+    </unit>
+    <unit id="8602814243662345124">
+      <segment state="initial">
+        <source>Email is required.</source>
+        <target>Имейлът е задължителен.</target>
+      </segment>
+    </unit>
+    <unit id="6865009229971482891">
+      <segment state="initial">
+        <source>Password:</source>
+        <target>Парола:</target>
+      </segment>
+    </unit>
+    <unit id="3577237269587081090">
+      <segment state="initial">
+        <source>Password is required.</source>
+        <target>Паролата е задължителна.</target>
+      </segment>
+    </unit>
+    <unit id="1908285951500318953">
+      <segment state="initial">
+        <source> Login </source>
+        <target> Вход </target>
+      </segment>
+    </unit>
+    <unit id="8999284073934392732">
+      <segment state="initial">
+        <source>Login with Google</source>
+        <target>Вход с Google</target>
+      </segment>
+    </unit>
+    <unit id="2836854179267941399">
+      <segment state="initial">
+        <source>First name:</source>
+        <target>Име:</target>
+      </segment>
+    </unit>
+    <unit id="5759985852212057755">
+      <segment state="initial">
+        <source>Last name:</source>
+        <target>Фамилия:</target>
+      </segment>
+    </unit>
+    <unit id="5082696930337587734">
+      <segment state="initial">
+        <source>Page size:</source>
+        <target>Размер на страницата:</target>
+      </segment>
+    </unit>
+    <unit id="3527166547629863858">
+      <segment state="initial">
+        <source>Favorite books:</source>
+        <target>Любими книги:</target>
+      </segment>
+    </unit>
+    <unit id="1591379336757067235">
+      <segment state="initial">
+        <source>No favorite books yet</source>
+        <target>Все още нямате любими книги</target>
+      </segment>
+    </unit>
+    <unit id="8843909375724508983">
+      <segment state="initial">
+        <source>User profile updated successfully for user: <ph id="0" equiv="PH" disp="this.user!.username"/></source>
+        <target>Профилът на потребителя е актуализиран успешно за потребител: <ph id="0" equiv="PH" disp="this.user!.username"/></target>
+      </segment>
+    </unit>
+    <unit id="140822705245800362">
+      <segment state="initial">
+        <source>Username:</source>
+        <target>Потребителско име:</target>
+      </segment>
+    </unit>
+    <unit id="3868123820758341861">
+      <segment state="initial">
+        <source>Username is required.</source>
+        <target>Потребителското име е задължително.</target>
+      </segment>
+    </unit>
+    <unit id="7101448287632504006">
+      <segment state="initial">
+        <source> Password must be at least 6 characters long. </source>
+        <target> Паролата трябва да е поне 6 символа. </target>
+      </segment>
+    </unit>
+    <unit id="7864193007659849769">
+      <segment state="initial">
+        <source>Repeat password:</source>
+        <target>Повторете паролата:</target>
+      </segment>
+    </unit>
+    <unit id="1543538730036692975">
+      <segment state="initial">
+        <source>Passwords do not match.</source>
+        <target>Паролите не съвпадат.</target>
+      </segment>
+    </unit>
+    <unit id="6028371114637047813">
+      <segment state="initial">
+        <source>First Name</source>
+        <target>Име</target>
+      </segment>
+    </unit>
+    <unit id="4407559560004943843">
+      <segment state="initial">
+        <source>Last Name</source>
+        <target>Фамилия</target>
+      </segment>
+    </unit>
+    <unit id="5248717555542428023">
+      <segment state="initial">
+        <source>Username</source>
+        <target>Потребителско име</target>
+      </segment>
+    </unit>
+    <unit id="4768749765465246664">
+      <segment state="initial">
+        <source>Email</source>
+        <target>Имейл</target>
+      </segment>
+    </unit>
+    <unit id="3193976279273491157">
+      <segment state="initial">
+        <source>Actions</source>
+        <target>Действия</target>
+      </segment>
+    </unit>
+    <unit id="4839682406703705780">
+      <segment state="initial">
+        <source>Delete User</source>
+        <target>Изтриване на потребител</target>
+      </segment>
+    </unit>
+    <unit id="6948913338134720135">
+      <segment state="initial">
+        <source>User <ph id="0" equiv="PH" disp="user.username"/> deleted successfully</source>
+        <target>Потребителят <ph id="0" equiv="PH" disp="user.username"/> е изтрит успешно</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

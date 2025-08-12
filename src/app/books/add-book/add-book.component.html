@@ -1,15 +1,15 @@
 <form [formGroup]="form" (ngSubmit)="addBook()">
-  <label for="name">Name:</label><br />
+  <label i18n for="name">Name:</label><br />
   <input type="text" id="name" formControlName="name" required />
   @if (form.get('name')?.touched) {
   <div>
     @if (form.get('name')?.errors?.['required']) {
-    <p class="input-error">Book name is required.</p>
+    <p i18n class="input-error">Book name is required.</p>
     }
   </div>
   }
   <br />
-  <label for="author">Author:</label><br />
+  <label i18n for="author">Author:</label><br />
   <select id="author" formControlName="author" required>
     @for (author of authors(); track author.id) {
     <option [value]="author.id">{{ author.name }}</option>
@@ -18,12 +18,12 @@
   @if (form.get('author')?.touched) {
   <div>
     @if (form.get('author')?.errors?.['required']) {
-    <p class="input-error">Author is required.</p>
+    <p i18n class="input-error">Author is required.</p>
     }
   </div>
   }
   <br />
-  <label for="publish_date">Publish date:</label><br />
+  <label i18n for="publish_date">Publish date:</label><br />
   <input
     type="date"
     id="publish_date"
@@ -33,26 +33,26 @@
   @if (form.get('publish_date')?.touched) {
   <div>
     @if (form.get('publish_date')?.errors?.['required']) {
-    <p class="input-error">Publish date is required.</p>
+    <p i18n class="input-error">Publish date is required.</p>
     } @if (form.get('publish_date')?.errors?.['notInPast']) {
-    <p class="input-error">Publish date must be in the past.</p>
+    <p i18n class="input-error">Publish date must be in the past.</p>
     }
   </div>
   }
   <br />
-  <label for="pages">Pages:</label><br />
+  <label i18n for="pages">Pages:</label><br />
   <input type="number" id="pages" formControlName="pages" min="1" required />
   @if (form.get('pages')?.touched) {
   <div>
     @if (form.get('pages')?.errors?.['required']) {
-    <p class="input-error">Pages count is required.</p>
+    <p i18n class="input-error">Pages count is required.</p>
     } @if (form.get('pages')?.errors?.['min']) {
-    <p class="input-error">Pages count must be at least 1.</p>
+    <p i18n class="input-error">Pages count must be at least 1.</p>
     }
   </div>
   }
   <br />
-  <label for="synopsis">Synopsis:</label><br />
+  <label i18n for="synopsis">Synopsis:</label><br />
   <textarea
     type="text"
     id="synopsis"
@@ -65,16 +65,19 @@
   @if (form.get('synopsis')?.touched) {
   <div>
     @if (form.get('synopsis')?.errors?.['minlength']) {
-    <p class="input-error">Synopsis must be at least 20 characters long.</p>
+    <p i18n class="input-error">
+      Synopsis must be at least 20 characters long.
+    </p>
     }
   </div>
   }
   <br /><br />
 
-  <button class="cancel" type="button" (click)="onCancel($event)">
+  <button i18n class="cancel" type="button" (click)="onCancel($event)">
     Cancel
   </button>
   <button
+    i18n
     type="submit"
     [disabled]="form.invalid"
     [style]="{

@@ -23,6 +23,7 @@ import { RecentBooksListComponent } from '../recent/recent-books-list/recent-boo
 import { FirebaseUserService } from '../../users/firebase-user.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'app-books-list',
@@ -33,6 +34,7 @@ import { JettyUserService } from '../../users/jetty-user.service';
     LoaderComponent,
     FormsModule,
     RecentBooksListComponent,
+    KeyValuePipe,
   ],
   templateUrl: './books-list.component.html',
   styleUrl: './books-list.component.css',
@@ -41,13 +43,15 @@ export class BooksListComponent implements OnInit {
   isLoading = signal<boolean>(true);
 
   sortBy: string = 'name';
-  sortByOptions: string[] = [
-    'name',
-    'author',
-    'publishDate',
-    'pages',
-    'rating',
-  ];
+  // sortByOptions: string[] = [
+  //   'name',
+  //   'author',
+  //   'publishDate',
+  //   'pages',
+  //   'rating',
+  // ];
+
+  sortByOptions = new Map<string, string>();
 
   isDescending: boolean = false;
 
@@ -117,7 +121,13 @@ export class BooksListComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
     private userService: FirebaseUserService // private userService: JettyUserService
-  ) {}
+  ) {
+    this.sortByOptions.set('name', $localize`Name`);
+    this.sortByOptions.set('author', $localize`Author`);
+    this.sortByOptions.set('publishDate', $localize`Publish Date`);
+    this.sortByOptions.set('pages', $localize`Pages`);
+    this.sortByOptions.set('rating', $localize`Rating`);
+  }
 
   books: WritableSignal<Book[]> = signal<Book[]>([]);
 

@@ -1,5 +1,5 @@
 <form #form="ngForm" (ngSubmit)="addAuthor(form)">
-  <label for="name">Name:</label><br />
+  <label i18n for="name">Name:</label><br />
   <input
     type="text"
     id="name"
@@ -12,12 +12,12 @@
   @if (inputName?.touched) {
   <div>
     @if (inputName?.errors?.['required']) {
-    <p class="input-error">Author name is required.</p>
+    <p i18n class="input-error">Author name is required.</p>
     }
   </div>
   }
   <br />
-  <label for="birth_date">Birth date:</label><br />
+  <label i18n for="birth_date">Birth date:</label><br />
   <input
     type="date"
     id="birth_date"
@@ -29,12 +29,12 @@
   @if (inputBirthDate?.touched) {
   <div>
     @if (inputBirthDate?.errors?.['required']) {
-    <p class="input-error">Birth date is required.</p>
+    <p i18n class="input-error">Birth date is required.</p>
     }
   </div>
   }
   <br />
-  <label for="country">Country:</label><br />
+  <label i18n for="country">Country:</label><br />
   <input
     type="text"
     id="country"
@@ -47,16 +47,17 @@
   @if (inputCountry?.touched) {
   <div>
     @if (inputCountry?.errors?.['required']) {
-    <p class="input-error">Country is required.</p>
+    <p i18n class="input-error">Country is required.</p>
     }
   </div>
   }
   <br /><br />
 
-  <button class="cancel" type="button" (click)="onCancel($event)">
+  <button i18n class="cancel" type="button" (click)="onCancel($event)">
     Cancel
   </button>
   <button
+    i18n
     type="submit"
     [disabled]="form.invalid"
     [style]="{

@@ -33,7 +33,7 @@ export class AddAuthorComponent {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add(`Author ${name} created successfully`);
+          this.toastService.add($localize`Author ${name} created successfully`);
           this.router.navigate(['/authors']);
         },
         error: (err) => {

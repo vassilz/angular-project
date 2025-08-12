@@ -15,24 +15,24 @@
 </div>
 <br /><br />
 @if (isAdmin) {
-<button routerLink="/books/add">Add book</button>
+<button i18n routerLink="/books/add">Add book</button>
 <br />
 } }
 <div class="books">
   <div class="books-list">
-    @if (isLoggedIn && books().length > 0) { Sort by:
+    @if (isLoggedIn && books().length > 0) { <span i18n>Sort by:</span>
     <select [(ngModel)]="sortBy" (change)="sortBooks()">
-      @for (sortByOption of sortByOptions; track $index) {
-      <option [value]="sortByOption">{{ sortByOption }}</option>
+      @for (sortByOption of sortByOptions | keyvalue; track $index) {
+      <option [value]="sortByOption.key">{{ sortByOption.value }}</option>
       }
     </select>
-    Descending:
+    <span i18n>Descending:</span>
     <input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
     <br /><br />
-    } @if (books().length === 0) { @if (searchActive) { No books found for "{{
-      searchTerm
-    }}" } @else { No books yet }} @else { @for (book of books(); track book.id)
-    {
+    } @if (books().length === 0) { @if (searchActive) {
+    <span i18n>No books found for</span> "{{ searchTerm }}" } @else {
+    <span i18n>No books yet</span> }} @else { @for (book of books(); track
+    book.id) {
     <!-- {{ book | json }} -->
     <app-book-card
       [book]="book"

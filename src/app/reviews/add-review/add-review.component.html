@@ -1,5 +1,5 @@
 <form #form="ngForm" (ngSubmit)="addReview(form)">
-  <label for="rating">Rating:</label><br />
+  <label i18n for="rating">Rating:</label><br />
   <input
     type="number"
     id="rating"
@@ -13,16 +13,16 @@
   @if (inputRating?.touched) {
   <div>
     @if (inputRating?.errors?.['required']) {
-    <p class="input-error">Rating is required.</p>
+    <p i18n class="input-error">Rating is required.</p>
     } @if (inputRating?.errors?.['min']) {
-    <p class="input-error">Rating must be at least 1.</p>
+    <p i18n class="input-error">Rating must be at least 1.</p>
     } @if (inputRating?.errors?.['max']) {
-    <p class="input-error">Rating must be at most 5.</p>
+    <p i18n class="input-error">Rating must be at most 5.</p>
     }
   </div>
   }
   <br />
-  <label for="text">Text:</label><br />
+  <label i18n for="text">Text:</label><br />
   <textarea
     type="text"
     id="text"
@@ -36,7 +36,9 @@
   @if (inputText?.touched) {
   <div>
     @if (inputText?.errors?.['minlength']) {
-    <p class="input-error">Review text must be at least 5 characters long.</p>
+    <p i18n class="input-error">
+      Review text must be at least 5 characters long.
+    </p>
     }
   </div>
   }
@@ -44,6 +46,7 @@
 
   <!-- <button class="cancel" (click)="onCancel($event)">Cancel</button> -->
   <button
+    i18n
     type="submit"
     [disabled]="form.invalid"
     [style]="{

@@ -3,15 +3,27 @@
   <button class="nav-link" routerLink="/">
     <img class="menu-icon" src="menu-icon.png" />
   </button>
-  <h3 class="title">Online Bookstore</h3>
+  <h3 i18n class="title">Online Bookstore</h3>
   <div class="button-group">
-    <button routerLink="/profile">Profile</button>
-    <button (click)="logout()">Logout</button>
+    <span class="nav-link" class="fi fi-bg" (click)="switchLanguage('bg')">
+    </span>
+    <span class="nav-link" class="fi fi-gb" (click)="switchLanguage('en')">
+    </span>
+  </div>
+  <div class="button-group">
+    <button routerLink="/profile" i18n>Profile</button>
+    <button (click)="logout()" i18n>Logout</button>
   </div>
   } @else {
   <div class="button-group">
-    <button routerLink="/login">Login</button>
-    <button routerLink="/register">Register</button>
+    <span class="nav-link" class="fi fi-bg" (click)="switchLanguage('bg')">
+    </span>
+    <span class="nav-link" class="fi fi-gb" (click)="switchLanguage('en')">
+    </span>
+  </div>
+  <div class="button-group">
+    <button routerLink="/login" i18n>Login</button>
+    <button routerLink="/register" i18n>Register</button>
   </div>
   }
 </div>

@@ -1,5 +1,5 @@
 <form #form="ngForm" (ngSubmit)="editBook(form)">
-  <label for="name">Name:</label><br />
+  <label i18n for="name">Name:</label><br />
   <input
     type="text"
     id="name"
@@ -11,12 +11,12 @@
   @if (inputName?.touched) {
   <div>
     @if (inputName?.errors?.['required']) {
-    <p class="input-error">Book name is required.</p>
+    <p i18n class="input-error">Book name is required.</p>
     }
   </div>
   }
   <br />
-  <label for="author">Author:</label><br />
+  <label i18n for="author">Author:</label><br />
   <input
     type="text"
     id="author"
@@ -28,12 +28,12 @@
   @if (inputAuthor?.touched) {
   <div>
     @if (inputAuthor?.errors?.['required']) {
-    <p class="input-error">Author is required.</p>
+    <p i18n class="input-error">Author is required.</p>
     }
   </div>
   }
   <br />
-  <label for="publish_date">Publish date:</label><br />
+  <label i18n for="publish_date">Publish date:</label><br />
   <input
     type="date"
     id="publish_date"
@@ -45,12 +45,12 @@
   @if (inputPublishDate?.touched) {
   <div>
     @if (inputPublishDate?.errors?.['required']) {
-    <p class="input-error">Publish date is required.</p>
+    <p i18n class="input-error">Publish date is required.</p>
     }
   </div>
   }
   <br />
-  <label for="pages">Pages:</label><br />
+  <label i18n for="pages">Pages:</label><br />
   <input
     type="number"
     id="pages"
@@ -63,14 +63,14 @@
   @if (inputPages?.touched) {
   <div>
     @if (inputPages?.errors?.['required']) {
-    <p class="input-error">Pages count is required.</p>
+    <p i18n class="input-error">Pages count is required.</p>
     } @if (inputPages?.errors?.['min']) {
-    <p class="input-error">Pages count must be at least 1.</p>
+    <p i18n class="input-error">Pages count must be at least 1.</p>
     }
   </div>
   }
   <br />
-  <label for="synopsis">Synopsis:</label><br />
+  <label i18n for="synopsis">Synopsis:</label><br />
   <textarea
     type="text"
     id="synopsis"
@@ -84,16 +84,19 @@
   @if (inputSynopsis?.touched) {
   <div>
     @if (inputSynopsis?.errors?.['minlength']) {
-    <p class="input-error">Synopsis must be at least 20 characters long.</p>
+    <p i18n class="input-error">
+      Synopsis must be at least 20 characters long.
+    </p>
     }
   </div>
   }
   <br /><br />
 
-  <button class="cancel" type="button" (click)="onCancel($event)">
+  <button i18n class="cancel" type="button" (click)="onCancel($event)">
     Cancel
   </button>
   <button
+    i18n
     type="submit"
     [disabled]="form.invalid"
     [style]="{

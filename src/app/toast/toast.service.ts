@@ -8,7 +8,7 @@ export class ToastService {
 
   add(message: string) {
     this.toasts.push(message);
-    setTimeout(() => this.remove(0), 3000); // Remove after 3 seconds
+    setTimeout(() => this.remove(this.toasts.length - 1), 3000); // Remove after 3 seconds
   }
 
   remove(index: number) {

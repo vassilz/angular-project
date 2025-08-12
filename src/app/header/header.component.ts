@@ -51,4 +51,8 @@ export class HeaderComponent {
     // console.log('Is logged in: ' + this.authenticationService.isLoggedIn);
     return this.authenticationService.isLoggedIn;
   }
+
+  switchLanguage(language: string) {
+    window.location.href = `/${language}/`;
+  }
 }

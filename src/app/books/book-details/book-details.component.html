@@ -8,19 +8,22 @@
       onerror="this.src='no-image-available.png';"
     />
     <h3>{{ book().name }}</h3>
-    by <a [routerLink]="['/authors', book().authorId]">{{ authorName() }}</a>
+    <span i18n>by</span>
+    <a [routerLink]="['/authors', book().authorId]">{{ authorName() }}</a>
     <p></p>
-    <div>Number of pages: {{ book().pagesCount }}</div>
+    <span i18n>Number of pages:</span>
+    {{ book().pagesCount }}
     <br />
-    <div>Published at: {{ book().publishDate | date : "dd.MM.yyyy" }}</div>
+    <span i18n>Published at: </span
+    >{{ book().publishDate | date : "dd.MM.yyyy" }}
     <p></p>
   </div>
   <div class="book-description">
-    <h4>Synopsis</h4>
+    <h4 i18n>Synopsis</h4>
     <p>{{ book().synopsis }}</p>
   </div>
 </div>
-<button class="back-button" routerLink="/books">Back to overview</button>
+<button i18n class="back-button" routerLink="/books">Back to overview</button>
 
 @if (isLoggedIn()) { @if (hasReviewedBook()) {
 <app-edit-review [bookId]="book().id" /> } @else {

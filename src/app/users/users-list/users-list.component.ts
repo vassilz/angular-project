@@ -33,7 +33,9 @@ export class UsersListComponent {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add(`User ${user.username} deleted successfully`);
+          this.toastService.add(
+            $localize`User ${user.username} deleted successfully`
+          );
           this.users.update((currentUsers) =>
             currentUsers.filter((u) => u.id !== user.id)
           );

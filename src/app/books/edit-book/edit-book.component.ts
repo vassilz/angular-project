@@ -63,7 +63,9 @@ export class EditBookComponent {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add(`Book ${this.book.name} updated successfully`);
+          this.toastService.add(
+            $localize`Book ${this.book.name} updated successfully`
+          );
           this.router.navigate(['/books']);
         },
         error: (err) => {

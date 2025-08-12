@@ -1,9 +1,9 @@
 @if (isLoading()) {
 <app-loader />
-} @else { Latest books: <br /><br />
+} @else { <span i18n>Latest books:</span> <br /><br />
 
-@if (recentBooks().length === 0) { No books yet } @else { @for (book of
-recentBooks(); track $index) {
+@if (recentBooks().length === 0) { <span i18n>No books yet</span> } @else { @for
+(book of recentBooks(); track $index) {
 <!-- {{ book | json }} -->
 <app-recent-book-card [book]="book" />
 } } }

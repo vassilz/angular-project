@@ -5,6 +5,14 @@
   "projects": {
     "bookstore": {
       "projectType": "application",
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "bg": "src/locale/messages.bg.xlf"
+          // "en": "src/locale/messages.en.xlf"
+          
+        }
+      },
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
@@ -13,11 +21,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "localize": ["bg"],
             "outputPath": "dist/bookstore",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -27,7 +37,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "./node_modules/flag-icons/css/flag-icons.min.css"
             ],
             "scripts": []
           },
@@ -49,6 +60,7 @@
             },
             "development": {
               "optimization": false,
+              "outputHashing": "media", // needed to fix issue with flag-icons files
               "extractLicenses": false,
               "sourceMap": true,
               "fileReplacements": [
@@ -74,14 +86,23 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
+          "options": {
+            "buildTarget": "bookstore:build",
+            "format": "xlf2",
+            "outputPath": "src/locale",
+            "targetFiles": [
+              "messages.bg.xlf"
+            ]
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
@@ -94,6 +115,14 @@
               "src/styles.css"
             ],
             "scripts": []
+          }
+        },
+        "extract-i18n-merge": {
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
+          "options": {
+            "format": "xlf2",
+            "outputPath": "src/locales",
+            "targetFiles": []
           }
         }
       }

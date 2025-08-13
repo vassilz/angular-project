@@ -9,6 +9,7 @@ import { Author } from '../../types/author';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { isPastValidator } from './is-past.validator';
 import { take } from 'rxjs';
+import { FirebaseStorageService } from '../../firebase-storage.service';
 
 @Component({
   selector: 'app-add-book',
@@ -33,13 +34,16 @@ export class AddBookComponent implements OnInit {
 
   authors = signal<Author[]>([]);
 
+  imageUrl = signal<string>('');
+
   constructor(
     private bookService: FirebaseBookService,
     // private bookService: JettyBookService,
     private authorService: FirebaseAuthorService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private storageService: FirebaseStorageService
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +73,14 @@ export class AddBookComponent implements OnInit {
     const author = +this.form.value.author!; // need the value as a number
 
     this.bookService
-      .createBook(name!, author!, publish_date!, pages!, synopsis)
+      .createBook(
+        name!,
+        author!,
+        publish_date!,
+        pages!,
+        synopsis,
+        this.imageUrl()
+      )
       .pipe(take(1))
       .subscribe({
         next: () => {
@@ -85,5 +96,24 @@ export class AddBookComponent implements OnInit {
   onCancel(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/books']);
+  }
+
+  uploadImage(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.storageService
+        .uploadFile(file)
+        .then((url) => {
+          console.log('Image uploaded successfully:', url);
+
+          this.imageUrl.set(url);
+        })
+        .catch((error) => {
+          console.error('Error uploading image:', error);
+        });
+    }
   }
 }

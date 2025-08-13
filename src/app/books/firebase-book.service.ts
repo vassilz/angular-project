@@ -215,7 +215,8 @@ export class FirebaseBookService implements BookService {
     authorId: number,
     publishDate: Date,
     pagesCount: number,
-    synopsis?: string
+    synopsis?: string,
+    imageUrl?: string
   ): Observable<void> {
     var result = new Subject<void>();
     const observable = from(get(ref(this.db, 'books')));
@@ -243,6 +244,7 @@ export class FirebaseBookService implements BookService {
           publishDate,
           pagesCount,
           synopsis,
+          imageUrl,
         })
       ).subscribe({
         next: () => {
@@ -264,7 +266,8 @@ export class FirebaseBookService implements BookService {
     authorId: number,
     publishDate: string,
     pagesCount: number,
-    synopsis?: string
+    synopsis?: string,
+    imageUrl?: string
   ): Observable<void> {
     return from(
       update(ref(this.db, 'books/' + bookId), {
@@ -273,6 +276,7 @@ export class FirebaseBookService implements BookService {
         publishDate,
         pagesCount,
         synopsis,
+        imageUrl,
       })
     );
   }

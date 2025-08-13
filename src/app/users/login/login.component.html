@@ -9,13 +9,9 @@
     ngModel
     required
   />
-  @if (inputEmail.touched) {
-  <div>
-    @if (inputEmail.errors?.['required']) {
-    <p i18n class="input-error">Email is required.</p>
-    }
-  </div>
-  }
+  @if (inputEmail.touched) { @if (inputEmail.errors?.['required']) {
+  <p i18n class="input-error">Email is required.</p>
+  } }
   <br />
   <label i18n for="password">Password:</label><br />
   <input
@@ -26,13 +22,9 @@
     ngModel
     required
   />
-  @if (inputPassword.touched) {
-  <div>
-    @if (inputPassword.errors?.['required']) {
-    <p i18n class="input-error">Password is required.</p>
-    }
-  </div>
-  }
+  @if (inputPassword.touched) { @if (inputPassword.errors?.['required']) {
+  <p i18n class="input-error">Password is required.</p>
+  } }
   <br /><br />
 
   <!-- <button class="cancel" routerLink="/home">Cancel</button> -->

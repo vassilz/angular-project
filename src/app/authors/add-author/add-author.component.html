@@ -9,13 +9,9 @@
     ngModel
     required
   />
-  @if (inputName?.touched) {
-  <div>
-    @if (inputName?.errors?.['required']) {
-    <p i18n class="input-error">Author name is required.</p>
-    }
-  </div>
-  }
+  @if (inputName?.touched) { @if (inputName?.errors?.['required']) {
+  <p i18n class="input-error">Author name is required.</p>
+  } }
   <br />
   <label i18n for="birth_date">Birth date:</label><br />
   <input
@@ -26,13 +22,9 @@
     ngModel
     required
   />
-  @if (inputBirthDate?.touched) {
-  <div>
-    @if (inputBirthDate?.errors?.['required']) {
-    <p i18n class="input-error">Birth date is required.</p>
-    }
-  </div>
-  }
+  @if (inputBirthDate?.touched) { @if (inputBirthDate?.errors?.['required']) {
+  <p i18n class="input-error">Birth date is required.</p>
+  } }
   <br />
   <label i18n for="country">Country:</label><br />
   <input
@@ -44,13 +36,9 @@
     ngModel
     required
   />
-  @if (inputCountry?.touched) {
-  <div>
-    @if (inputCountry?.errors?.['required']) {
-    <p i18n class="input-error">Country is required.</p>
-    }
-  </div>
-  }
+  @if (inputCountry?.touched) { @if (inputCountry?.errors?.['required']) {
+  <p i18n class="input-error">Country is required.</p>
+  } }
   <br /><br />
 
   <button i18n class="cancel" type="button" (click)="onCancel($event)">

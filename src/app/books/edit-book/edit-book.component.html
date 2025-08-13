@@ -1,4 +1,11 @@
 <form #form="ngForm" (ngSubmit)="editBook(form)">
+  <label i18n for="image">Image:</label><br />
+  <img
+    src="{{ book().imageUrl }}"
+    onerror="this.src='no-image-available.png';"
+  /><br />
+  <input name="image" type="file" (change)="uploadImage(form, $event)" />
+  <br />
   <label i18n for="name">Name:</label><br />
   <input
     type="text"
@@ -8,13 +15,9 @@
     [ngModel]="book().name"
     required
   />
-  @if (inputName?.touched) {
-  <div>
-    @if (inputName?.errors?.['required']) {
-    <p i18n class="input-error">Book name is required.</p>
-    }
-  </div>
-  }
+  @if (inputName?.touched) { @if (inputName?.errors?.['required']) {
+  <p i18n class="input-error">Book name is required.</p>
+  } }
   <br />
   <label i18n for="author">Author:</label><br />
   <input
@@ -25,13 +28,9 @@
     [ngModel]="author()?.name"
     disabled
   />
-  @if (inputAuthor?.touched) {
-  <div>
-    @if (inputAuthor?.errors?.['required']) {
-    <p i18n class="input-error">Author is required.</p>
-    }
-  </div>
-  }
+  @if (inputAuthor?.touched) { @if (inputAuthor?.errors?.['required']) {
+  <p i18n class="input-error">Author is required.</p>
+  } }
   <br />
   <label i18n for="publish_date">Publish date:</label><br />
   <input
@@ -42,13 +41,10 @@
     [ngModel]="book().publishDate"
     required
   />
-  @if (inputPublishDate?.touched) {
-  <div>
-    @if (inputPublishDate?.errors?.['required']) {
-    <p i18n class="input-error">Publish date is required.</p>
-    }
-  </div>
-  }
+  @if (inputPublishDate?.touched) { @if (inputPublishDate?.errors?.['required'])
+  {
+  <p i18n class="input-error">Publish date is required.</p>
+  } }
   <br />
   <label i18n for="pages">Pages:</label><br />
   <input
@@ -60,15 +56,11 @@
     [ngModel]="book().pagesCount"
     required
   />
-  @if (inputPages?.touched) {
-  <div>
-    @if (inputPages?.errors?.['required']) {
-    <p i18n class="input-error">Pages count is required.</p>
-    } @if (inputPages?.errors?.['min']) {
-    <p i18n class="input-error">Pages count must be at least 1.</p>
-    }
-  </div>
-  }
+  @if (inputPages?.touched) { @if (inputPages?.errors?.['required']) {
+  <p i18n class="input-error">Pages count is required.</p>
+  } @if (inputPages?.errors?.['min']) {
+  <p i18n class="input-error">Pages count must be at least 1.</p>
+  } }
   <br />
   <label i18n for="synopsis">Synopsis:</label><br />
   <textarea
@@ -81,15 +73,9 @@
     minlength="20"
     [ngModel]="book().synopsis"
   ></textarea>
-  @if (inputSynopsis?.touched) {
-  <div>
-    @if (inputSynopsis?.errors?.['minlength']) {
-    <p i18n class="input-error">
-      Synopsis must be at least 20 characters long.
-    </p>
-    }
-  </div>
-  }
+  @if (inputSynopsis?.touched) { @if (inputSynopsis?.errors?.['minlength']) {
+  <p i18n class="input-error">Synopsis must be at least 20 characters long.</p>
+  } }
   <br /><br />
 
   <button i18n class="cancel" type="button" (click)="onCancel($event)">

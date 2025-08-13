@@ -31,10 +31,12 @@
   background-color: transparent;
 }
 
-.nav-link {
+:not(.lang-group) > .nav-link {
   background: none;
   border: none;
+}
 
+.nav-link {
   &:hover {
     cursor: pointer;
   }

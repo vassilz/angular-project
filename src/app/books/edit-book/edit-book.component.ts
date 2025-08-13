@@ -9,6 +9,7 @@ import { Author } from '../../types/author';
 import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
+import { FirebaseStorageService } from '../../firebase-storage.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -21,16 +22,20 @@ export class EditBookComponent {
   book = signal<Book>({} as Book);
   author = signal<Author | null>(null);
 
+  imageUrl = signal<string>('');
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private bookService: FirebaseBookService,
     private authorService: FirebaseAuthorService,
     private toastService: ToastService,
-    private errorHandlingService: ErrorHandlingService // private bookService: JettyBookService
+    private errorHandlingService: ErrorHandlingService,
+    private storageService: FirebaseStorageService // private bookService: JettyBookService
   ) {
     const id = this.route.snapshot.params['bookId'];
     this.book.set(this.route.snapshot.data['book'] as Book);
+    this.imageUrl.set(this.book().imageUrl || '');
 
     this.loadAuthor();
   }
@@ -49,6 +54,8 @@ export class EditBookComponent {
       return;
     }
 
+    console.log(form.value);
+
     const { name, publish_date, pages, synopsis } = form.value;
 
     this.bookService
@@ -58,13 +65,14 @@ export class EditBookComponent {
         this.author()!.id,
         publish_date,
         pages,
-        synopsis
+        synopsis,
+        this.imageUrl()
       )
       .pipe(take(1))
       .subscribe({
         next: () => {
           this.toastService.add(
-            $localize`Book ${this.book.name} updated successfully`
+            $localize`Book ${this.book().name} updated successfully`
           );
           this.router.navigate(['/books']);
         },
@@ -77,5 +85,27 @@ export class EditBookComponent {
   onCancel(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/books']);
+  }
+
+  uploadImage(form: NgForm, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.storageService
+        .uploadFile(file)
+        .then((url) => {
+          console.log('Image uploaded successfully:', url);
+
+          this.imageUrl.set(url);
+          this.book().imageUrl = url; // Update the book's imageUrl
+
+          form.form.patchValue({ image: url });
+        })
+        .catch((error) => {
+          console.error('Error uploading image:', error);
+        });
+    }
   }
 }

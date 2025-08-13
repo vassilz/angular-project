@@ -306,9 +306,9 @@
         <source>Birth date:</source>
       </segment>
     </unit>
-    <unit id="5713688101384442809">
+    <unit id="9006171502157522338">
       <segment>
-        <source> Synopsis must be at least 20 characters long. </source>
+        <source>Synopsis must be at least 20 characters long.</source>
       </segment>
     </unit>
     <unit id="5759985852212057755">
@@ -401,9 +401,9 @@
         <source>Author</source>
       </segment>
     </unit>
-    <unit id="7101448287632504006">
+    <unit id="525871656034789056">
       <segment>
-        <source> Password must be at least 6 characters long. </source>
+        <source>Password must be at least 6 characters long.</source>
       </segment>
     </unit>
     <unit id="7136563350929128087">
@@ -508,7 +508,7 @@
     </unit>
     <unit id="8566422374066756277">
       <segment>
-        <source>Book <ph id="0" equiv="PH" disp="this.book.name"/> updated successfully</source>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> updated successfully</source>
       </segment>
     </unit>
     <unit id="8602814243662345124">
@@ -544,6 +544,11 @@
     <unit id="9133668335754347944">
       <segment>
         <source>Your review:</source>
+      </segment>
+    </unit>
+    <unit id="3711889941704624217">
+      <segment>
+        <source>Image:</source>
       </segment>
     </unit>
   </file>

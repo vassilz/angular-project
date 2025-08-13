@@ -174,10 +174,10 @@
         <target>Резюме:</target>
       </segment>
     </unit>
-    <unit id="5713688101384442809">
+    <unit id="9006171502157522338">
       <segment state="initial">
-        <source> Synopsis must be at least 20 characters long. </source>
-        <target> Резюмето трябва да бъде поне 20 знака. </target>
+        <source>Synopsis must be at least 20 characters long.</source>
+        <target>Резюмето трябва да бъде поне 20 знака.</target>
       </segment>
     </unit>
     <unit id="678857165420560136">
@@ -350,7 +350,7 @@
     </unit>
     <unit id="8566422374066756277">
       <segment state="initial">
-        <source>Book <ph id="0" equiv="PH" disp="this.book.name"/> updated successfully</source>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> updated successfully</source>
         <target>Книгата <ph id="0" equiv="PH" disp="this.book.name"/> беше актуализирана успешно</target>
       </segment>
     </unit>
@@ -594,10 +594,10 @@
         <target>Потребителското име е задължително.</target>
       </segment>
     </unit>
-    <unit id="7101448287632504006">
+    <unit id="525871656034789056">
       <segment state="initial">
-        <source> Password must be at least 6 characters long. </source>
-        <target> Паролата трябва да е поне 6 символа. </target>
+        <source>Password must be at least 6 characters long.</source>
+        <target>Паролата трябва да е поне 6 символа.</target>
       </segment>
     </unit>
     <unit id="7864193007659849769">
@@ -652,6 +652,12 @@
       <segment state="initial">
         <source>User <ph id="0" equiv="PH" disp="user.username"/> deleted successfully</source>
         <target>Потребителят <ph id="0" equiv="PH" disp="user.username"/> е изтрит успешно</target>
+      </segment>
+    </unit>
+    <unit id="3711889941704624217">
+      <segment state="initial">
+        <source>Image:</source>
+        <target>Изображение:</target>
       </segment>
     </unit>
   </file>

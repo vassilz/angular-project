@@ -17,6 +17,10 @@ A potential future enhancement would be to support also a Jetty Java backend.
 Login with user 'admin@gmail.com' and password 'admin1' for administrative access.
 With that you will be able to see user data, add authors, add/edit/delete books.
 
+## Third party components
+
+The application makes use of several Material icons, see `https://fonts.google.com/icons`
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

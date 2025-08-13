@@ -660,5 +660,17 @@
         <target>Изображение:</target>
       </segment>
     </unit>
+    <unit id="4814285799071780083">
+      <segment state="initial">
+        <source>Remove</source>
+        <target>Премахни</target>
+      </segment>
+    </unit>
+    <unit id="8290538347976681014">
+      <segment state="initial">
+        <source>The request has timed out. Check your internet connection and try again.</source>
+        <target>Заявката изтече. Проверете интернет връзката си и опитайте отново.</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

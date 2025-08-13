@@ -4,7 +4,11 @@
     src="{{ book().imageUrl }}"
     onerror="this.src='no-image-available.png';"
   /><br />
+  @if (book().imageUrl) {
+  <button i18n (click)="removeImage()" type="button">Remove</button>
+  } @else {
   <input name="image" type="file" (change)="uploadImage(form, $event)" />
+  }
   <br />
   <label i18n for="name">Name:</label><br />
   <input

@@ -1,9 +1,9 @@
 <div class="header">
   @if (isLoggedIn()) {
   <button class="nav-link" routerLink="/">
-    <img class="menu-icon" src="menu-icon.png" />
+    <img class="home-icon" src="home.png" />
   </button>
-  <h3 i18n class="title">Online Bookstore</h3>
+  <h3 i18n class="title nav-link" routerLink="/">Online Bookstore</h3>
   <div class="lang-group button-group">
     <span class="nav-link fi fi-bg" (click)="switchLanguage('bg')"> </span>
     <span class="nav-link fi fi-gb" (click)="switchLanguage('en')"> </span>

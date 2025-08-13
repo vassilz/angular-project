@@ -3,6 +3,7 @@
   flex-direction: row;
   /* float: right; */
   margin: 10px;
+  align-items: center;
 }
 
 .title {
@@ -25,7 +26,7 @@
   background-color: lightblue;
 }
 
-.menu-icon {
+.home-icon {
   width: 24px;
   height: 24px;
   background-color: transparent;

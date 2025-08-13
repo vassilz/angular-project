@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseBookService } from '../firebase-book.service';
@@ -38,6 +38,10 @@ export class EditBookComponent {
     this.imageUrl.set(this.book().imageUrl || '');
 
     this.loadAuthor();
+
+    effect(() => {
+      this.book().imageUrl = this.imageUrl();
+    });
   }
 
   loadAuthor() {
@@ -99,7 +103,6 @@ export class EditBookComponent {
           console.log('Image uploaded successfully:', url);
 
           this.imageUrl.set(url);
-          this.book().imageUrl = url; // Update the book's imageUrl
 
           form.form.patchValue({ image: url });
         })
@@ -107,5 +110,9 @@ export class EditBookComponent {
           console.error('Error uploading image:', error);
         });
     }
+  }
+
+  removeImage() {
+    this.imageUrl.set('');
   }
 }

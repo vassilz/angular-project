@@ -1,3 +1,11 @@
+@if (this.errorMessage()) {
 <p class="notification error-message" (click)="goBack()">
   {{ errorMessage() }}
 </p>
+} @if (this.timeoutMessage()) {
+<p i18n>
+  The request has timed out. Check your internet connection and try again.
+</p>
+<button i18n routerLink="/home">Back to home</button>
+
+}

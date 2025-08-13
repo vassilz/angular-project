@@ -11,7 +11,7 @@ import { Book } from '../../types/book';
 import { RouterLink } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { AuthenticationService } from '../../authentication.service';
-import { combineLatest, map, Subject, take } from 'rxjs';
+import { combineLatest, map, Subject, take, TimeoutError } from 'rxjs';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { FormsModule } from '@angular/forms';
 import { FirebaseReviewService } from '../../reviews/firebase-review.service';
@@ -24,6 +24,7 @@ import { FirebaseUserService } from '../../users/firebase-user.service';
 import { JettyBookService } from '../jetty-book.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 import { KeyValuePipe } from '@angular/common';
+import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
   selector: 'app-books-list',
@@ -120,7 +121,8 @@ export class BooksListComponent implements OnInit {
     private utilsService: UtilsService,
     private changeDetectorRef: ChangeDetectorRef,
     private rerenderService: RerenderService,
-    private userService: FirebaseUserService // private userService: JettyUserService
+    private userService: FirebaseUserService,
+    private errorHandlingService: ErrorHandlingService // private userService: JettyUserService
   ) {
     this.sortByOptions.set('name', $localize`Name`);
     this.sortByOptions.set('author', $localize`Author`);
@@ -178,6 +180,12 @@ export class BooksListComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error loading user settings:', err);
+              if (err instanceof TimeoutError) {
+                this.errorHandlingService.handleTimeout(err);
+              }
+              // else {
+              //   this.errorHandlingService.handleError(err);
+              // }
             },
           });
 
@@ -374,7 +382,11 @@ export class BooksListComponent implements OnInit {
       return;
     }
     this.pageStart = Math.max(0, this.pageStart - this.pageSize);
-    this.loadBooks();
+    if (this.searchActive) {
+      this.searchBooks();
+    } else {
+      this.loadBooks();
+    }
   }
 
   nextPage() {
@@ -382,6 +394,10 @@ export class BooksListComponent implements OnInit {
       return;
     }
     this.pageStart += this.pageSize;
-    this.loadBooks();
+    if (this.searchActive) {
+      this.searchBooks();
+    } else {
+      this.loadBooks();
+    }
   }
 }

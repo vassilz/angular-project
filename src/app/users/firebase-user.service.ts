@@ -9,7 +9,15 @@ import {
   set,
   update,
 } from '@angular/fire/database';
-import { forkJoin, from, Observable, Subject, throwError } from 'rxjs';
+import {
+  forkJoin,
+  from,
+  Observable,
+  Subject,
+  throwError,
+  timeout,
+  TimeoutError,
+} from 'rxjs';
 import { User } from '../types/user';
 import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
@@ -101,7 +109,7 @@ export class FirebaseUserService implements UserService {
     const observable = from(get(ref(this.db, 'users')));
 
     var foundUser = new Subject<User | null>();
-    observable.subscribe({
+    observable.pipe(timeout(10000)).subscribe({
       next: (data) => {
         const users: User[] = data.val();
 
@@ -117,7 +125,11 @@ export class FirebaseUserService implements UserService {
       },
       error: (err) => {
         console.error('Error loading user by ID:', err);
-        foundUser.next(null);
+        if (err instanceof TimeoutError) {
+          foundUser.error(err);
+        } else {
+          foundUser.next(null);
+        }
       },
     });
 

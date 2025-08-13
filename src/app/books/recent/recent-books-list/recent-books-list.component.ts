@@ -5,6 +5,8 @@ import { FirebaseBookService } from '../../firebase-book.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { JettyBookService } from '../../jetty-book.service';
 import { take } from 'rxjs';
+import moment from 'moment';
+import 'moment/locale/bg';
 
 @Component({
   selector: 'app-recent-books-list',
@@ -19,6 +21,8 @@ export class RecentBooksListComponent {
   isLoading = signal<boolean>(true);
 
   constructor(private bookService: FirebaseBookService) {
+    moment.locale('bg'); // Set locale for moment.js
+
     this.loadRecentBooks();
   }
 

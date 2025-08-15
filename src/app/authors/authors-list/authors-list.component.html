@@ -1,12 +1,29 @@
 @if (isLoading()) {
 <app-loader />
-} @else { @if (isLoggedIn && isAdmin) {
+} @else { @if (isLoggedIn) {
+<div class="search-box">
+  <input type="text" [(ngModel)]="searchTerm" (keyup)="keyUp($event)" />
+  @if (searchActive) {
+  <button (click)="resetSearch()">
+    <img class="search-icon" src="clear-search-icon.png" />
+  </button>
+  }
+  <button (click)="searchAuthors()">
+    <img class="search-icon" src="search-icon.png" />
+  </button>
+</div>
+<br /><br />
+@if (isAdmin) {
 <button i18n routerLink="/authors/add">Add author</button> <br />
-} @if (authors().length === 0) { <span i18n>No authors yet</span> } @else {
+} } @if (authors().length === 0) { <span i18n>No authors yet</span> } @else {
 <div class="authors-list">
   @for (author of authors(); track $index) {
   <div>
-    {{ author.name }}, {{ author.country }}
+    <div
+      class="title"
+      [innerHTML]="author.name | highlightSearch : searchTerm"
+    ></div>
+    , {{ author.country }}
     <button i18n class="details-button" [routerLink]="'' + author.id">
       Details
     </button>

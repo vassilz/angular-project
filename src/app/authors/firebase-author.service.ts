@@ -79,4 +79,46 @@ export class FirebaseAuthorService implements AuthorService {
 
     return result.asObservable();
   }
+
+  searchAuthors(term: string): Observable<Author[]> {
+    var result = new Subject<Author[]>();
+    const observable = from(get(ref(this.db, 'authors')));
+
+    const subscription = observable.subscribe((data) => {
+      var authors: Author[] = data.val() || [];
+      authors.forEach((author, index) => {
+        author.id = index;
+      });
+      const filteredAuthors: Author[] = authors.filter(
+        (author) =>
+          !!author && author.name.toLowerCase().includes(term.toLowerCase())
+      );
+
+      const foundAuthors: Author[] = filteredAuthors;
+
+      result.next(foundAuthors);
+
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
+  }
+
+  getSearchAuthorsCount(term: string): Observable<number> {
+    var result = new Subject<number>();
+    const observable = from(get(ref(this.db, 'authors')));
+
+    const subscription = observable.subscribe((data) => {
+      var authors: Author[] = data.val() || [];
+      const filteredAuthors: Author[] = authors.filter(
+        (author) =>
+          !!author && author.name.toLowerCase().includes(term.toLowerCase())
+      );
+
+      result.next(filteredAuthors.length);
+      subscription.unsubscribe();
+    });
+
+    return result.asObservable();
+  }
 }

@@ -11,4 +11,8 @@ export interface AuthorService {
     birthDate: Date,
     country: string
   ): Observable<void>;
+
+  searchAuthors(term: string): Observable<Author[]>;
+
+  getSearchAuthorsCount(term: string): Observable<number>;
 }

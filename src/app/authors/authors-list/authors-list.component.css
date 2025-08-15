@@ -1,5 +1,28 @@
+.search-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.search-box {
+  justify-self: center;
+}
+
 .authors-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.title-section {
+  /* min-width: 400px; */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  white-space: pre;
+}
+
+:host ::ng-deep .highlight {
+  background-color: orange;
+  font-weight: bold;
 }

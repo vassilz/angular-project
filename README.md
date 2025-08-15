@@ -21,6 +21,18 @@ With that you will be able to see user data, add authors, add/edit/delete books.
 
 The application makes use of several Material icons, see `https://fonts.google.com/icons`
 
+## Localization
+
+This application has been localized in Bulgarian, and English.
+
+By default it runs with Bulgarian localization, when you start it with `ng serve`.
+
+In order to run it with English localization, or to be able to change the language dynamically at runtime, you first need to build the application with `npm build --localize`.
+
+This will generate localized bundles in the dist/bookstore subdirectory. You then need to deploy and run those bundles in a web server, such as Apache.
+
+You may also want to configure redirects in the web server, to the index.html by default, to enable Angular routing to work properly. See the sample config for Apache in `src/deployment/apache.config`
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

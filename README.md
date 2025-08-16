@@ -61,4 +61,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Other acknowledgements
 
-Some parts and code snippets have been inspired by the workshop of Tsveti Stoyanov given in the SoftUni Angular course October 24.
+Some parts and code snippets have been inspired by the workshop of Tsveti Stoyanov given in the SoftUni Angular course October 2024.

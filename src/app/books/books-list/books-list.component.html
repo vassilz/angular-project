@@ -16,19 +16,26 @@
 <br /><br />
 @if (isAdmin) {
 <button i18n routerLink="/books/add">Add book</button>
-<br />
+<br /><br />
 } }
 <div class="books">
   <div class="books-list">
-    @if (isLoggedIn && books().length > 0) { <span i18n>Sort by:</span>
-    <select [(ngModel)]="sortBy" (change)="sortBooks()">
-      @for (sortByOption of sortByOptions | keyvalue; track $index) {
-      <option [value]="sortByOption.key">{{ sortByOption.value }}</option>
-      }
-    </select>
-    <span i18n>Descending:</span>
-    <input type="checkbox" [(ngModel)]="isDescending" (change)="sortBooks()" />
-    <br /><br />
+    @if (isLoggedIn && books().length > 0) {
+    <div class="sorting-controls">
+      <span i18n>Sort by:</span>
+      <select [(ngModel)]="sortBy" (change)="sortBooks()">
+        @for (sortByOption of sortByOptions | keyvalue; track $index) {
+        <option [value]="sortByOption.key">{{ sortByOption.value }}</option>
+        }
+      </select>
+      <span class="descending-label" i18n>Descending:</span>
+      <input
+        type="checkbox"
+        [(ngModel)]="isDescending"
+        (change)="sortBooks()"
+      />
+    </div>
+    <br />
     } @if (books().length === 0) { @if (searchActive) {
     <span i18n>No books found for</span> "{{ searchTerm }}" } @else {
     <span i18n>No books yet</span> }} @else { @for (book of books(); track

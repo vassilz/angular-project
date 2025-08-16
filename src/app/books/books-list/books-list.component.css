@@ -31,3 +31,14 @@ img.disabled {
   /* filter: grayscale(100%); */
   cursor: default;
 }
+
+.sorting-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.descending-label {
+  margin-left: 5px;
+}

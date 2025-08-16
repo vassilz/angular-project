@@ -1,4 +1,5 @@
-{{ book().name }} <span i18n>by</span> {{ authorName() }},
+<a [routerLink]="['/books', book().id]">{{ book().name }}</a>
+<span i18n> by</span> {{ authorName() }},
 <span i18n>published</span>
 {{ book().publishDate | elapsedTime }}
 <br />

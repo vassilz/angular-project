@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 This is an Angular application representing the frontend of an Online Bookstore web application.
 
-The backend is implemented using Firebase Realtime database for storing and providing data, and Firebase Authentication for managing user logins and sessions.
+The backend is implemented using Firebase Realtime database and Firebase Storage for storing and providing data, as well as Firebase Authentication, for managing user logins and sessions.
 
 The Angular application is configured to work with the Firebase backend via the proper configuration in the environment\*.ts files.
 
@@ -19,7 +19,9 @@ With that you will be able to see user data, add authors, add/edit/delete books.
 
 ## Third party components
 
-The application makes use of several Material icons, see `https://fonts.google.com/icons`
+The application makes use of several Material icons, see `https://fonts.google.com/icons`.
+
+It also uses the Bulgarian and UK flag icons from the flag icons npm package, see `https://github.com/lipis/flag-icons`.
 
 ## Localization
 
@@ -56,3 +58,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Other acknowledgements
+
+Some parts and code snippets have been inspired by the workshop of Tsveti Stoyanov given in the SoftUni Angular course October 24.

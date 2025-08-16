@@ -18,12 +18,14 @@
 } } @if (authors().length === 0) { <span i18n>No authors yet</span> } @else {
 <div class="authors-list">
   @for (author of authors(); track $index) {
-  <div>
-    <div
-      class="title"
-      [innerHTML]="author.name | highlightSearch : searchTerm"
-    ></div>
-    , {{ author.country }}
+  <div class="author">
+    <div class="details">
+      <span
+        class="name"
+        [innerHTML]="author.name | highlightSearch : searchTerm"
+      ></span>
+      <span>, {{ author.country }}</span>
+    </div>
     <button i18n class="details-button" [routerLink]="'' + author.id">
       Details
     </button>

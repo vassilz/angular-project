@@ -3,11 +3,12 @@ import { Book } from '../../../types/book';
 import { ElapsedTimePipe } from '../../../shared/pipes/elapsed-time.pipe';
 import { FirebaseAuthorService } from '../../../authors/firebase-author.service';
 import { take } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recent-book-card',
   standalone: true,
-  imports: [ElapsedTimePipe],
+  imports: [ElapsedTimePipe, RouterLink],
   templateUrl: './recent-book-card.component.html',
   styleUrl: './recent-book-card.component.css',
 })

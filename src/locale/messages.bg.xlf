@@ -672,5 +672,11 @@
         <target> Заявката изтече. Проверете интернет връзката си и опитайте отново. </target>
       </segment>
     </unit>
+    <unit id="3381844017928690049">
+      <segment state="initial">
+        <source> by</source>
+        <target> от</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

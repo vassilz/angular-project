@@ -9,10 +9,10 @@ import moment from 'moment';
 import 'moment/locale/bg';
 
 @Component({
-    selector: 'app-recent-books-list',
-    imports: [RecentBookCardComponent, LoaderComponent],
-    templateUrl: './recent-books-list.component.html',
-    styleUrl: './recent-books-list.component.css'
+  selector: 'app-recent-books-list',
+  imports: [RecentBookCardComponent, LoaderComponent],
+  templateUrl: './recent-books-list.component.html',
+  styleUrl: './recent-books-list.component.css',
 })
 export class RecentBooksListComponent {
   recentBooks = signal<Book[]>([]);

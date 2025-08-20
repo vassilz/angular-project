@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { AuthenticationService } from './authentication.service';
-import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './footer/footer.component';
 import { ToastService } from './toast/toast.service';
@@ -10,6 +9,7 @@ import { ToastService } from './toast/toast.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
+import { initializeApp } from '@angular/fire/app';
 
 // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
@@ -20,27 +20,27 @@ import { NavigationMenuComponent } from './navigation-menu/navigation-menu.compo
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        CommonModule,
-        RouterOutlet,
-        HeaderComponent,
-        FooterComponent,
-        NavigationMenuComponent,
-    ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css',
-    animations: [
-        trigger('fade', [
-            transition('void => *', [
-                style({ opacity: 0 }),
-                animate('500ms ease-in-out', style({ opacity: 1 })),
-            ]),
-            transition('* => void', [
-                animate('500ms ease-in-out', style({ opacity: 0 })),
-            ]),
-        ]),
-    ]
+  selector: 'app-root',
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    FooterComponent,
+    NavigationMenuComponent,
+  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+  animations: [
+    trigger('fade', [
+      transition('void => *', [
+        style({ opacity: 0 }),
+        animate('500ms ease-in-out', style({ opacity: 1 })),
+      ]),
+      transition('* => void', [
+        animate('500ms ease-in-out', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class AppComponent implements OnInit {
   constructor(

@@ -1,19 +1,32 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Auth, user } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import {
+  Auth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-  UserCredential,
-  onAuthStateChanged,
-  signInWithPopup,
-  GoogleAuthProvider,
   deleteUser,
   getAuth,
-} from 'firebase/auth';
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  User,
+  user,
+  UserCredential,
+} from '@angular/fire/auth';
+import { Router } from '@angular/router';
+// import {
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   signOut,
+//   User,
+//   UserCredential,
+//   onAuthStateChanged,
+//   signInWithPopup,
+//   GoogleAuthProvider,
+//   deleteUser,
+//   getAuth,
+// } from 'firebase/auth';
 import { BehaviorSubject, from, Observable, of, tap } from 'rxjs';
 
 @Injectable({

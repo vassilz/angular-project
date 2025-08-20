@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import {
   Database,
   DataSnapshot,
@@ -20,7 +20,7 @@ import { FirebaseUserService } from '../users/firebase-user.service';
   providedIn: 'root',
 })
 export class FirebaseBookService implements BookService {
-  constructor(private db: Database) {}
+  constructor(private db: Database, private injector: Injector) {}
 
   getBooks(
     start: number = 0,
@@ -99,33 +99,35 @@ export class FirebaseBookService implements BookService {
   }
 
   getRecentBooks(count: number): Observable<Book[]> {
-    var recentBooks = new Subject<Book[]>();
-    const observable = from(get(ref(this.db, 'books')));
+    return runInInjectionContext(this.injector, () => {
+      var recentBooks = new Subject<Book[]>();
+      const observable = from(get(ref(this.db, 'books')));
 
-    const subscription = observable.subscribe((data) => {
-      var books: Book[] = [];
+      const subscription = observable.subscribe((data) => {
+        var books: Book[] = [];
 
-      for (const [key, value] of Object.entries(data.val() ?? {})) {
-        const id = +key;
-        const book: Book = value as Book;
-        book.id = id;
-        books.push(book);
-      }
+        for (const [key, value] of Object.entries(data.val() ?? {})) {
+          const id = +key;
+          const book: Book = value as Book;
+          book.id = id;
+          books.push(book);
+        }
 
-      // var books: Book[] = data.val() || [];
-      // books.forEach((book, index) => {
-      //   book.id = index;
-      // });
-      // books = books.filter((book) => !!book);
-      books.sort((bookA, bookB) =>
-        this.compareDates(bookB.publishDate, bookA.publishDate)
-      );
-      const mostRecentBooks: Book[] = books.slice(0, count);
-      recentBooks.next(mostRecentBooks);
-      subscription.unsubscribe();
+        // var books: Book[] = data.val() || [];
+        // books.forEach((book, index) => {
+        //   book.id = index;
+        // });
+        // books = books.filter((book) => !!book);
+        books.sort((bookA, bookB) =>
+          this.compareDates(bookB.publishDate, bookA.publishDate)
+        );
+        const mostRecentBooks: Book[] = books.slice(0, count);
+        recentBooks.next(mostRecentBooks);
+        subscription.unsubscribe();
+      });
+
+      return recentBooks.asObservable();
     });
-
-    return recentBooks.asObservable();
   }
 
   compareDates(dateA: string, dateB: string) {

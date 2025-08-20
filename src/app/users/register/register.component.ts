@@ -9,16 +9,17 @@ import { Router, RouterLink } from '@angular/router';
 import { matchPasswordsValidator } from './match-passwords.validator';
 import { FirebaseUserService } from '../firebase-user.service';
 import { AuthenticationService } from '../../authentication.service';
-import { User } from 'firebase/auth';
+// import { User } from 'firebase/auth';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyUserService } from '../jetty-user.service';
 import { take } from 'rxjs';
+import { User } from '@angular/fire/auth';
 
 @Component({
-    selector: 'app-register',
-    imports: [ReactiveFormsModule, RouterLink],
-    templateUrl: './register.component.html',
-    styleUrl: './register.component.css'
+  selector: 'app-register',
+  imports: [ReactiveFormsModule, RouterLink],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent {
   form = new FormGroup({

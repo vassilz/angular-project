@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
-import { getApp } from 'firebase/app';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getApp } from '@angular/fire/app';
+// import { getApp } from 'firebase/app';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root',

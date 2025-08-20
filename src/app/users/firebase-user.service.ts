@@ -19,7 +19,7 @@ import {
   TimeoutError,
 } from 'rxjs';
 import { User } from '../types/user';
-import { User as AuthenticatedUser } from '@firebase/auth';
+// import { User as AuthenticatedUser } from '@firebase/auth';
 import { Book } from '../types/book';
 import { FirebaseBookService } from '../books/firebase-book.service';
 import { Settings } from '../types/settings';

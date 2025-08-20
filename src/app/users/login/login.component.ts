@@ -3,25 +3,25 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../authentication.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
-import { User } from 'firebase/auth';
+// import { User } from 'firebase/auth';
 import { FirebaseUserService } from '../firebase-user.service';
 import { JettyUserService } from '../jetty-user.service';
 import { forkJoin, take } from 'rxjs';
+import { User } from '@angular/fire/auth';
 
 @Component({
-    selector: 'app-login',
-    imports: [FormsModule],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  imports: [FormsModule],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
-    private userService: FirebaseUserService
-  ) // private userService: JettyUserService
-  {}
+    private userService: FirebaseUserService // private userService: JettyUserService
+  ) {}
 
   onSubmit(form: NgForm, submitter: string) {
     console.log('Form submitted with submitter:', submitter);

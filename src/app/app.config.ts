@@ -4,8 +4,7 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
-import { provideDatabase } from '@angular/fire/database';
-import { getDatabase } from 'firebase/database';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { appInterceptor } from './app.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';

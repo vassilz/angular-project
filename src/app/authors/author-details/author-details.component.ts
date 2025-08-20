@@ -8,11 +8,10 @@ import { LoaderComponent } from '../../shared/loader/loader.component';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-author-details',
-  standalone: true,
-  imports: [DatePipe, RouterLink, LoaderComponent],
-  templateUrl: './author-details.component.html',
-  styleUrl: './author-details.component.css',
+    selector: 'app-author-details',
+    imports: [DatePipe, RouterLink, LoaderComponent],
+    templateUrl: './author-details.component.html',
+    styleUrl: './author-details.component.css'
 })
 export class AuthorDetailsComponent implements OnInit {
   authorId: number;

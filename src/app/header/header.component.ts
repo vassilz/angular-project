@@ -5,11 +5,10 @@ import { ErrorMessageService } from '../errors/error-message/error-message.servi
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+    selector: 'app-header',
+    imports: [RouterLink],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.css'
 })
 export class HeaderComponent {
   uuid: string | null = null;

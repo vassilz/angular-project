@@ -27,18 +27,17 @@ import { KeyValuePipe } from '@angular/common';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 
 @Component({
-  selector: 'app-books-list',
-  standalone: true,
-  imports: [
-    RouterLink,
-    BookCardComponent,
-    LoaderComponent,
-    FormsModule,
-    RecentBooksListComponent,
-    KeyValuePipe,
-  ],
-  templateUrl: './books-list.component.html',
-  styleUrl: './books-list.component.css',
+    selector: 'app-books-list',
+    imports: [
+        RouterLink,
+        BookCardComponent,
+        LoaderComponent,
+        FormsModule,
+        RecentBooksListComponent,
+        KeyValuePipe,
+    ],
+    templateUrl: './books-list.component.html',
+    styleUrl: './books-list.component.css'
 })
 export class BooksListComponent implements OnInit {
   isLoading = signal<boolean>(true);

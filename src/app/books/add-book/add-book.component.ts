@@ -12,11 +12,10 @@ import { take } from 'rxjs';
 import { FirebaseStorageService } from '../../firebase-storage.service';
 
 @Component({
-  selector: 'app-add-book',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './add-book.component.html',
-  styleUrl: './add-book.component.css',
+    selector: 'app-add-book',
+    imports: [ReactiveFormsModule],
+    templateUrl: './add-book.component.html',
+    styleUrl: './add-book.component.css'
 })
 export class AddBookComponent implements OnInit {
   form = new FormGroup({

@@ -16,11 +16,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-reviews-list',
-  standalone: true,
-  imports: [ReviewCardComponent, LoaderComponent],
-  templateUrl: './reviews-list.component.html',
-  styleUrl: './reviews-list.component.css',
+    selector: 'app-reviews-list',
+    imports: [ReviewCardComponent, LoaderComponent],
+    templateUrl: './reviews-list.component.html',
+    styleUrl: './reviews-list.component.css'
 })
 export class ReviewsListComponent implements OnInit {
   isLoading = signal<boolean>(true);

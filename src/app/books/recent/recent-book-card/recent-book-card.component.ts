@@ -6,11 +6,10 @@ import { take } from 'rxjs';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-recent-book-card',
-  standalone: true,
-  imports: [ElapsedTimePipe, RouterLink],
-  templateUrl: './recent-book-card.component.html',
-  styleUrl: './recent-book-card.component.css',
+    selector: 'app-recent-book-card',
+    imports: [ElapsedTimePipe, RouterLink],
+    templateUrl: './recent-book-card.component.html',
+    styleUrl: './recent-book-card.component.css'
 })
 export class RecentBookCardComponent implements OnInit {
   book = input.required<Book>();

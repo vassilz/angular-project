@@ -6,11 +6,10 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-users-list',
-  standalone: true,
-  imports: [],
-  templateUrl: './users-list.component.html',
-  styleUrl: './users-list.component.css',
+    selector: 'app-users-list',
+    imports: [],
+    templateUrl: './users-list.component.html',
+    styleUrl: './users-list.component.css'
 })
 export class UsersListComponent {
   protected readonly users = signal<User[]>([]);

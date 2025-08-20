@@ -20,28 +20,27 @@ import { NavigationMenuComponent } from './navigation-menu/navigation-menu.compo
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HeaderComponent,
-    FooterComponent,
-    NavigationMenuComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  animations: [
-    trigger('fade', [
-      transition('void => *', [
-        style({ opacity: 0 }),
-        animate('500ms ease-in-out', style({ opacity: 1 })),
-      ]),
-      transition('* => void', [
-        animate('500ms ease-in-out', style({ opacity: 0 })),
-      ]),
-    ]),
-  ],
+    selector: 'app-root',
+    imports: [
+        CommonModule,
+        RouterOutlet,
+        HeaderComponent,
+        FooterComponent,
+        NavigationMenuComponent,
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    animations: [
+        trigger('fade', [
+            transition('void => *', [
+                style({ opacity: 0 }),
+                animate('500ms ease-in-out', style({ opacity: 1 })),
+            ]),
+            transition('* => void', [
+                animate('500ms ease-in-out', style({ opacity: 0 })),
+            ]),
+        ]),
+    ]
 })
 export class AppComponent implements OnInit {
   constructor(

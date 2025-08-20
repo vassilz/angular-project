@@ -15,11 +15,10 @@ import { JettyUserService } from '../jetty-user.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
+    selector: 'app-register',
+    imports: [ReactiveFormsModule, RouterLink],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   form = new FormGroup({

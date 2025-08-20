@@ -21,18 +21,17 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-book-details',
-  standalone: true,
-  imports: [
-    RouterLink,
-    AddReviewComponent,
-    ReviewsListComponent,
-    EditReviewComponent,
-    DatePipe,
-    LoaderComponent,
-  ],
-  templateUrl: './book-details.component.html',
-  styleUrl: './book-details.component.css',
+    selector: 'app-book-details',
+    imports: [
+        RouterLink,
+        AddReviewComponent,
+        ReviewsListComponent,
+        EditReviewComponent,
+        DatePipe,
+        LoaderComponent,
+    ],
+    templateUrl: './book-details.component.html',
+    styleUrl: './book-details.component.css'
 })
 export class BookDetailsComponent implements OnInit {
   book = signal<Book>({} as Book);

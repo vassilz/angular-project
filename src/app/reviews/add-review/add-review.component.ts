@@ -7,11 +7,10 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-add-review',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './add-review.component.html',
-  styleUrl: './add-review.component.css',
+    selector: 'app-add-review',
+    imports: [FormsModule],
+    templateUrl: './add-review.component.html',
+    styleUrl: './add-review.component.css'
 })
 export class AddReviewComponent {
   bookId = input.required<number>();

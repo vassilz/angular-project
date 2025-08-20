@@ -6,11 +6,10 @@ import { TimeoutError } from 'rxjs';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-error-message',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: './error-message.component.html',
-  styleUrl: './error-message.component.css',
+    selector: 'app-error-message',
+    imports: [RouterLink],
+    templateUrl: './error-message.component.html',
+    styleUrl: './error-message.component.css'
 })
 export class ErrorMessageComponent {
   errorMessage = signal('');

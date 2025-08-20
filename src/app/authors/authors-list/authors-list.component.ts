@@ -9,11 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { HighlightSearchPipe } from '../../highlight-search.pipe';
 
 @Component({
-  selector: 'app-authors-list',
-  standalone: true,
-  imports: [LoaderComponent, RouterLink, FormsModule, HighlightSearchPipe],
-  templateUrl: './authors-list.component.html',
-  styleUrl: './authors-list.component.css',
+    selector: 'app-authors-list',
+    imports: [LoaderComponent, RouterLink, FormsModule, HighlightSearchPipe],
+    templateUrl: './authors-list.component.html',
+    styleUrl: './authors-list.component.css'
 })
 export class AuthorsListComponent implements OnInit {
   isLoading = signal<boolean>(true);

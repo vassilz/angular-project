@@ -25,11 +25,10 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-book-card',
-  standalone: true,
-  imports: [RouterLink, AverageRatingPipe, HighlightSearchPipe],
-  templateUrl: './book-card.component.html',
-  styleUrl: './book-card.component.css',
+    selector: 'app-book-card',
+    imports: [RouterLink, AverageRatingPipe, HighlightSearchPipe],
+    templateUrl: './book-card.component.html',
+    styleUrl: './book-card.component.css'
 })
 export class BookCardComponent implements OnInit {
   book = input.required<Book>();

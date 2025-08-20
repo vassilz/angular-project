@@ -10,11 +10,10 @@ import { AuthenticationService } from '../../authentication.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 
 @Component({
-  selector: 'app-review-card',
-  standalone: true,
-  imports: [RouterLink, ElapsedTimePipe],
-  templateUrl: './review-card.component.html',
-  styleUrl: './review-card.component.css',
+    selector: 'app-review-card',
+    imports: [RouterLink, ElapsedTimePipe],
+    templateUrl: './review-card.component.html',
+    styleUrl: './review-card.component.css'
 })
 export class ReviewCardComponent implements OnInit {
   bookId = input.required<number>();

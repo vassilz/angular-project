@@ -12,11 +12,10 @@ import { take } from 'rxjs';
 import { FirebaseStorageService } from '../../firebase-storage.service';
 
 @Component({
-  selector: 'app-edit-book',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './edit-book.component.html',
-  styleUrl: './edit-book.component.css',
+    selector: 'app-edit-book',
+    imports: [FormsModule],
+    templateUrl: './edit-book.component.html',
+    styleUrl: './edit-book.component.css'
 })
 export class EditBookComponent {
   book = signal<Book>({} as Book);

@@ -14,11 +14,10 @@ import { RerenderService } from '../../rerender.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-edit-review',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './edit-review.component.html',
-  styleUrl: './edit-review.component.css',
+    selector: 'app-edit-review',
+    imports: [FormsModule],
+    templateUrl: './edit-review.component.html',
+    styleUrl: './edit-review.component.css'
 })
 export class EditReviewComponent implements OnInit {
   isEditMode = signal<boolean>(false);

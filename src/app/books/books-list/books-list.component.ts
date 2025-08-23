@@ -64,8 +64,8 @@ export class BooksListComponent implements OnInit {
         'name',
         (bookA, bookB) =>
           this.isDescending
-            ? bookB.name.localeCompare(bookA.name)
-            : bookA.name.localeCompare(bookB.name),
+            ? bookB.name.localeCompare(bookA.name, ['bg', 'en'])
+            : bookA.name.localeCompare(bookB.name, ['bg', 'en']),
       ],
       // [
       //   'author',

@@ -1,6 +1,7 @@
 <form #form="ngForm" (ngSubmit)="editBook(form)">
   <label i18n for="image">Image:</label><br />
   <img
+    class="book-cover"
     src="{{ book().imageUrl }}"
     onerror="this.src='no-image-available.png';"
   /><br />

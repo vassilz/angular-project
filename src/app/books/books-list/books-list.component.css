@@ -42,3 +42,9 @@ img.disabled {
 .descending-label {
   margin-left: 5px;
 }
+
+.paging {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

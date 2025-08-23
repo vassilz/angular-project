@@ -20,6 +20,10 @@
   flex-grow: 1;
 }
 
+.book-cover {
+  max-width: 200px;
+}
+
 .back-button {
   align-self: center;
 }

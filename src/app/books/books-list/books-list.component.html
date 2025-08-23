@@ -51,7 +51,8 @@
     <!-- TODO: extract as a separate component  -->
     <!-- <app-books-paging [start]="pagingStart" [count]="pagingCount" /> -->
 
-    <img
+    <div class="paging">
+      <img
       [class]="'paging-previous-button' + (pageStart === 0 ? ' disabled' : '')"
       [src]="pageStart === 0 ? 'chevron-left-light.png' : 'chevron-left.png'"
       (click)="previousPage()"
@@ -70,6 +71,8 @@
       "
       (click)="nextPage()"
     />
+    </div>
+    
     <!---->
 
     }

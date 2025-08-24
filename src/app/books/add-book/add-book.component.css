@@ -2,3 +2,7 @@ input,
 textarea {
   width: 400px;
 }
+
+.book-cover {
+  max-width: 200px;
+}

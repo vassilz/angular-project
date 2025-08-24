@@ -1,6 +1,6 @@
 export const environment = {
   firebase: {
-    apiKey: '<API_KEY>',
+    apiKey: 'AIzaSyBs-qJSZ0eSJUWjznMeZAMSNdVaF51ieEk',
     authDomain: 'bookstore-8b9b8.firebaseapp.com',
     databaseURL:
       'https://bookstore-8b9b8-default-rtdb.europe-west1.firebasedatabase.app',

@@ -1,6 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="addBook()">
   <label i18n for="image">Image:</label><br />
   <img
+    class="book-cover"
     src="{{ imageUrl() }}"
     onerror="this.src='no-image-available.png';"
   /><br />

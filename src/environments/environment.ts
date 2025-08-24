@@ -3,7 +3,7 @@ export const environment = {
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   firebase: {
-    apiKey: '<API_KEY>',
+    apiKey: 'AIzaSyBs-qJSZ0eSJUWjznMeZAMSNdVaF51ieEk',
     authDomain: 'bookstore-8b9b8.firebaseapp.com',
     databaseURL:
       'https://bookstore-8b9b8-default-rtdb.europe-west1.firebasedatabase.app',

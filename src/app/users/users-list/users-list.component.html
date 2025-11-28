@@ -1,3 +1,9 @@
+<button (click)="download()">
+  <img class="file-export-icon" src="file-export.png" />Export to CSV
+</button>
+<button (click)="csvUpload.click()">
+  <img class="file-import-icon" src="upload-file.png" />Import users from CSV
+</button>
 <table class="users-list">
   <thead>
     <tr>
@@ -10,7 +16,7 @@
   </thead>
   <tbody>
     @for (user of users(); track user.id) {
-    <tr>
+    <tr class="row">
       <td>{{ user.firstName }}</td>
       <td>{{ user.lastName }}</td>
       <td>{{ user.username }}</td>
@@ -20,3 +26,14 @@
     }
   </tbody>
 </table>
+<div>
+  <!-- <label for="csvUpload">Upload Users CSV:</label> -->
+  <input
+    #csvUpload
+    class="csv-upload"
+    type="file"
+    id="csvUpload"
+    accept=".csv"
+    (change)="onCsvUpload($event)"
+  />
+</div>

@@ -18,6 +18,12 @@ export class JettyUserService implements UserService {
     // private bookService: JettyBookService
     private bookService: FirebaseBookService
   ) {}
+  getUserByUsername(username: string): Observable<User | null> {
+    throw new Error('Method not implemented.');
+  }
+  getUserByEmail(email: string): Observable<User | null> {
+    throw new Error('Method not implemented.');
+  }
   cleanupFavoriteBook(bookId: number): Observable<void> {
     throw new Error('Method not implemented.');
   }

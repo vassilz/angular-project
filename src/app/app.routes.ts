@@ -15,6 +15,7 @@ import { AuthorDetailsComponent } from './authors/author-details/author-details.
 import { UnauthenticatedGuard } from './unauthenticated.guard';
 import { bookResolver } from './books/book.resolver';
 import { authorResolver } from './authors/author.resolver';
+import { LogoutComponent } from './users/logout/logout.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
@@ -30,6 +31,11 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     canActivate: [UnauthenticatedGuard],
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'profile',

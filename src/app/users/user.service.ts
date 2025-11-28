@@ -20,6 +20,10 @@ export interface UserService {
 
   getUserById(userId: string): Observable<User | null>;
 
+  getUserByUsername(username: string): Observable<User | null>;
+
+  getUserByEmail(email: string): Observable<User | null>;
+
   getFavoriteBookIdsForUser(userId: string): Observable<number[]>;
 
   getFavoriteBooksForUser(userId: string): Observable<Book>;

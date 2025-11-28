@@ -36,6 +36,65 @@ export class FirebaseUserService implements UserService {
     private bookService: FirebaseBookService,
     private destroyRef: DestroyRef
   ) {}
+  getUserByUsername(username: string): Observable<User | null> {
+    const result = new Subject<User | null>();
+    from(get(ref(this.db, 'users')))
+      .pipe(timeout(10000))
+      .subscribe({
+        next: (data) => {
+          const users: User[] = data.val() || [];
+          users.forEach((user, index) => {
+            user.id = index;
+          });
+          const user = users.find((user) => user.username === username) || null;
+          if (user && user.favoriteBookIds === undefined) {
+            user.favoriteBookIds = [];
+          }
+          result.next(user);
+          result.complete();
+        },
+        error: (err) => {
+          console.error('Error loading user by username:', err);
+          if (err instanceof TimeoutError) {
+            result.error(err);
+          } else {
+            result.next(null);
+            result.complete();
+          }
+        },
+      });
+    return result.asObservable();
+  }
+
+  getUserByEmail(email: string): Observable<User | null> {
+    const result = new Subject<User | null>();
+    from(get(ref(this.db, 'users')))
+      .pipe(timeout(10000))
+      .subscribe({
+        next: (data) => {
+          const users: User[] = data.val() || [];
+          users.forEach((user, index) => {
+            user.id = index;
+          });
+          const user = users.find((user) => user.email === email) || null;
+          if (user && user.favoriteBookIds === undefined) {
+            user.favoriteBookIds = [];
+          }
+          result.next(user);
+          result.complete();
+        },
+        error: (err) => {
+          console.error('Error loading user by email:', err);
+          if (err instanceof TimeoutError) {
+            result.error(err);
+          } else {
+            result.next(null);
+            result.complete();
+          }
+        },
+      });
+    return result.asObservable();
+  }
 
   createUser(
     uuid: string,
@@ -57,24 +116,44 @@ export class FirebaseUserService implements UserService {
       const nextUserId = users.length;
       subscription.unsubscribe();
 
-      from(
-        set(ref(this.db, `users/${nextUserId}`), {
-          username,
-          uuid,
-          email,
-          firstName,
-          lastName,
-          password,
-          favoriteBookIds,
-          settings,
-        })
-      ).subscribe({
-        next: () => {
-          result.next();
-        },
-        error: (err) => {
-          console.error('Error creating user:', err);
-          result.error(err);
+      const userByUsername = this.getUserByUsername(username);
+      const userByEmail = this.getUserByEmail(email);
+
+      forkJoin([userByUsername, userByEmail]).subscribe({
+        next: ([userByUsername, userByEmail]) => {
+          if (userByUsername) {
+            console.error('User with username already exists:', username);
+            result.error(
+              new Error(`User with username already exists: ${username}`)
+            );
+            return;
+          }
+          if (userByEmail) {
+            console.error('User with email already exists:', email);
+            result.error(new Error(`User with email already exists: ${email}`));
+            return;
+          }
+
+          from(
+            set(ref(this.db, `users/${nextUserId}`), {
+              username,
+              uuid,
+              email,
+              firstName,
+              lastName,
+              password,
+              favoriteBookIds,
+              settings,
+            })
+          ).subscribe({
+            next: () => {
+              result.next();
+            },
+            error: (err) => {
+              console.error('Error creating user:', err);
+              result.error(err);
+            },
+          });
         },
       });
     });

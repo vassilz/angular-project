@@ -1,3 +1,21 @@
 .users-list {
   width: 100%;
 }
+
+.file-export-icon,
+.file-import-icon {
+  width: 16px;
+  height: 16px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.row {
+  border-bottom: 1px solid #ccc;
+}
+
+.csv-upload {
+  display: none;
+}

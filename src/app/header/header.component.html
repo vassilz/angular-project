@@ -10,6 +10,9 @@
   </div>
   <div class="button-group">
     <button (click)="openDialog()">
+      @if (hasNewNotifications() ) {
+      <div class="bell-unread"></div>
+      }
       <img class="bell-icon" src="bell.png" />
     </button>
     <button routerLink="/profile" i18n>Profile</button>

@@ -1,6 +1,6 @@
 <!-- <p>notifications-popup works!</p> -->
 
-<h2 mat-dialog-title>Hi {{ data.uuid }}</h2>
+<h2 mat-dialog-title>Hi {{ data.username }}</h2>
 <mat-dialog-content>
   <p>Notifications:</p>
   <!-- <mat-form-field>
@@ -8,12 +8,17 @@
     <input matInput [(ngModel)]="animal" />
   </mat-form-field> -->
   @for (notification of notifications(); track notification.id) {
-  <div class="notification" [class]="notification.type">
+  <div
+    class="notification"
+    [class]="notification.type"
+    [class.unread]="!notification.read"
+    (click)="markAsRead(notification.id)"
+  >
     <p>{{ notification.message }}</p>
   </div>
   }
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton (click)="onNoClick()">No Thanks</button>
+  <button matButton (click)="markAllAsRead()">Mark all as read</button>
   <button matButton (click)="onClose()">Ok</button>
 </mat-dialog-actions>

@@ -42,6 +42,22 @@ export class NotificationsPopupComponent {
       });
   }
 
+  markAsRead(id: number) {
+    this.notificationsService.markAsRead(id).subscribe((data) => {
+      this.notifications().find(
+        (notification) => notification.id === id
+      )!.read = true;
+    });
+  }
+
+  markAllAsRead() {
+    this.notificationsService.markAllAsRead().subscribe(() => {
+      this.notifications().forEach((notification) => {
+        notification.read = true;
+      });
+    });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

@@ -42,3 +42,15 @@
     cursor: pointer;
   }
 }
+
+.bell-unread {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%; /* Makes it round */
+  background-color: #007bff; /* Your desired color */
+  /* Optional: Center content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* color: white; */
+}

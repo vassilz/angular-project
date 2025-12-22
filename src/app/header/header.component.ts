@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorMessageService } from '../errors/error-message/error-message.service';
@@ -7,9 +7,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationsPopupComponent } from './notifications/notifications-popup.component';
 import { Notification } from './notifications/notifications';
 import { NotificationsService } from './notifications/notifications.service';
+import { FirebaseUserService } from '../users/firebase-user.service';
 
 export interface NotificationPopupData {
-  uuid: string;
+  username: string;
 
   notifications: Notification[];
 }
@@ -22,15 +23,39 @@ export interface NotificationPopupData {
 })
 export class HeaderComponent {
   uuid: string | null = null;
+  username: string | null = null;
+
+  hasNewNotifications: WritableSignal<boolean> = signal(false);
 
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
     private errorMessageService: ErrorMessageService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private userService: FirebaseUserService
   ) {
     this.authenticationService.user$.subscribe((loggedInUser) => {
       this.uuid = loggedInUser?.uid || null;
+
+      if (this.uuid) {
+        this.userService.getUserById(this.uuid).subscribe((user) => {
+          this.username = user?.username || null;
+        });
+      }
+    });
+
+    this.checkForNewNotifications();
+    setInterval(() => {
+      this.checkForNewNotifications();
+    }, 10000);
+  }
+
+  checkForNewNotifications() {
+    this.notificationsService.getAll().subscribe((notifications) => {
+      const hasNew = notifications.some(
+        (notification) => notification.read === false
+      );
+      this.hasNewNotifications.set(hasNew);
     });
   }
 
@@ -71,7 +96,7 @@ export class HeaderComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(NotificationsPopupComponent, {
       data: {
-        uuid: this.uuid,
+        username: this.username || '',
         // notifications: this.notificationsService.notifications(),
       },
     });

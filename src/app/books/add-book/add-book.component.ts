@@ -10,12 +10,14 @@ import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { isPastValidator } from './is-past.validator';
 import { take } from 'rxjs';
 import { FirebaseStorageService } from '../../firebase-storage.service';
+import { NotificationsService } from '../../header/notifications/notifications.service';
+import { Notification } from '../../header/notifications/notifications';
 
 @Component({
-    selector: 'app-add-book',
-    imports: [ReactiveFormsModule],
-    templateUrl: './add-book.component.html',
-    styleUrl: './add-book.component.css'
+  selector: 'app-add-book',
+  imports: [ReactiveFormsModule],
+  templateUrl: './add-book.component.html',
+  styleUrl: './add-book.component.css',
 })
 export class AddBookComponent implements OnInit {
   form = new FormGroup({
@@ -42,7 +44,8 @@ export class AddBookComponent implements OnInit {
     private router: Router,
     private errorHandlingService: ErrorHandlingService,
     private toastService: ToastService,
-    private storageService: FirebaseStorageService
+    private storageService: FirebaseStorageService,
+    private notificationsService: NotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +86,11 @@ export class AddBookComponent implements OnInit {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add($localize`Book ${name} created successfully`);
+          const bookCreatedMessage = $localize`Book ${name} created successfully`;
+          this.toastService.add(bookCreatedMessage);
+
+          this.notificationsService.create(bookCreatedMessage, 'info');
+
           this.router.navigate(['/books']);
         },
         error: (err) => {

@@ -14,7 +14,7 @@ A potential future enhancement would be to support also a Jetty Java backend.
 
 ## Admin access
 
-Login with user 'admin@gmail.com' and password 'admin1' for administrative access.
+Login with user 'admin@gmail.com' and password '123456' for administrative access.
 With that you will be able to see user data, add authors, add/edit/delete books.
 
 ## Third party components
@@ -26,6 +26,9 @@ It also uses the Bulgarian and UK flag icons from the flag icons npm package, se
 ## Localization
 
 This application has been localized in Bulgarian, and English.
+
+To generate new translations, or modify existing ones, run `ng extract-i18n` and then
+adjust the Bulgarian translation as needed in the messages.bg.xlf file.
 
 By default it runs with Bulgarian localization, when you start it with `ng serve`.
 

@@ -5,12 +5,13 @@ import { AuthenticationService } from '../../authentication.service';
 import { RerenderService } from '../../rerender.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
+import { NotificationsService } from '../../header/notifications/notifications.service';
 
 @Component({
-    selector: 'app-add-review',
-    imports: [FormsModule],
-    templateUrl: './add-review.component.html',
-    styleUrl: './add-review.component.css'
+  selector: 'app-add-review',
+  imports: [FormsModule],
+  templateUrl: './add-review.component.html',
+  styleUrl: './add-review.component.css',
 })
 export class AddReviewComponent {
   bookId = input.required<number>();
@@ -19,7 +20,8 @@ export class AddReviewComponent {
     private reviewService: FirebaseReviewService,
     private authenticationService: AuthenticationService,
     private rerenderService: RerenderService,
-    private errorHandlingService: ErrorHandlingService
+    private errorHandlingService: ErrorHandlingService,
+    private notificationsService: NotificationsService
   ) {}
 
   addReview(form: NgForm) {
@@ -52,6 +54,11 @@ export class AddReviewComponent {
             next: () => {
               // this.router.navigate(['/books']);
               this.rerenderService.rerenderReviews.emit();
+
+              const reviewAddedMessage = $localize`Book ${this.bookId()} has been reviewed`;
+              // this.toastService.add(reviewAddedMessage);
+
+              this.notificationsService.create(reviewAddedMessage, 'info');
             },
             error: (error) => {
               this.errorHandlingService.handleError(error);

@@ -566,5 +566,15 @@
         <source> by</source>
       </segment>
     </unit>
+    <unit id="3206899766132763866">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.bookId()"/> has been reviewed</source>
+      </segment>
+    </unit>
+    <unit id="791146724447146176">
+      <segment>
+        <source>User <ph id="0" equiv="PH" disp="user.username"/> created successfully</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

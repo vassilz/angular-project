@@ -1,0 +1,19 @@
+<!-- <p>notifications-popup works!</p> -->
+
+<h2 mat-dialog-title>Hi {{ data.uuid }}</h2>
+<mat-dialog-content>
+  <p>Notifications:</p>
+  <!-- <mat-form-field>
+    <mat-label>Favorite Animal</mat-label>
+    <input matInput [(ngModel)]="animal" />
+  </mat-form-field> -->
+  @for (notification of notifications(); track notification.id) {
+  <div class="notification" [class]="notification.type">
+    <p>{{ notification.message }}</p>
+  </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton (click)="onNoClick()">No Thanks</button>
+  <button matButton (click)="onClose()">Ok</button>
+</mat-dialog-actions>

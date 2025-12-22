@@ -23,12 +23,13 @@ import { JettyUserService } from '../../users/jetty-user.service';
 import { ToastService } from '../../toast/toast.service';
 import { FirebaseAuthorService } from '../../authors/firebase-author.service';
 import { take } from 'rxjs';
+import { NotificationsService } from '../../header/notifications/notifications.service';
 
 @Component({
-    selector: 'app-book-card',
-    imports: [RouterLink, AverageRatingPipe, HighlightSearchPipe],
-    templateUrl: './book-card.component.html',
-    styleUrl: './book-card.component.css'
+  selector: 'app-book-card',
+  imports: [RouterLink, AverageRatingPipe, HighlightSearchPipe],
+  templateUrl: './book-card.component.html',
+  styleUrl: './book-card.component.css',
 })
 export class BookCardComponent implements OnInit {
   book = input.required<Book>();
@@ -58,7 +59,8 @@ export class BookCardComponent implements OnInit {
     // private bookService: JettyBookService,
     private authorService: FirebaseAuthorService,
     private errorHandlingService: ErrorHandlingService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private notificationsService: NotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -166,9 +168,13 @@ export class BookCardComponent implements OnInit {
             .pipe(take(1))
             .subscribe(() => {
               this.rerenderService.rerenderBooks.emit();
-              this.toastService.add(
-                $localize`Book ${this.book().name} deleted successfully`
-              );
+
+              const bookDeletedMessage = $localize`Book ${
+                this.book().name
+              } deleted successfully`;
+              this.toastService.add(bookDeletedMessage);
+
+              this.notificationsService.create(bookDeletedMessage, 'info');
 
               this.confirmDeletionDialog().nativeElement.close();
             });

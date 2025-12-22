@@ -9,6 +9,9 @@
     <span class="nav-link fi fi-gb" (click)="switchLanguage('en')"> </span>
   </div>
   <div class="button-group">
+    <button (click)="openDialog()">
+      <img class="bell-icon" src="bell.png" />
+    </button>
     <button routerLink="/profile" i18n>Profile</button>
     <button routerLink="/logout" i18n>Logout</button>
   </div>

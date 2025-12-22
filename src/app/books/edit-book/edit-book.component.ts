@@ -10,12 +10,13 @@ import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
 import { FirebaseStorageService } from '../../firebase-storage.service';
+import { NotificationsService } from '../../header/notifications/notifications.service';
 
 @Component({
-    selector: 'app-edit-book',
-    imports: [FormsModule],
-    templateUrl: './edit-book.component.html',
-    styleUrl: './edit-book.component.css'
+  selector: 'app-edit-book',
+  imports: [FormsModule],
+  templateUrl: './edit-book.component.html',
+  styleUrl: './edit-book.component.css',
 })
 export class EditBookComponent {
   book = signal<Book>({} as Book);
@@ -30,7 +31,8 @@ export class EditBookComponent {
     private authorService: FirebaseAuthorService,
     private toastService: ToastService,
     private errorHandlingService: ErrorHandlingService,
-    private storageService: FirebaseStorageService // private bookService: JettyBookService
+    private storageService: FirebaseStorageService, // private bookService: JettyBookService,
+    private notificationsService: NotificationsService
   ) {
     const id = this.route.snapshot.params['bookId'];
     this.book.set(this.route.snapshot.data['book'] as Book);
@@ -74,9 +76,13 @@ export class EditBookComponent {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add(
-            $localize`Book ${this.book().name} updated successfully`
-          );
+          const bookUpdatedMessage = $localize`Book ${
+            this.book().name
+          } updated successfully`;
+          this.toastService.add(bookUpdatedMessage);
+
+          this.notificationsService.create(bookUpdatedMessage, 'info');
+
           this.router.navigate(['/books']);
         },
         error: (err) => {

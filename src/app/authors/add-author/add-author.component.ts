@@ -5,19 +5,21 @@ import { Router } from '@angular/router';
 import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
+import { NotificationsService } from '../../header/notifications/notifications.service';
 
 @Component({
-    selector: 'app-add-author',
-    imports: [FormsModule],
-    templateUrl: './add-author.component.html',
-    styleUrl: './add-author.component.css'
+  selector: 'app-add-author',
+  imports: [FormsModule],
+  templateUrl: './add-author.component.html',
+  styleUrl: './add-author.component.css',
 })
 export class AddAuthorComponent {
   constructor(
     private authorService: FirebaseAuthorService,
     private router: Router,
     private toastService: ToastService,
-    private errorHandlingService: ErrorHandlingService
+    private errorHandlingService: ErrorHandlingService,
+    private notificationsService: NotificationsService
   ) {}
 
   addAuthor(form: NgForm) {
@@ -32,7 +34,11 @@ export class AddAuthorComponent {
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.toastService.add($localize`Author ${name} created successfully`);
+          const authorCreatedMessage = $localize`Author ${name} created successfully`;
+          this.toastService.add(authorCreatedMessage);
+
+          this.notificationsService.create(authorCreatedMessage, 'info');
+
           this.router.navigate(['/authors']);
         },
         error: (err) => {

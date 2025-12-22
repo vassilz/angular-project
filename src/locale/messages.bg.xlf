@@ -678,5 +678,17 @@
         <target> от</target>
       </segment>
     </unit>
+    <unit id="3206899766132763866">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.bookId()"/> has been reviewed</source>
+        <target>Беше добавена рецензия за книгата <ph id="0" equiv="PH" disp="this.bookId()"/></target>
+      </segment>
+    </unit>
+    <unit id="791146724447146176">
+      <segment state="initial">
+        <source>User <ph id="0" equiv="PH" disp="user.username"/> created successfully</source>
+        <target>Потребителят <ph id="0" equiv="PH" disp="user.username"/> беше създаден успешно</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

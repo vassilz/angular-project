@@ -33,6 +33,17 @@ export class NotificationsPopupComponent {
 
   notifications: WritableSignal<Notification[]> = signal([]);
 
+  isRead(id: number): boolean {
+    const notification = this.notifications().find(
+      (notification) => notification.id === id
+    );
+    return (
+      notification?.receivers.find(
+        (receiver) => receiver.uuid === this.data.uuid
+      )?.read ?? false
+    );
+  }
+
   constructor(private notificationsService: NotificationsService) {
     notificationsService
       .getAll()
@@ -44,16 +55,19 @@ export class NotificationsPopupComponent {
 
   markAsRead(id: number) {
     this.notificationsService.markAsRead(id).subscribe((data) => {
-      this.notifications().find(
-        (notification) => notification.id === id
-      )!.read = true;
+      this.notifications()
+        .find((notification) => notification.id === id)!
+        .receivers.find((receiver) => receiver.uuid === this.data.uuid)!.read =
+        true;
     });
   }
 
   markAllAsRead() {
     this.notificationsService.markAllAsRead().subscribe(() => {
       this.notifications().forEach((notification) => {
-        notification.read = true;
+        notification.receivers.find(
+          (receiver) => receiver.uuid === this.data.uuid
+        )!.read = true;
       });
     });
   }

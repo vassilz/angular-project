@@ -37,7 +37,11 @@ export class AddAuthorComponent {
           const authorCreatedMessage = $localize`Author ${name} created successfully`;
           this.toastService.add(authorCreatedMessage);
 
-          this.notificationsService.create(authorCreatedMessage, 'info');
+          this.notificationsService.create(
+            authorCreatedMessage,
+            'info',
+            'create-author'
+          );
 
           this.router.navigate(['/authors']);
         },

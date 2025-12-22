@@ -26,6 +26,53 @@
     [(ngModel)]="pageSize"
   />
   <br />
+  <label i18n>Subscribe to:</label><br />
+  <label i18n for="newBooks">New books</label>
+  <input
+    type="checkbox"
+    id="newBooks"
+    name="subscribeNewBooks"
+    #inputNewBooks="ngModel"
+    [(ngModel)]="subscribeNewBooks"
+  />
+  <br />
+  <label i18n for="editBooks">Edited books</label>
+  <input
+    type="checkbox"
+    id="editBooks"
+    name="subscribeEditBooks"
+    #inputEditBooks="ngModel"
+    [(ngModel)]="subscribeEditBooks"
+  />
+  <br />
+  <label i18n for="deleteBooks">Deleted books</label>
+  <input
+    type="checkbox"
+    id="deleteBooks"
+    name="subscribeDeleteBooks"
+    #inputDeleteBooks="ngModel"
+    [(ngModel)]="subscribeDeleteBooks"
+  />
+  <br />
+  <label i18n for="newAuthors">New authors</label>
+  <input
+    type="checkbox"
+    id="newAuthors"
+    name="subscribeNewAuthors"
+    #inputNewAuthors="ngModel"
+    [(ngModel)]="subscribeNewAuthors"
+  />
+  <br />
+  <label i18n for="newReviews">New reviews</label>
+  <input
+    type="checkbox"
+    id="newReviews"
+    name="subscribeNewReviews"
+    #inputNewReviews="ngModel"
+    [(ngModel)]="subscribeNewReviews"
+  />
+
+  <br />
   <br />
   <div class="actions">
     <button i18n class="cancel" type="button" (click)="onCancel($event)">
@@ -48,5 +95,15 @@
 <br />
 @if (favoriteBooks.length === 0) { <span i18n>No favorite books yet</span> }
 @else {@for (book of favoriteBooks; track book.id) { {{ book.name }} by
+{{ bookAuthors.get(book.id) }} <br />
+} }
+
+<br />
+<br />
+
+<span i18n>Subscribed for books:</span>
+<br />
+@if (subscribedBooks.length === 0) { <span i18n>No subscribed books yet</span> }
+@else {@for (book of subscribedBooks; track book.id) { {{ book.name }} by
 {{ bookAuthors.get(book.id) }} <br />
 } }

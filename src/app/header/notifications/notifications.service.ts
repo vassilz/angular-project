@@ -1,17 +1,35 @@
 import { Injectable } from '@angular/core';
-import { Notification } from './notifications';
+import {
+  Notification,
+  NotificationReceiver,
+  NotificationType,
+} from './notifications';
 import { Database, get, ref, set, update } from '@angular/fire/database';
 import { from, Observable, Subject } from 'rxjs';
+import { AuthenticationService } from '../../authentication.service';
+import { FirebaseUserService } from '../../users/firebase-user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  constructor(private db: Database) {}
+  uuid: string | null = null;
+
+  constructor(
+    private db: Database,
+    private authenticationService: AuthenticationService,
+    private userService: FirebaseUserService
+  ) {
+    this.authenticationService.user$.subscribe((loggedInUser) => {
+      this.uuid = loggedInUser?.uid || null;
+    });
+  }
 
   create(
     message: string,
-    type: 'info' | 'warning' | 'error'
+    type: 'info' | 'warning' | 'error',
+    eventType: NotificationType,
+    bookId?: number
   ): Observable<void> {
     var result = new Subject<void>();
     const observable = from(get(ref(this.db, 'notifications')));
@@ -23,20 +41,23 @@ export class NotificationsService {
       const nextNotificationId = notifications.length;
       subscription.unsubscribe();
 
-      from(
-        set(ref(this.db, `notifications/${nextNotificationId}`), {
-          message,
-          type,
-          read: false,
-        })
-      ).subscribe({
-        next: () => {
-          result.next();
-        },
-        error: (err) => {
-          console.error('Error creating notification:', err);
-          result.error(err);
-        },
+      this.getSubscribersFor(eventType, bookId).subscribe((uuids) => {
+        from(
+          set(ref(this.db, `notifications/${nextNotificationId}`), {
+            message,
+            type,
+            read: false,
+            receivers: this.mapToReceivers(uuids),
+          })
+        ).subscribe({
+          next: () => {
+            result.next();
+          },
+          error: (err) => {
+            console.error('Error creating notification:', err);
+            result.error(err);
+          },
+        });
       });
     });
 
@@ -48,11 +69,19 @@ export class NotificationsService {
 
     this.getById(id).subscribe((notification) => {
       if (!!notification) {
+        const updatedReceivers: NotificationReceiver[] =
+          notification.receivers.map((receiver) => {
+            if (receiver.uuid === this.uuid) {
+              return { ...receiver, read: true };
+            }
+            return receiver;
+          });
+
         from(
           update(ref(this.db, 'notifications/' + id), {
             message: notification.message,
             type: notification.type,
-            read: true,
+            receivers: updatedReceivers,
           })
         ).subscribe((data) => {
           console.info(`Notification ${id} was marked as read`);
@@ -73,10 +102,18 @@ export class NotificationsService {
     this.getAll().subscribe((notifications) => {
       const updates: any = {};
       notifications.forEach((notification) => {
+        const updatedReceivers: NotificationReceiver[] =
+          notification.receivers.map((receiver) => {
+            if (receiver.uuid === this.uuid) {
+              return { ...receiver, read: true };
+            }
+            return receiver;
+          });
+
         updates[`notifications/${notification.id}`] = {
           message: notification.message,
           type: notification.type,
-          read: true,
+          receivers: updatedReceivers,
         };
       });
 
@@ -128,5 +165,27 @@ export class NotificationsService {
     });
 
     return result.asObservable();
+  }
+
+  getSubscribersFor(
+    type: NotificationType,
+    bookId?: number
+  ): Observable<string[]> {
+    var result = new Subject<string[]>();
+    this.userService.getUsers().subscribe((users) => {
+      const subscribers: string[] = users
+        .filter(
+          (user) =>
+            user.subscribedFor.includes(type) &&
+            (bookId ? user.subscribedForBookIds.includes(bookId) : true)
+        )
+        .map((user) => user.uuid);
+      result.next(subscribers);
+    });
+    return result.asObservable();
+  }
+
+  mapToReceivers(uuids: string[]): NotificationReceiver[] {
+    return uuids.map((uuid) => ({ uuid, read: false }));
   }
 }

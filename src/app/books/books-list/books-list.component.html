@@ -44,6 +44,7 @@
     <app-book-card
       [book]="book"
       [favoriteBookIds]="favoriteBookIds()"
+      [subscribedBookIds]="subscribedBookIds()"
       [searchTerm]="searchTerm"
     />
     }
@@ -53,26 +54,28 @@
 
     <div class="paging">
       <img
-      [class]="'paging-previous-button' + (pageStart === 0 ? ' disabled' : '')"
-      [src]="pageStart === 0 ? 'chevron-left-light.png' : 'chevron-left.png'"
-      (click)="previousPage()"
-    />
+        [class]="
+          'paging-previous-button' + (pageStart === 0 ? ' disabled' : '')
+        "
+        [src]="pageStart === 0 ? 'chevron-left-light.png' : 'chevron-left.png'"
+        (click)="previousPage()"
+      />
 
-    {{ pageStart + 1 }} - {{ pageStart + currentPage }}
-    <img
-      [class]="
-        'paging-next-button' +
-        (pageStart + currentPage >= allBooksCount ? ' disabled' : '')
-      "
-      [src]="
-        pageStart + currentPage >= allBooksCount
-          ? 'chevron-right-light.png'
-          : 'chevron-right.png'
-      "
-      (click)="nextPage()"
-    />
+      {{ pageStart + 1 }} - {{ pageStart + currentPage }}
+      <img
+        [class]="
+          'paging-next-button' +
+          (pageStart + currentPage >= allBooksCount ? ' disabled' : '')
+        "
+        [src]="
+          pageStart + currentPage >= allBooksCount
+            ? 'chevron-right-light.png'
+            : 'chevron-right.png'
+        "
+        (click)="nextPage()"
+      />
     </div>
-    
+
     <!---->
 
     }

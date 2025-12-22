@@ -89,7 +89,11 @@ export class AddBookComponent implements OnInit {
           const bookCreatedMessage = $localize`Book ${name} created successfully`;
           this.toastService.add(bookCreatedMessage);
 
-          this.notificationsService.create(bookCreatedMessage, 'info');
+          this.notificationsService.create(
+            bookCreatedMessage,
+            'info',
+            'create-book'
+          );
 
           this.router.navigate(['/books']);
         },

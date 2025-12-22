@@ -26,6 +26,7 @@ import { Settings } from '../types/settings';
 import { JettyBookService } from '../books/jetty-book.service';
 import { UserService } from './user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationType } from '../header/notifications/notifications';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +43,8 @@ export class FirebaseUserService implements UserService {
       .pipe(timeout(10000))
       .subscribe({
         next: (data) => {
-          const users: User[] = data.val() || [];
+          let users: User[] = data.val() || [];
+          users = users.filter((user) => !!user);
           users.forEach((user, index) => {
             user.id = index;
           });
@@ -72,7 +74,8 @@ export class FirebaseUserService implements UserService {
       .pipe(timeout(10000))
       .subscribe({
         next: (data) => {
-          const users: User[] = data.val() || [];
+          let users: User[] = data.val() || [];
+          users = users.filter((user) => !!user);
           users.forEach((user, index) => {
             user.id = index;
           });
@@ -104,6 +107,8 @@ export class FirebaseUserService implements UserService {
     lastName: string | null | undefined,
     password: string,
     favoriteBookIds: number[] = [],
+    subscribedFor: NotificationType[] = [],
+    subscribedForBookIds: number[] = [],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     var result = new Subject<void>();
@@ -143,6 +148,8 @@ export class FirebaseUserService implements UserService {
               lastName,
               password,
               favoriteBookIds,
+              subscribedFor,
+              subscribedForBookIds,
               settings,
             })
           ).subscribe({
@@ -174,6 +181,9 @@ export class FirebaseUserService implements UserService {
         if (user.favoriteBookIds === undefined) {
           user.favoriteBookIds = [];
         }
+        if (user.subscribedForBookIds === undefined) {
+          user.subscribedForBookIds = [];
+        }
       });
 
       result.next(users);
@@ -198,6 +208,9 @@ export class FirebaseUserService implements UserService {
         const user = users.filter((user) => user.uuid === userId)[0];
         if (user && user.favoriteBookIds === undefined) {
           user.favoriteBookIds = [];
+        }
+        if (user && user.subscribedForBookIds === undefined) {
+          user.subscribedForBookIds = [];
         }
 
         foundUser.next(user);
@@ -282,6 +295,8 @@ export class FirebaseUserService implements UserService {
           user.lastName,
           user.password,
           favoriteBookIds,
+          user.subscribedFor,
+          user.subscribedForBookIds,
           user.settings
         ).subscribe((data) => {
           console.info('User updated successfully');
@@ -317,6 +332,8 @@ export class FirebaseUserService implements UserService {
           user.lastName,
           user.password,
           favoriteBookIds,
+          user.subscribedFor,
+          user.subscribedForBookIds,
           user.settings
         ).subscribe((data) => {
           // this.router.navigate(['/home']);
@@ -330,16 +347,70 @@ export class FirebaseUserService implements UserService {
     return subject.asObservable();
   }
 
-  cleanupFavoriteBook(bookId: number): Observable<void> {
+  // TODO - add to interface
+  getSubscribedBookIdsForUser(userId: string): Observable<number[]> {
+    console.log('Getting subscribed book IDs for user:', userId);
+    var subscribedBookIds = new Subject<number[]>();
+    this.getUserById(userId).subscribe((user) => {
+      if (!user) {
+        subscribedBookIds.error(new Error('User not found for ID: ' + userId));
+      } else {
+        const bookIds: number[] = user!.subscribedForBookIds || [];
+        subscribedBookIds.next(bookIds);
+      }
+    });
+
+    return subscribedBookIds.asObservable();
+  }
+
+  // TODO - add to interface
+  getSubscribedBooksForUser(userId: string): Observable<Book> {
+    var subscribedBooks = new Subject<Book>();
+    this.getUserById(userId).subscribe((user) => {
+      if (user == undefined) {
+        subscribedBooks.error(new Error('User not found for ID: ' + userId));
+      } else {
+        const bookIds: number[] = user!.subscribedForBookIds || [];
+        const observables: Observable<Book | null>[] = [];
+        bookIds.forEach((id) => {
+          const book$ = this.bookService.getBook(id);
+          observables.push(book$);
+        });
+        forkJoin(observables).subscribe({
+          next: (books) => {
+            books.forEach((book) => {
+              if (!!book) {
+                subscribedBooks.next(book);
+              }
+            });
+          },
+          complete: () => {
+            subscribedBooks.complete();
+          },
+        });
+      }
+    });
+
+    return subscribedBooks.asObservable();
+  }
+
+  cleanupForBook(bookId: number): Observable<void> {
     const subject = new Subject<void>();
     this.getUsers().subscribe((users) => {
       const observables: Observable<void>[] = [];
       users.forEach((user) => {
         var favoriteBookIds = user.favoriteBookIds || [];
-        const index = favoriteBookIds.indexOf(bookId);
-        if (index > -1) {
+        var subscribedBookIds = user.subscribedForBookIds || [];
+        const favoriteIndex = favoriteBookIds.indexOf(bookId);
+        const subscribedIndex = subscribedBookIds.indexOf(bookId);
+        if (favoriteIndex > -1 || subscribedIndex > -1) {
           // only splice array when item is found
-          favoriteBookIds.splice(index, 1); // 2nd parameter means remove one item only
+          if (favoriteIndex > -1) {
+            favoriteBookIds.splice(favoriteIndex, 1); // 2nd parameter means remove one item only
+          }
+          if (subscribedIndex > -1) {
+            subscribedBookIds.splice(subscribedIndex, 1); // 2nd parameter means remove one item only
+          }
 
           const userObservable = this.updateUser(
             user.id,
@@ -350,6 +421,8 @@ export class FirebaseUserService implements UserService {
             user.lastName,
             user.password,
             favoriteBookIds,
+            user.subscribedFor,
+            subscribedBookIds,
             user.settings
           );
           observables.push(userObservable);
@@ -365,11 +438,85 @@ export class FirebaseUserService implements UserService {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             console.log(
-              'All users have been updated to remove the book from favorites'
+              'All users have been updated to remove the book from favorites or subscriptions'
             );
             subject.next();
             subject.complete();
           });
+      }
+    });
+
+    return subject.asObservable();
+  }
+
+  subscribeForBookForUser(userId: string, bookId: number): Observable<void> {
+    const subject = new Subject<void>();
+
+    this.getUserById(userId).subscribe((user) => {
+      if (!!user) {
+        var subscribedBookIds = user.subscribedForBookIds || [];
+        const index = subscribedBookIds.indexOf(bookId);
+        if (index === -1) {
+          subscribedBookIds.push(bookId);
+        }
+
+        console.log(subscribedBookIds);
+
+        this.updateUser(
+          user.id,
+          user.username,
+          user.uuid,
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.password,
+          user.favoriteBookIds,
+          user.subscribedFor,
+          subscribedBookIds,
+          user.settings
+        ).subscribe((data) => {
+          console.info('User updated successfully');
+          // this.router.navigate(['/home']);
+
+          subject.next();
+          subject.complete();
+        });
+      }
+    });
+
+    return subject.asObservable();
+  }
+
+  unsubscribeFromBookForUser(userId: string, bookId: number): Observable<void> {
+    const subject = new Subject<void>();
+
+    this.getUserById(userId).subscribe((user) => {
+      if (!!user) {
+        var subscribedBookIds = user.subscribedForBookIds || [];
+        const index = subscribedBookIds.indexOf(bookId);
+        if (index > -1) {
+          // only splice array when item is found
+          subscribedBookIds.splice(index, 1); // 2nd parameter means remove one item only
+        }
+
+        this.updateUser(
+          user.id,
+          user.username,
+          user.uuid,
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.password,
+          user.favoriteBookIds,
+          user.subscribedFor,
+          subscribedBookIds,
+          user.settings
+        ).subscribe((data) => {
+          // this.router.navigate(['/home']);
+
+          subject.next();
+          subject.complete();
+        });
       }
     });
 
@@ -396,6 +543,8 @@ export class FirebaseUserService implements UserService {
     lastName: string,
     password: string,
     favoriteBookIds: number[],
+    subscribedFor: NotificationType[],
+    subscribedForBookIds: number[],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     return from(
@@ -407,6 +556,8 @@ export class FirebaseUserService implements UserService {
         lastName,
         password,
         favoriteBookIds,
+        subscribedFor,
+        subscribedForBookIds,
         settings,
       })
     );

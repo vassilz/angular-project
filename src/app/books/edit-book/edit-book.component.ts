@@ -81,7 +81,12 @@ export class EditBookComponent {
           } updated successfully`;
           this.toastService.add(bookUpdatedMessage);
 
-          this.notificationsService.create(bookUpdatedMessage, 'info');
+          this.notificationsService.create(
+            bookUpdatedMessage,
+            'info',
+            'update-book',
+            this.book().id
+          );
 
           this.router.navigate(['/books']);
         },

@@ -3,6 +3,7 @@ import { Settings } from '../types/settings';
 // import { DataSnapshot } from 'firebase/database';
 import { Book } from '../types/book';
 import { User } from '../types/user';
+import { NotificationType } from '../header/notifications/notifications';
 
 export interface UserService {
   createUser(
@@ -13,6 +14,8 @@ export interface UserService {
     lastName: string | null | undefined,
     password: string,
     favoriteBookIds: number[],
+    subscribedFor: NotificationType[],
+    subscribedForBookIds: number[],
     settings: Settings
   ): Observable<void>;
 
@@ -32,7 +35,7 @@ export interface UserService {
 
   removeFavoriteBookForUser(userId: string, bookId: number): Observable<void>;
 
-  cleanupFavoriteBook(bookId: number): Observable<void>;
+  cleanupForBook(bookId: number): Observable<void>;
 
   updateUser(
     userId: number,
@@ -43,6 +46,8 @@ export interface UserService {
     lastName: string,
     password: string,
     favoriteBookIds: number[],
+    subscribedFor: NotificationType[],
+    subscribedForBookIds: number[],
     settings: Settings
   ): Observable<void>;
 

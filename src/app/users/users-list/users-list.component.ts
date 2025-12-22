@@ -5,6 +5,7 @@ import { ToastService } from '../../toast/toast.service';
 import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { take } from 'rxjs';
 import { downloadFile, parseCsvToUsers } from '../../file.service';
+import { defaultSubscriptions } from '../../header/notifications/notifications';
 
 @Component({
   selector: 'app-users-list',
@@ -38,6 +39,8 @@ export class UsersListComponent {
             user.firstName,
             user.lastName,
             password,
+            [],
+            defaultSubscriptions,
             [],
             { pageSize: 5 }
           )

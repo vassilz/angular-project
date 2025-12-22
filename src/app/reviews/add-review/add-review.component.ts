@@ -58,7 +58,12 @@ export class AddReviewComponent {
               const reviewAddedMessage = $localize`Book ${this.bookId()} has been reviewed`;
               // this.toastService.add(reviewAddedMessage);
 
-              this.notificationsService.create(reviewAddedMessage, 'info');
+              this.notificationsService.create(
+                reviewAddedMessage,
+                'info',
+                'create-review',
+                this.bookId()
+              );
             },
             error: (error) => {
               this.errorHandlingService.handleError(error);

@@ -576,5 +576,55 @@
         <source>User <ph id="0" equiv="PH" disp="user.username"/> created successfully</source>
       </segment>
     </unit>
+    <unit id="1989352210202904798">
+      <segment>
+        <source>Deleted books</source>
+      </segment>
+    </unit>
+    <unit id="4228380416367539393">
+      <segment>
+        <source>New authors</source>
+      </segment>
+    </unit>
+    <unit id="5852038478304396089">
+      <segment>
+        <source>New reviews</source>
+      </segment>
+    </unit>
+    <unit id="6819931366513118208">
+      <segment>
+        <source>Subscribe to:</source>
+      </segment>
+    </unit>
+    <unit id="723546524044309809">
+      <segment>
+        <source>New books</source>
+      </segment>
+    </unit>
+    <unit id="8308173486419864629">
+      <segment>
+        <source>Edited books</source>
+      </segment>
+    </unit>
+    <unit id="1540649789244292400">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> removed from subscriptions</source>
+      </segment>
+    </unit>
+    <unit id="2586725273765143910">
+      <segment>
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> added to subscriptions</source>
+      </segment>
+    </unit>
+    <unit id="3694741105508379839">
+      <segment>
+        <source>Subscribed for books:</source>
+      </segment>
+    </unit>
+    <unit id="4162381250950787907">
+      <segment>
+        <source>No subscribed books yet</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

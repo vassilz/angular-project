@@ -8,6 +8,8 @@ import { FirebaseUserService } from '../firebase-user.service';
 import { JettyUserService } from '../jetty-user.service';
 import { forkJoin, take } from 'rxjs';
 import { User } from '@angular/fire/auth';
+// import { getAnalytics, logEvent } from '@angular/fire/analytics';
+import { defaultSubscriptions } from '../../header/notifications/notifications';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +40,9 @@ export class LoginComponent {
       console.warn('Invalid login form!');
       return;
     }
+
+    // const analytics = getAnalytics();
+    // logEvent(analytics, 'login');
 
     const { email, password } = form.value;
 
@@ -103,6 +108,8 @@ export class LoginComponent {
                   firstName,
                   lastName,
                   '',
+                  [],
+                  defaultSubscriptions,
                   [],
                   defaultUserSettings
                 )

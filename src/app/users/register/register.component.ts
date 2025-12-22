@@ -14,6 +14,7 @@ import { ErrorHandlingService } from '../../errors/error-handling.service';
 import { JettyUserService } from '../jetty-user.service';
 import { take } from 'rxjs';
 import { User } from '@angular/fire/auth';
+import { defaultSubscriptions } from '../../header/notifications/notifications';
 
 @Component({
   selector: 'app-register',
@@ -90,6 +91,8 @@ export class RegisterComponent {
               firstName,
               lastName,
               password!,
+              [],
+              defaultSubscriptions,
               [],
               defaultUserSettings
             )

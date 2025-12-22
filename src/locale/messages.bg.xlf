@@ -690,5 +690,65 @@
         <target>Потребителят <ph id="0" equiv="PH" disp="user.username"/> беше създаден успешно</target>
       </segment>
     </unit>
+    <unit id="6819931366513118208">
+      <segment state="initial">
+        <source>Subscribe to:</source>
+        <target>Абониране за:</target>
+      </segment>
+    </unit>
+    <unit id="723546524044309809">
+      <segment state="initial">
+        <source>New books</source>
+        <target>Нови книги</target>
+      </segment>
+    </unit>
+    <unit id="8308173486419864629">
+      <segment state="initial">
+        <source>Edited books</source>
+        <target>Редактирани книги</target>
+      </segment>
+    </unit>
+    <unit id="1989352210202904798">
+      <segment state="initial">
+        <source>Deleted books</source>
+        <target>Изтрити книги</target>
+      </segment>
+    </unit>
+    <unit id="4228380416367539393">
+      <segment state="initial">
+        <source>New authors</source>
+        <target>Нови автори</target>
+      </segment>
+    </unit>
+    <unit id="5852038478304396089">
+      <segment state="initial">
+        <source>New reviews</source>
+        <target>Нови рецензии</target>
+      </segment>
+    </unit>
+    <unit id="1540649789244292400">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> removed from subscriptions</source>
+        <target>Известията за книгата <ph id="0" equiv="PH" disp="this.book().name"/> бяха спряни</target>
+      </segment>
+    </unit>
+    <unit id="2586725273765143910">
+      <segment state="initial">
+        <source>Book <ph id="0" equiv="PH" disp="this.book().name"/> added to subscriptions</source>
+        <target>Известията за книгата <ph id="0" equiv="PH" disp="this.book().name"/> бяха активирани</target>
+      </segment>
+    </unit>
+    <unit id="3694741105508379839">
+      <segment state="initial">
+        <source>Subscribed for books:</source>
+        <target>Абониран/а за книги:</target>
+      </segment>
+    </unit>
+    <unit id="4162381250950787907">
+      <segment state="initial">
+        <source>No subscribed books yet</source>
+        <target>Все още няма активирани известия за книги</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

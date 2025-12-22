@@ -37,6 +37,7 @@ export class BookCardComponent implements OnInit {
   searchTerm = input<string>('');
 
   favoriteBookIds = input.required<number[]>();
+  subscribedBookIds = input.required<number[]>();
 
   confirmDeletionDialog = viewChild.required('confirmDeletionDialog', {
     read: ElementRef,
@@ -47,6 +48,8 @@ export class BookCardComponent implements OnInit {
   authorName = signal<string>('');
 
   isFavorite: boolean = false;
+
+  isSubscribedFor: boolean = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -122,6 +125,10 @@ export class BookCardComponent implements OnInit {
     this.isFavorite = this.favoriteBookIds().includes(this.book().id);
   }
 
+  loadIsSubscribedFor() {
+    this.isSubscribedFor = this.subscribedBookIds().includes(this.book().id);
+  }
+
   toggleFavorite() {
     if (this.isFavorite) {
       this.userService
@@ -152,6 +159,36 @@ export class BookCardComponent implements OnInit {
     }
   }
 
+  toggleSubscribed() {
+    if (this.isSubscribedFor) {
+      this.userService
+        .unsubscribeFromBookForUser(
+          this.authenticationService.user!.uid,
+          this.book().id
+        )
+        .pipe(take(1))
+        .subscribe(() => {
+          this.isSubscribedFor = false;
+          this.toastService.add(
+            $localize`Book ${this.book().name} removed from subscriptions`
+          );
+        });
+    } else {
+      this.userService
+        .subscribeForBookForUser(
+          this.authenticationService.user!.uid,
+          this.book().id
+        )
+        .pipe(take(1))
+        .subscribe(() => {
+          this.isSubscribedFor = true;
+          this.toastService.add(
+            $localize`Book ${this.book().name} added to subscriptions`
+          );
+        });
+    }
+  }
+
   onDelete() {
     this.confirmDeletionDialog().nativeElement.showModal();
   }
@@ -164,7 +201,7 @@ export class BookCardComponent implements OnInit {
         next: () => {
           console.log('Cleaning up favorite book for users');
           this.userService
-            .cleanupFavoriteBook(this.book().id)
+            .cleanupForBook(this.book().id)
             .pipe(take(1))
             .subscribe(() => {
               this.rerenderService.rerenderBooks.emit();
@@ -174,7 +211,11 @@ export class BookCardComponent implements OnInit {
               } deleted successfully`;
               this.toastService.add(bookDeletedMessage);
 
-              this.notificationsService.create(bookDeletedMessage, 'info');
+              this.notificationsService.create(
+                bookDeletedMessage,
+                'info',
+                'delete-book'
+              );
 
               this.confirmDeletionDialog().nativeElement.close();
             });

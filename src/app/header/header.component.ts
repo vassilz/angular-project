@@ -10,6 +10,7 @@ import { NotificationsService } from './notifications/notifications.service';
 import { FirebaseUserService } from '../users/firebase-user.service';
 
 export interface NotificationPopupData {
+  uuid: string;
   username: string;
 
   notifications: Notification[];
@@ -53,8 +54,12 @@ export class HeaderComponent {
   checkForNewNotifications() {
     this.notificationsService.getAll().subscribe((notifications) => {
       const hasNew = notifications.some(
-        (notification) => notification.read === false
+        (notification) =>
+          notification.receivers.find(
+            (receiver) => receiver.uuid === this.uuid && !receiver.read
+          ) !== undefined
       );
+      // console.log(`Has new notifications for user: ${this.uuid}: ${hasNew}`);
       this.hasNewNotifications.set(hasNew);
     });
   }
@@ -96,6 +101,7 @@ export class HeaderComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(NotificationsPopupComponent, {
       data: {
+        uuid: this.uuid,
         username: this.username || '',
         // notifications: this.notificationsService.notifications(),
       },

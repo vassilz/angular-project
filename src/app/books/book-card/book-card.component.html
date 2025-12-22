@@ -8,7 +8,7 @@
     <a [routerLink]="['/authors', book().authorId]">{{ authorName() }}</a>
     @if (isLoggedIn) { @if (isFavorite) {
     <div
-      class="favorite-icon"
+      class="toggle-icon"
       (click)="toggleFavorite()"
       title="Remove from favorites"
     >
@@ -16,11 +16,23 @@
     </div>
     } @else {
     <div
-      class="favorite-icon"
+      class="toggle-icon"
       (click)="toggleFavorite()"
       title="Add to favorites"
     >
       &#9734;
+    </div>
+    } @if (isSubscribedFor) {
+    <div
+      class="toggle-icon"
+      (click)="toggleSubscribed()"
+      title="Unsubscribe from"
+    >
+      <img src="bell_active.png" />
+    </div>
+    } @else {
+    <div class="toggle-icon" (click)="toggleSubscribed()" title="Subscribe to">
+      <img src="bell_off.png" />
     </div>
     } }
   </div>

@@ -147,6 +147,7 @@ export class BooksListComponent implements OnInit {
   recentBooksList = viewChild(RecentBooksListComponent);
 
   favoriteBookIds: WritableSignal<number[]> = signal<number[]>([]);
+  subscribedBookIds: WritableSignal<number[]> = signal<number[]>([]);
 
   ngOnInit(): void {
     const pageSizeLoaded = new Subject<void>();
@@ -193,6 +194,13 @@ export class BooksListComponent implements OnInit {
           .pipe(take(1))
           .subscribe((bookIds) => {
             this.favoriteBookIds.set(bookIds || []);
+          });
+
+        this.userService
+          .getSubscribedBookIdsForUser(firebaseUser.uid)
+          .pipe(take(1))
+          .subscribe((bookIds) => {
+            this.subscribedBookIds.set(bookIds || []);
           });
       } else {
         console.log('Loading default page size');

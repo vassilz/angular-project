@@ -7,6 +7,7 @@ import { JettyBookService } from '../books/jetty-book.service';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { FirebaseBookService } from '../books/firebase-book.service';
+import { NotificationType } from '../header/notifications/notifications';
 
 //TODO implement fully
 @Injectable({
@@ -24,7 +25,7 @@ export class JettyUserService implements UserService {
   getUserByEmail(email: string): Observable<User | null> {
     throw new Error('Method not implemented.');
   }
-  cleanupFavoriteBook(bookId: number): Observable<void> {
+  cleanupForBook(bookId: number): Observable<void> {
     throw new Error('Method not implemented.');
   }
 
@@ -36,6 +37,8 @@ export class JettyUserService implements UserService {
     lastName: string | null | undefined,
     password: string,
     favoriteBookIds: number[] = [],
+    subscribedFor: NotificationType[] = [],
+    subscribedForBookIds: number[] = [],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     var result = new Subject<void>();
@@ -55,6 +58,8 @@ export class JettyUserService implements UserService {
           lastName,
           password,
           favoriteBookIds,
+          subscribedFor,
+          subscribedForBookIds,
           settings,
         })
         .subscribe(() => {
@@ -135,7 +140,10 @@ export class JettyUserService implements UserService {
           user.firstName,
           user.lastName,
           user.password,
-          favoriteBookIds
+          favoriteBookIds,
+          user.subscribedFor,
+          user.subscribedForBookIds,
+          user.settings
         ).subscribe((data) => {
           console.info('User updated successfully');
           // this.router.navigate(['/home']);
@@ -170,7 +178,10 @@ export class JettyUserService implements UserService {
           user.firstName,
           user.lastName,
           user.password,
-          favoriteBookIds
+          favoriteBookIds,
+          user.subscribedFor,
+          user.subscribedForBookIds,
+          user.settings
         ).subscribe((data) => {
           // this.router.navigate(['/home']);
 
@@ -204,6 +215,8 @@ export class JettyUserService implements UserService {
     lastName: string,
     password: string,
     favoriteBookIds: number[] = [],
+    subscribedFor: NotificationType[] = [],
+    subscribedForBookIds: number[] = [],
     settings: Settings = { pageSize: 5 }
   ): Observable<void> {
     var result = new Subject<void>();
@@ -217,6 +230,8 @@ export class JettyUserService implements UserService {
         lastName,
         password,
         favoriteBookIds,
+        subscribedFor,
+        subscribedForBookIds,
         settings,
       })
       .subscribe(() => {

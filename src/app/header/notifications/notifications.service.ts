@@ -4,7 +4,14 @@ import {
   NotificationReceiver,
   NotificationType,
 } from './notifications';
-import { Database, get, ref, set, update } from '@angular/fire/database';
+import {
+  Database,
+  get,
+  ref,
+  remove,
+  set,
+  update,
+} from '@angular/fire/database';
 import { from, Observable, Subject } from 'rxjs';
 import { AuthenticationService } from '../../authentication.service';
 import { FirebaseUserService } from '../../users/firebase-user.service';
@@ -42,11 +49,18 @@ export class NotificationsService {
       subscription.unsubscribe();
 
       this.getSubscribersFor(eventType, bookId).subscribe((uuids) => {
+        if (uuids.length === 0) {
+          console.log(
+            `No subscribers found for notification type ${eventType} and book ${bookId}, skipping notification creation.`
+          );
+          result.next();
+          return;
+        }
+
         from(
           set(ref(this.db, `notifications/${nextNotificationId}`), {
             message,
             type,
-            read: false,
             receivers: this.mapToReceivers(uuids),
           })
         ).subscribe({
@@ -152,12 +166,16 @@ export class NotificationsService {
     const observable = from(get(ref(this.db, 'notifications')));
 
     const subscription = observable.subscribe((data) => {
-      let notifications: Notification[] = data.val() || [];
+      let notifications: Notification[] = [];
+
+      for (const [key, value] of Object.entries(data.val() ?? {})) {
+        const id = +key;
+        const notification: Notification = value as Notification;
+        notification.id = id;
+        notifications.push(notification);
+      }
 
       notifications = notifications.filter((notification) => !!notification);
-      notifications.forEach((notification, index) => {
-        notification.id = index;
-      });
 
       result.next(notifications);
 
@@ -187,5 +205,43 @@ export class NotificationsService {
 
   mapToReceivers(uuids: string[]): NotificationReceiver[] {
     return uuids.map((uuid) => ({ uuid, read: false }));
+  }
+
+  dismiss(id: number): Observable<void> {
+    const subject = new Subject<void>();
+
+    from(get(ref(this.db, 'notifications/' + id))).subscribe((data) => {
+      const notification = data.val() as Notification | null;
+      if (!!notification) {
+        const updatedReceivers: NotificationReceiver[] =
+          notification.receivers.filter(
+            (receiver) => receiver.uuid !== this.uuid
+          );
+
+        if (updatedReceivers.length === 0) {
+          // No receivers left, delete the notification entirely
+          from(remove(ref(this.db, 'notifications/' + id))).subscribe(() => {
+            console.info(`Notification ${id} was dismissed and deleted`);
+            subject.next();
+            subject.complete();
+          });
+          return;
+        }
+
+        from(
+          update(ref(this.db, 'notifications/' + id), {
+            message: notification.message,
+            type: notification.type,
+            receivers: updatedReceivers,
+          })
+        ).subscribe(() => {
+          console.info(`Notification ${id} was dismissed by user ${this.uuid}`);
+          subject.next();
+          subject.complete();
+        });
+      }
+    });
+
+    return subject.asObservable();
   }
 }

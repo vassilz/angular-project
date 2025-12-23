@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   input,
+  numberAttribute,
   OnInit,
   signal,
 } from '@angular/core';
@@ -14,15 +15,15 @@ import { RerenderService } from '../../rerender.service';
 import { take } from 'rxjs';
 
 @Component({
-    selector: 'app-edit-review',
-    imports: [FormsModule],
-    templateUrl: './edit-review.component.html',
-    styleUrl: './edit-review.component.css'
+  selector: 'app-edit-review',
+  imports: [FormsModule],
+  templateUrl: './edit-review.component.html',
+  styleUrl: './edit-review.component.css',
 })
 export class EditReviewComponent implements OnInit {
   isEditMode = signal<boolean>(false);
 
-  bookId = input.required<number>();
+  bookId = input.required({ transform: numberAttribute });
 
   review: Review | null = null;
   rating: number | null = null;

@@ -1,3 +1,17 @@
 .unread {
   background-color: lightblue;
 }
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.dismiss-icon {
+  cursor: pointer;
+  vertical-align: middle;
+}

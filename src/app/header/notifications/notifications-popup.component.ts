@@ -48,8 +48,13 @@ export class NotificationsPopupComponent {
     notificationsService
       .getAll()
       .pipe(take(1))
-      .subscribe((data) => {
-        this.notifications.set(data);
+      .subscribe((notifications) => {
+        const notificationsForUser = notifications.filter((notification) =>
+          notification.receivers?.some(
+            (receiver) => receiver.uuid === this.data.uuid
+          )
+        );
+        this.notifications.set(notificationsForUser);
       });
   }
 
@@ -69,6 +74,14 @@ export class NotificationsPopupComponent {
           (receiver) => receiver.uuid === this.data.uuid
         )!.read = true;
       });
+    });
+  }
+
+  dismiss(id: number) {
+    this.notificationsService.dismiss(id).subscribe(() => {
+      this.notifications.set(
+        this.notifications().filter((notification) => notification.id !== id)
+      );
     });
   }
 

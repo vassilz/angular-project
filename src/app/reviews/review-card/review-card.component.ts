@@ -1,4 +1,11 @@
-import { Component, effect, input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  input,
+  numberAttribute,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Review } from '../../types/review';
 import { RouterLink } from '@angular/router';
 import { User } from '../../types/user';
@@ -10,13 +17,13 @@ import { AuthenticationService } from '../../authentication.service';
 import { JettyUserService } from '../../users/jetty-user.service';
 
 @Component({
-    selector: 'app-review-card',
-    imports: [RouterLink, ElapsedTimePipe],
-    templateUrl: './review-card.component.html',
-    styleUrl: './review-card.component.css'
+  selector: 'app-review-card',
+  imports: [RouterLink, ElapsedTimePipe],
+  templateUrl: './review-card.component.html',
+  styleUrl: './review-card.component.css',
 })
 export class ReviewCardComponent implements OnInit {
-  bookId = input.required<number>();
+  bookId = input.required({ transform: numberAttribute });
 
   review = input.required<Review>();
 

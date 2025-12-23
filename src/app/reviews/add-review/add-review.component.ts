@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, numberAttribute } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FirebaseReviewService } from '../firebase-review.service';
 import { AuthenticationService } from '../../authentication.service';
@@ -14,7 +14,7 @@ import { NotificationsService } from '../../header/notifications/notifications.s
   styleUrl: './add-review.component.css',
 })
 export class AddReviewComponent {
-  bookId = input.required<number>();
+  bookId = input.required({ transform: numberAttribute });
 
   constructor(
     private reviewService: FirebaseReviewService,

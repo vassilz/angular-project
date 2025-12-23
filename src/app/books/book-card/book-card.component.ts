@@ -73,6 +73,7 @@ export class BookCardComponent implements OnInit {
 
     this.loadReviews();
     this.loadIsFavorite();
+    this.loadIsSubscribedFor();
 
     this.rerenderService.rerenderReviews.subscribe(() => {
       // console.log(

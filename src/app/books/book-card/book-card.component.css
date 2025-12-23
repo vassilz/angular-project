@@ -45,6 +45,11 @@
   vertical-align: middle;
 }
 
+.bell-icon {
+  /* width: 14px;
+  height: 14px; */
+}
+
 :host ::ng-deep .highlight {
   background-color: orange;
   font-weight: bold;
